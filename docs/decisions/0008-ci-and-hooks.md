@@ -8,7 +8,7 @@ A workflow that hard-codes a Python version (e.g. 3.11) drifts from the project'
 pre-commit mirrors can drift from the project's own ruff/mypy versions.
 
 ## Decision
-- **CI** (`ubuntu-latest`): every action pinned to a **full-length commit SHA** with a version
+- **CI** (`ubuntu-24.04`, pinned so a runner-image change is a deliberate choice): every action pinned to a **full-length commit SHA** with a version
   comment (checkout v7.0.1, setup-uv v10.3.0, setup-node v7.1.0); `persist-credentials: false`;
   setup-uv **without** a `python-version` input (uv reads
   `.python-version`), the privacy guard over all tracked files (catches `--no-verify`

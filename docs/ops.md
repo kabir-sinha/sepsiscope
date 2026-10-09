@@ -66,8 +66,11 @@ Reference: [About protected branches](https://docs.github.com/en/repositories/co
 
 ## CI runner note
 
-GitHub announced that `ubuntu-latest` moves to Ubuntu 26 from 2026-10-19 (annotation on the
-first run). If CI breaks then, check the runner image first.
+Both CI jobs are pinned to `runs-on: ubuntu-24.04` (label confirmed in the
+[runner-images README](https://github.com/actions/runner-images#available-images)), because
+GitHub announced that `ubuntu-latest` moves to Ubuntu 26 from 2026-10-19. **Upgrade
+deliberately later:** change the label to `ubuntu-26.04` in a pull request, let CI prove it,
+then merge. Dependabot does not update runner labels.
 
 ## Release and visibility checklist (going public later)
 
