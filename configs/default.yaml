@@ -1,0 +1,23 @@
+# SepsiScope default configuration. Paths are relative to the repo root.
+# Loaded with yaml.safe_load and validated by sepsiscope.config (pydantic).
+paths:
+  data_dir: data
+  models_dir: models
+  mlruns_dir: mlruns
+  reports_dir: reports
+
+seed: 42
+
+# Maximum fraction of patient-hours allowed to raise an alert.
+alarm_budget: 0.05
+
+# SepsisLabel is 1 from t_sepsis - label_horizon_hours onwards (challenge definition).
+label_horizon_hours: 6
+
+features:
+  vitals: true
+  labs: true
+  demographics: true          # Age, Gender only
+  measurement_process: true   # missingness indicators / time since last measurement
+  trends: true                # rolling statistics over hours <= t
+  icu_time: false             # ICULOS / HospAdmTime / Unit1 / Unit2 - ablation only, never in the main model
