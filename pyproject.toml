@@ -1,0 +1,97 @@
+[project]
+name = "sepsiscope"
+version = "0.1.0"
+description = "Explainable, alarm-budgeted sepsis early-warning research prototype (PhysioNet/CinC 2019)."
+readme = "README.md"
+authors = [
+    { name = "Kabir Sinha", email = "222482936+kabir-sinha@users.noreply.github.com" }
+]
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "dcurves==1.1.7",
+    "duckdb==1.5.6",
+    "fastapi==0.143.0",
+    "httpx==0.28.1",
+    "lightgbm==4.7.0",
+    "matplotlib==3.11.2",
+    "mlflow==3.17.0",
+    "numpy==2.5.3",
+    "optuna==5.0.0",
+    "pandas==3.0.6",
+    "pandera==0.34.1",
+    "pyarrow==25.0.1",
+    "pydantic==2.14.0",
+    "pyyaml==6.0.3",
+    "scikit-learn==1.9.1",
+    "shap==0.53.0",
+    "typer==0.27.3",
+    "uvicorn==0.54.0",
+]
+
+[project.scripts]
+sepsiscope = "sepsiscope.cli:app"
+
+[project.optional-dependencies]
+xgb = [
+    "xgboost==3.4.1",
+]
+
+[build-system]
+requires = ["uv_build>=0.12.24,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.uv]
+# Reuse the Homebrew Python 3.13 already on the local machine instead of downloading a
+# uv-managed copy. CI (no system 3.13) can still fall back to a managed one.
+python-preference = "system"
+# Same uv minor locally and in CI (setup-uv reads this).
+required-version = ">=0.12.24,<0.13"
+
+[dependency-groups]
+dev = [
+    "hypothesis==6.168.5",
+    "jupyterlab==4.6.4",
+    "mypy==2.4.0",
+    "nbstripout==0.9.1",
+    "pip-audit==2.10.1",
+    "pre-commit==4.6.2",
+    "pytest==9.1.1",
+    "pytest-cov==7.1.0",
+    "ruff==0.16.10",
+    "types-pyyaml==6.0.12.20260906",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+extend-exclude = ["web", "third_party"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "SIM", "RUF", "S", "PTH", "NPY", "PD"]
+ignore = ["S101"]  # assert is fine in tests and invariants
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S603"]   # subprocess with sys.executable in tests
+"scripts/**" = ["S603", "S607"]
+
+[tool.mypy]
+strict = true
+python_version = "3.13"
+files = ["src"]
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["lightgbm", "lightgbm.*", "sklearn", "sklearn.*", "mlflow", "mlflow.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["-ra", "--strict-markers", "--strict-config"]
+
+[tool.coverage.run]
+source = ["sepsiscope"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true

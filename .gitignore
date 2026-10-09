@@ -1,0 +1,42 @@
+# --- Data, models, experiment runs: never committed ---
+/data/
+/models/
+/mlruns/
+mlflow.db
+*.parquet
+*.psv
+*.feather
+
+# --- Secrets / local env ---
+.env
+.env.*
+
+# --- Python ---
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.hypothesis/
+
+# --- Coverage ---
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# --- Notebooks ---
+.ipynb_checkpoints/
+
+# --- Node / web ---
+node_modules/
+web/dist/
+
+# --- OS / editors ---
+.DS_Store
+.vscode/
+.idea/
