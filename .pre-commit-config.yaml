@@ -1,0 +1,49 @@
+# pre-commit hooks. Install once per clone:  uv run pre-commit install
+# ruff / mypy run through `uv run` as local hooks so they use the exact versions
+# locked in uv.lock (no second copy pinned here that could drift).
+# `language: unsupported` is the pre-commit >= 4.4 name for the old `system`.
+minimum_pre_commit_version: "4.4.0"
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-added-large-files
+        args: ["--maxkb=1000"]
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-yaml
+      - id: check-toml
+      - id: check-merge-conflict
+
+  - repo: local
+    hooks:
+      - id: privacy-guard
+        name: privacy guard (home paths, emails, .env, data, >1 MB)
+        entry: uv run --frozen python scripts/privacy_guard.py
+        language: unsupported
+        types: [file]
+      - id: ruff-check
+        name: ruff check
+        entry: uv run --frozen ruff check --fix --force-exclude
+        language: unsupported
+        types_or: [python, pyi]
+        require_serial: true
+      - id: ruff-format
+        name: ruff format
+        entry: uv run --frozen ruff format --force-exclude
+        language: unsupported
+        types_or: [python, pyi]
+        require_serial: true
+      - id: mypy
+        name: mypy (strict, src/)
+        entry: uv run --frozen mypy src
+        language: unsupported
+        types: [python]
+        pass_filenames: false
+      - id: nbstripout
+        name: nbstripout
+        entry: uv run --frozen nbstripout
+        language: unsupported
+        types: [jupyter]
