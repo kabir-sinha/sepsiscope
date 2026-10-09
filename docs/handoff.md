@@ -6,8 +6,8 @@ State of the work, so anyone can pick it up from the repository alone.
 
 - Repository `kabir-sinha/sepsiscope` is **private**; default branch `main`.
 - First CI run is green: run `38003153138` (jobs `python` and `web`).
-- Local commit `1e7b118` (`docs(ops): record repository state after first push`) is
-  **not yet pushed**.
+- Commit `1e7b118` (`docs(ops): record repository state after first push`) is
+  pushed.
 - Branch protection: pending; rules in `docs/ops.md`, to apply when enabled.
 
 ## Rules for this work
@@ -19,7 +19,7 @@ State of the work, so anyone can pick it up from the repository alone.
 
 ## Pending tasks
 
-- [ ] **Task 1:** push the `ops.md` and `handoff.md` commits (privacy scan first). _Not started._
+- [x] **Task 1:** pushed `1e7b118` and `bceb8db` after a clean privacy scan.
 - [ ] **Task 2:** Dependabot and TypeScript 7: add an `ignore` rule for `typescript`
   semver-major updates in `.github/dependabot.yml`, push, then close that PR with the
   comment `@dependabot ignore this major version`. _Not started._
