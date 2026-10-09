@@ -8,10 +8,11 @@ A workflow that hard-codes a Python version (e.g. 3.11) drifts from the project'
 pre-commit mirrors can drift from the project's own ruff/mypy versions.
 
 ## Decision
-- **CI** (`ubuntu-latest`): `actions/checkout@v7` with `persist-credentials: false`,
-  `astral-sh/setup-uv@v10` **without** a `python-version` input (uv reads
-  `.python-version`), `uv sync --locked`, ruff, mypy, pytest; `actions/setup-node@v7`
-  with `node-version-file: web/.nvmrc`, then `npm ci`, lint and build. Top-level
+- **CI** (`ubuntu-latest`): every action pinned to a **full-length commit SHA** with a version
+  comment (checkout v7.0.1, setup-uv v10.3.0, setup-node v7.1.0); `persist-credentials: false`;
+  setup-uv **without** a `python-version` input (uv reads
+  `.python-version`), the privacy guard over all tracked files (catches `--no-verify`
+  commits), `uv sync --locked`, ruff, mypy, pytest; setup-node with `node-version-file: web/.nvmrc`, then `npm ci`, lint and build. Top-level
   `permissions: contents: read`, `timeout-minutes: 15` per job, and a concurrency group
   that cancels superseded runs. Telemetry variables are set as workflow `env`.
 - **pre-commit:** ruff, ruff-format, mypy and nbstripout are `repo: local` hooks run via
@@ -25,10 +26,11 @@ pre-commit mirrors can drift from the project's own ruff/mypy versions.
 out of scope (ubuntu only, as requested).
 
 ## Consequences
-Hooks need `uv` on PATH. Dependabot does not update `uses:` versions (no
-`github-actions` ecosystem was requested); check them manually each phase.
+Hooks need `uv` on PATH. Dependabot's `github-actions` ecosystem proposes SHA/version
+updates weekly.
 
 ## Sources
+[GitHub: pin actions to a full-length commit SHA](https://docs.github.com/en/actions/reference/security/secure-use) ·
 [actions/checkout](https://github.com/actions/checkout) ·
 [astral-sh/setup-uv](https://github.com/astral-sh/setup-uv) ·
 [actions/setup-node](https://github.com/actions/setup-node) ·

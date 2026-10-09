@@ -40,7 +40,8 @@ Reference: [About protected branches](https://docs.github.com/en/repositories/co
 
 ## Dependabot
 
-- `.github/dependabot.yml`: weekly version updates for `uv` (root) and `npm` (`web/`)
+- `.github/dependabot.yml`: weekly version updates for `uv` (root), `npm` (`web/`) and
+  `github-actions` (SHA-pinned workflow actions)
   ([options reference](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference)).
 - Dependabot alerts and the dependency graph: _status to record after checking
   Settings → Advanced Security (Code security) on github.com._

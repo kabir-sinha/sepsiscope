@@ -55,7 +55,8 @@ Checked on 2026-10-10 against each tool's own docs or source.
 - `*.psv` / `*.parquet` anywhere, and `*.csv` under `data/`
 - files over 1 MB (also `check-added-large-files --maxkb=1000`)
 
-`detect-private-key` blocks committed private keys.
+`detect-private-key` blocks committed private keys. CI runs the same privacy guard over
+every tracked file, so a commit made with `git commit --no-verify` still fails CI.
 
 ### How to check the guardrails yourself
 
