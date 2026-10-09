@@ -2,10 +2,11 @@
 
 State of the work, so anyone can pick it up from the repository alone.
 
-## Phase 0 status: complete
+## Phase 0 fully closed, ready for Phase 1
 
 - Repository `kabir-sinha/sepsiscope` is **private**; default branch `main`.
-- First CI run is green: run `38003153138` (jobs `python` and `web`).
+- First CI run is green: run `38003153138` (jobs `python` and `web`). After the four
+  follow-up tasks, CI is green on `df74bd2`: run `38004614423`, on `ubuntu-24.04`.
 - Commit `1e7b118` (`docs(ops): record repository state after first push`) is
   pushed.
 - Branch protection: pending; rules in `docs/ops.md`, to apply when enabled.
@@ -28,7 +29,7 @@ State of the work, so anyone can pick it up from the repository alone.
 - [x] **Task 4:** both CI jobs pinned to `runs-on: ubuntu-24.04` (26e9efe); upgrade note in
   `docs/ops.md`.
 
-When all four are done: push, record the CI result, and mark Phase 0 fully closed.
+All four are done and pushed. Open pull requests: none (#1 closed, #2 merged).
 
 ## Next after these
 

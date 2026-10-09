@@ -76,4 +76,6 @@ git grep -nI -e "$HOME" -e "$(whoami)" || echo "clean"
 git log --format='%ae %ce' | sort -u
 ```
 
-The last command must print only the noreply address.
+The last command must print only the noreply address, plus GitHub's own bot identities on
+merged Dependabot pull requests (`49699333+dependabot[bot]@users.noreply.github.com` as
+author, and GitHub's own web-flow noreply address as committer). Neither is personal.
