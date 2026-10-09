@@ -25,8 +25,8 @@ State of the work, so anyone can pick it up from the repository alone.
 - [x] **Task 3:** runtime is Node 26 (`web/.nvmrc`, read by CI via `node-version-file`);
   `@types/node` moved from major 24 to 26.6.4 by merging PR #2 (`56a5bdb`, authored by
   `dependabot[bot]`); local `npm ci`, lint and build pass.
-- [ ] **Task 4:** pin `runs-on: ubuntu-24.04` in both CI jobs (verify the label in the
-  runner-images docs) and note in `docs/ops.md` to upgrade deliberately later. _Not started._
+- [x] **Task 4:** both CI jobs pinned to `runs-on: ubuntu-24.04` (26e9efe); upgrade note in
+  `docs/ops.md`.
 
 When all four are done: push, record the CI result, and mark Phase 0 fully closed.
 
