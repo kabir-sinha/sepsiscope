@@ -20,9 +20,8 @@ State of the work, so anyone can pick it up from the repository alone.
 ## Pending tasks
 
 - [x] **Task 1:** pushed `1e7b118` and `bceb8db` after a clean privacy scan.
-- [ ] **Task 2:** Dependabot and TypeScript 7: add an `ignore` rule for `typescript`
-  semver-major updates in `.github/dependabot.yml`, push, then close that PR with the
-  comment `@dependabot ignore this major version`. _Not started._
+- [x] **Task 2:** `ignore` rule for `typescript` semver-major updates added and pushed
+  (`ba3152f`); PR #1 answered with `@dependabot ignore this major version`.
 - [ ] **Task 3:** Node consistency: `web/.nvmrc` = 26 read by CI through
   `node-version-file`; check that the `@types/node` major matches the runtime; if
   consistent and CI passes, merge the `@types/node` 26 PR, otherwise stop and explain.
