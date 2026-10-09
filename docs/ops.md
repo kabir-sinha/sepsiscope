@@ -1,5 +1,24 @@
 # Operations
 
+## Repository state (2026-10-10)
+
+| Item | State |
+|---|---|
+| Repository | `kabir-sinha/sepsiscope`, **Private**, default branch `main` |
+| Created with | `gh repo create --private --source=. --remote=origin --push --disable-wiki` |
+| Features | Issues on; Wiki, Projects and Discussions off; delete head branch on merge on |
+| Dependabot alerts | **Enabled** (`PUT /repos/{owner}/{repo}/vulnerability-alerts` accepted) |
+| Dependabot security updates | **Enabled** (`GET .../automated-security-fixes` returned `enabled: true`) |
+| Dependabot version updates | Enabled by `.github/dependabot.yml` (first PRs opened the same day) |
+| Watching | All Activity (`subscribed: true`, `ignored: false`) |
+| Collaborators | Only `kabir-sinha` (admin) |
+| Branch protection | **Pending** (see below) |
+| First CI run | Success on `main`; check names `python` and `web` |
+
+Pre-push check: the full history was scanned three ways (git grep over every commit, every
+blob object, and a fresh clone including image metadata) for the macOS username, home
+path, hostname, non-noreply emails, IP/MAC addresses, UUIDs, tokens and keys. Clean.
+
 ## Authentication to GitHub
 
 - **Method:** the GitHub CLI `gh`, already installed and signed in as `kabir-sinha`, with
@@ -26,12 +45,12 @@
 
 Reference: [About protected branches](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches).
 
-**Status:** _pending until the repo is public or Pro is active._ Apply these rules then
+**Status:** _pending; rules below, to apply when enabled._ Apply these rules then
 (Settings → Branches → Add classic branch protection rule, or Settings → Rules → Rulesets):
 
 - Branch name pattern: `main`
 - Require a pull request before merging (0 required approvals)
-- Require status checks to pass: `python`, `web` (the CI job names); require branches to be up to date
+- Require status checks to pass: `python`, `web` (exact names confirmed from the first CI run); require branches to be up to date
 - Do not allow force pushes
 - Do not allow deletions
 - Leave "Do not allow bypassing the above settings" **unchecked**, so the admin (the maintainer) can still bypass when needed
@@ -43,8 +62,12 @@ Reference: [About protected branches](https://docs.github.com/en/repositories/co
 - `.github/dependabot.yml`: weekly version updates for `uv` (root), `npm` (`web/`) and
   `github-actions` (SHA-pinned workflow actions)
   ([options reference](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference)).
-- Dependabot alerts and the dependency graph: _status to record after checking
-  Settings → Advanced Security (Code security) on github.com._
+- Dependabot alerts and security updates: **enabled** on 2026-10-10 through the REST API.
+
+## CI runner note
+
+GitHub announced that `ubuntu-latest` moves to Ubuntu 26 from 2026-10-19 (annotation on the
+first run). If CI breaks then, check the runner image first.
 
 ## Release and visibility checklist (going public later)
 
