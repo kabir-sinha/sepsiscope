@@ -21,6 +21,9 @@ DATA_SUFFIXES = {".psv", ".parquet", ".csv"}
 
 # Built from pieces so this file does not trip its own rules.
 HOME_PREFIX = "/" + "Users/"
+HOME_PREFIX_ENCODINGS = tuple(
+    HOME_PREFIX.encode(enc) for enc in ("utf-8", "utf-16-le", "utf-16-be")
+)
 EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}")
 
 
@@ -49,10 +52,17 @@ def check_file(name: str) -> list[str]:
         problems.append(f"file is {size:,} bytes (> 1 MB)")
         return problems
 
+    raw = file.read_bytes()
+    # UTF-16 text can also be valid UTF-8 (NUL bytes are legal), so always check it.
+    if any(enc in raw for enc in HOME_PREFIX_ENCODINGS[1:]):
+        problems.append(f"absolute macOS home path ({HOME_PREFIX}...) in UTF-16 content")
     try:
-        text = file.read_text(encoding="utf-8")
+        text = raw.decode("utf-8")
     except UnicodeDecodeError:
-        return problems  # binary: size check above is the guard
+        # Binary or non-UTF-8 (e.g. image metadata, UTF-16): scan the raw bytes.
+        if any(enc in raw for enc in HOME_PREFIX_ENCODINGS):
+            problems.append(f"absolute macOS home path ({HOME_PREFIX}...) in non-UTF-8 content")
+        return problems
 
     for lineno, line in enumerate(text.splitlines(), start=1):
         if HOME_PREFIX in line:
