@@ -1,0 +1,18 @@
+# Architecture Decision Records
+
+One short file per decision: context, decision, alternatives, consequences, sources.
+Format after [Michael Nygard's ADRs](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions).
+A decision is changed by a new ADR that supersedes it, never by editing history.
+
+| # | Decision | Status |
+|---|---|---|
+| [0001](0001-reuse-before-install.md) | Reuse existing tools; install only uv and libomp | Accepted |
+| [0002](0002-python-313-system-interpreter.md) | Python 3.13 via uv, using the Homebrew interpreter | Accepted |
+| [0003](0003-licence-all-rights-reserved.md) | No open-source licence during evaluation | Accepted |
+| [0004](0004-models-as-text-never-pickle.md) | Models as LightGBM text + JSON; never pickle/joblib | Accepted |
+| [0005](0005-openmp-single-process-smoke.md) | Homebrew libomp + single-process OpenMP smoke test | Accepted |
+| [0006](0006-telemetry-off.md) | Telemetry off, enforced in code and tested | Accepted |
+| [0007](0007-frozen-evaluation-protocol.md) | Evaluation protocol frozen before data access | Accepted |
+| [0008](0008-ci-and-hooks.md) | CI and pre-commit design | Accepted |
+| [0009](0009-dependency-choices.md) | Dependency pins and exclusions | Accepted |
+| [0010](0010-frontend-scaffold.md) | Vite react-ts template, pins untouched | Accepted |

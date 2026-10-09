@@ -1,0 +1,13 @@
+# AI assistance
+
+SepsiScope was developed with AI assistance from **Claude Code** (Anthropic), used as a
+pair programmer: proposing plans, drafting code, tests and documentation, and checking
+versions and sources.
+
+All decisions were approved by me, and **every component was reviewed, tested and
+understood by me** before being committed. Commits are authored by me alone; no AI
+co-author trailer is used.
+
+| Phase | Date | What the assistant did | How it was verified |
+|---|---|---|---|
+| 0 — Foundation | 2026-10-10 | Inventory, environment setup, repo skeleton, tests, hooks, CI, docs | Tests run 3× green, pre-commit clean, privacy hook demo, link check, critique loop (see the Phase 0 report) |
