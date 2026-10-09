@@ -13,6 +13,10 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
+    ignore:
+      # Decision (ADR 0010): stay on TypeScript ~6.0, the Vite template's pin.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
 
   # GitHub Actions used in workflows (keeps the SHA pins and version comments current)
   - package-ecosystem: "github-actions"
