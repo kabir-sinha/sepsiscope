@@ -5,6 +5,7 @@ from __future__ import annotations
 import socket
 from collections.abc import Callable, Sequence
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -45,14 +46,36 @@ def psv_text(
     return "\n".join(lines) + "\n"
 
 
+class NetworkBlockedError(AssertionError):
+    """A test tried to use the network."""
+
+
 @pytest.fixture(autouse=True)
 def _no_network(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Safety net: no test may open a real network connection."""
+    """Safety net: no test may look up a hostname or open a real network connection.
 
-    def blocked(self: socket.socket, address: object) -> None:
-        raise AssertionError(f"test tried to open a network connection to {address!r}")
+    Socket-level, standard library only. Unix-domain sockets (AF_UNIX) stay allowed
+    because local tooling uses them and they never leave the machine.
+    """
+    real_connect = socket.socket.connect
+    real_connect_ex = socket.socket.connect_ex
 
-    monkeypatch.setattr(socket.socket, "connect", blocked)
+    def connect(self: socket.socket, address: Any) -> None:
+        if self.family == socket.AF_UNIX:
+            return real_connect(self, address)
+        raise NetworkBlockedError(f"test tried to connect to {address!r}")
+
+    def connect_ex(self: socket.socket, address: Any) -> int:
+        if self.family == socket.AF_UNIX:
+            return real_connect_ex(self, address)
+        raise NetworkBlockedError(f"test tried to connect to {address!r}")
+
+    def getaddrinfo(host: Any, *args: Any, **kwargs: Any) -> Any:
+        raise NetworkBlockedError(f"test tried to resolve the hostname {host!r}")
+
+    monkeypatch.setattr(socket.socket, "connect", connect)
+    monkeypatch.setattr(socket.socket, "connect_ex", connect_ex)
+    monkeypatch.setattr(socket, "getaddrinfo", getaddrinfo)
 
 
 @pytest.fixture
