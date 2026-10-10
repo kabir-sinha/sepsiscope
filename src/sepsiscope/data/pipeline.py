@@ -35,7 +35,8 @@ class BuildResult:
 
 
 def to_frame(table: pa.Table) -> pd.DataFrame:
-    return table.to_pandas()
+    frame: pd.DataFrame = table.to_pandas()
+    return frame
 
 
 def to_table(frame: pd.DataFrame) -> pa.Table:
@@ -84,11 +85,15 @@ def build_all(raw_root: Path, data_dir: Path, reports_dir: Path) -> BuildResult:
 
 def septic_flags(frame: pd.DataFrame) -> dict[str, dict[str, bool]]:
     """Per hospital: patient ID -> ever septic."""
-    flags = frame.groupby(["hospital", "pid"], sort=True)["SepsisLabel"].max() == 1
-    return {
-        str(hospital): {str(pid): bool(v) for (_, pid), v in group.items()}
-        for hospital, group in flags.groupby(level="hospital")
-    }
+    per_patient = frame.groupby("pid", sort=True).agg(
+        hospital=("hospital", "first"), label_max=("SepsisLabel", "max")
+    )
+    flags: dict[str, dict[str, bool]] = {}
+    for pid, hospital, label_max in zip(
+        per_patient.index, per_patient["hospital"], per_patient["label_max"], strict=True
+    ):
+        flags.setdefault(str(hospital), {})[str(pid)] = bool(label_max == 1)
+    return flags
 
 
 def write_splits(data_dir: Path, splits_dir: Path, seed: int) -> dict[str, dict[str, object]]:
@@ -121,7 +126,8 @@ def run_eda(data_dir: Path, figures_dir: Path | None = None) -> dict[str, pd.Dat
         "patients": patients,
         "cohort": eda.cohort_table(patients),
         "missingness": eda.missingness(frame),
-        "frequency": eda.measurement_frequency(frame),
+        "frequency": eda.measurements_per_patient_day(frame),
+        "ever_measured": eda.patients_ever_measured(frame),
         "shift": eda.hospital_shift(frame),
         "units": eda.unit_fingerprint(frame),
         "unit_rule_accuracy": pd.DataFrame({"accuracy": [eda.unit_rule_accuracy(frame)]}),

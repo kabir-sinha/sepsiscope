@@ -106,8 +106,8 @@ def missingness_figure(missing: pd.DataFrame) -> Figure:
     return fig
 
 
-def frequency_figure(frequency: pd.DataFrame) -> Figure:
-    table = frequency["per_patient_day"].sort_values("A", ascending=False)
+def frequency_figure(per_day: pd.DataFrame) -> Figure:
+    table = per_day.sort_values("A", ascending=False)
     with plt.rc_context(STYLE):
         fig, (ax,) = _new(7.0, 8.0)
         _paired_barh(ax, table, "Measurements per patient-day (log scale)")

@@ -54,9 +54,8 @@ def test_missingness_and_frequency(frame: pd.DataFrame) -> None:
     assert missing.loc["HR", "A"] == 0.0
     assert missing.loc["Lactate", "A"] == 1.0
     assert missing.loc["FiO2", "B"] == pytest.approx(6 / 8)
-    frequency = eda.measurement_frequency(frame)
-    assert frequency.loc["HR", ("per_patient_day", "A")] == pytest.approx(24.0)
-    assert frequency.loc["FiO2", ("patients_ever_measured", "B")] == pytest.approx(0.5)
+    assert eda.measurements_per_patient_day(frame).loc["HR", "A"] == pytest.approx(24.0)
+    assert eda.patients_ever_measured(frame).loc["FiO2", "B"] == pytest.approx(0.5)
 
 
 def test_hospital_shift_and_unit_fingerprint(frame: pd.DataFrame) -> None:
@@ -75,7 +74,7 @@ def _all_figures(frame: pd.DataFrame, out: Path) -> list[Path]:
     return [
         figures.save(figures.missingness_figure(eda.missingness(frame)), out / "missingness.png"),
         figures.save(
-            figures.frequency_figure(eda.measurement_frequency(frame).replace(0, np.nan)),
+            figures.frequency_figure(eda.measurements_per_patient_day(frame).replace(0, np.nan)),
             out / "frequency.png",
         ),
         figures.save(figures.stay_length_figure(patients), out / "stay.png"),

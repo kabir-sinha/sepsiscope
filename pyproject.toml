@@ -54,6 +54,7 @@ dev = [
     "jupyterlab==4.6.4",
     "mypy==2.4.0",
     "nbstripout==0.9.1",
+    "pandas-stubs==3.0.5.260914",
     "pip-audit==2.10.1",
     "pre-commit==4.6.2",
     "pytest==9.1.1",
@@ -83,7 +84,7 @@ files = ["src"]
 plugins = ["pydantic.mypy"]
 
 [[tool.mypy.overrides]]
-module = ["lightgbm", "lightgbm.*", "sklearn", "sklearn.*", "mlflow", "mlflow.*", "pyarrow", "pyarrow.*", "pandas", "pandas.*"]
+module = ["lightgbm", "lightgbm.*", "sklearn", "sklearn.*", "mlflow", "mlflow.*", "pyarrow", "pyarrow.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]

@@ -61,19 +61,22 @@ def cohort_table(patients: pd.DataFrame) -> pd.DataFrame:
 
 def missingness(df: pd.DataFrame) -> pd.DataFrame:
     """Share of rows where each variable is missing, per hospital (0-1)."""
-    shares = df.groupby("hospital", sort=True)[list(VARIABLES)].agg(lambda s: s.isna().mean())
+    shares = df[list(VARIABLES)].isna().groupby(df["hospital"], sort=True).mean()
     return shares.T.rename_axis("variable")
 
 
-def measurement_frequency(df: pd.DataFrame) -> pd.DataFrame:
-    """Per variable and hospital: measurements per patient-day, share of patients ever measured."""
+def measurements_per_patient_day(df: pd.DataFrame) -> pd.DataFrame:
+    """Per variable (rows) and hospital (columns A, B): measurements per patient-day."""
     observed = df[list(MEASUREMENTS)].notna()
     per_day = observed.groupby(df["hospital"], sort=True).mean().T * 24
-    ever = observed.groupby(df["pid"], sort=True).any()
+    return per_day.rename_axis("variable")
+
+
+def patients_ever_measured(df: pd.DataFrame) -> pd.DataFrame:
+    """Per variable and hospital: share of patients with at least one measurement."""
+    ever = df[list(MEASUREMENTS)].notna().groupby(df["pid"], sort=True).any()
     hospital_of = df.groupby("pid", sort=True)["hospital"].first()
-    ever_share = ever.groupby(hospital_of, sort=True).mean().T
-    out = pd.concat({"per_patient_day": per_day, "patients_ever_measured": ever_share}, axis=1)
-    return out.rename_axis("variable")
+    return ever.groupby(hospital_of, sort=True).mean().T.rename_axis("variable")
 
 
 def js_divergence(a: np.ndarray, b: np.ndarray, bins: int = 50) -> float:
