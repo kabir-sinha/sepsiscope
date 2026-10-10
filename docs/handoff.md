@@ -48,6 +48,47 @@ All four are done and pushed. Open pull requests: none (#1 closed, #2 merged).
 - [x] **Close-out 6:** "Open items" section added; ten commits pushed after a clean privacy
   scan (`dfad15b..c92c9c5`); CI green on `c92c9c5`: run `38028938070` (jobs `python` and `web`).
 
+## Paused on 2026-10-10: exactly where things stand
+
+- **Last code commit before this note:** `8526542` (`test: block DNS and connect_ex in the
+  network guard, allow AF_UNIX`). Working tree clean.
+- **Download:** 30,651 of 40,336 files on disk when paused (set A 20,336 of 20,336,
+  set B 10,315 of 20,000), in the git-ignored `data/raw/`. The background download was
+  still running and may finish or be killed; either is fine because it is resumable.
+- **Not run yet:** `sepsiscope data verify`, `data build`, `data splits`. No real-data
+  result exists yet, so nothing about the fingerprint is confirmed.
+- **Phase 1 tasks done:** P1-9 (vendored scorer) and P1-11 (Phase 0 leftovers).
+- **Code written, tested on synthetic data and committed, but not yet run on real data**
+  (so not ticked): P1-1 downloader, P1-2 verify, P1-3 build, P1-4 cleaning rules,
+  P1-5 schemas, P1-6 splits code, most of P1-10 tests, the EDA functions, figure code
+  and notebook for P1-8. 133 tests pass with the network blocked.
+- **Dependencies added with approval:** `defusedxml==0.7.1` (runtime),
+  `types-defusedxml` and `pandas-stubs==3.0.5.260914` (dev).
+
+### Next three steps
+
+1. Re-run `uv run sepsiscope data download`. It resumes, re-checks the size and MD5 of
+   every file (including those fetched earlier), removes stale temp files and writes
+   `data/raw/MANIFEST.json`. Record the manifest SHA-256 in `docs/data_manifest.md`.
+2. Run `uv run sepsiscope data verify` and compare with the expected fingerprint. On any
+   mismatch: stop and show expected vs observed.
+3. Stage 2 on real data: `data build`; check observed distributions against each cleaning
+   bound; ADR 0013 (stratified splits) and ADR 0014 (cleaning bounds, with per-hospital
+   counts and the values just outside each bound); `data splits`; then tick P1-1 to P1-6.
+
+### Pending
+
+- **16 local commits are not pushed.** The push waits for the Stage 3 privacy scan.
+- Still to write: `docs/data_manifest.md`, `docs/data_card.md` (include Age 90+ coded as
+  100 as a de-identification quirk; Age stays uncapped), `docs/eda_findings.md`, the
+  figures, a CHANGELOG entry for Phase 1, and the `docs/ai_assistance.md` Phase 1 row.
+- Cleaning-rule reasons in `src/sepsiscope/data/clean.py` are provisional until checked
+  against the real distributions.
+- Commit `b4ac7f6` also contains `build.py`, although its title mentions only cleaning
+  and schemas.
+- Evidence report (P1-13): Pollard et al. 2026 (Nature Health 1(8):792-795) is verified on
+  Crossref and on the PhysioNet page; cite it alongside Goldberger 2000.
+
 ## Phase 1 checklist
 
 No models are trained in this phase.
