@@ -2,7 +2,7 @@
 
 State of the work, so anyone can pick it up from the repository alone.
 
-## Phase 0 fully closed, ready for Phase 1
+## Phase 0 closed. Next: Phase 1.
 
 - Repository `kabir-sinha/sepsiscope` is **private**; default branch `main`.
 - First CI run is green: run `38003153138` (jobs `python` and `web`). After the four
@@ -45,8 +45,8 @@ All four are done and pushed. Open pull requests: none (#1 closed, #2 merged).
   runs in a row; ruff and mypy clean; `pre-commit run --all-files` clean; web `npm ci`, lint
   and build clean; pip-audit and npm audit report no vulnerabilities; full-history privacy
   scan (100 blobs, 28 commits) clean. No files changed.
-- [ ] **Close-out 6:** add an "Open items" section here, then push after a privacy scan
-  and record the CI result. _Not started._
+- [x] **Close-out 6:** "Open items" section added; ten commits pushed after a clean privacy
+  scan (`dfad15b..c92c9c5`); CI green on `c92c9c5`: run `38028938070` (jobs `python` and `web`).
 
 ## Open items (carried into later phases)
 
