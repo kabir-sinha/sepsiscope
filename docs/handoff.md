@@ -2,7 +2,7 @@
 
 State of the work, so anyone can pick it up from the repository alone.
 
-## Phase 0 closed. Next: Phase 1.
+## Phase 0 closed. Phase 1 in progress (see the Phase 1 checklist).
 
 - Repository `kabir-sinha/sepsiscope` is **private**; default branch `main`.
 - First CI run is green: run `38003153138` (jobs `python` and `web`). After the four
@@ -47,6 +47,24 @@ All four are done and pushed. Open pull requests: none (#1 closed, #2 merged).
   scan (100 blobs, 28 commits) clean. No files changed.
 - [x] **Close-out 6:** "Open items" section added; ten commits pushed after a clean privacy
   scan (`dfad15b..c92c9c5`); CI green on `c92c9c5`: run `38028938070` (jobs `python` and `web`).
+
+## Phase 1 checklist
+
+No models are trained in this phase.
+
+- [ ] **P1-1:** downloader (`sepsiscope data download`): S3 listing, resumable, size + MD5 checks, manifest summary. _Not started._
+- [ ] **P1-2:** verify (`sepsiscope data verify`): recompute the fingerprint, fail loudly on mismatch. _Not started._
+- [ ] **P1-3:** build (`sepsiscope data build`): raw Parquet with pid, hospital, t + 41 original columns. _Not started._
+- [ ] **P1-4:** cleaning rules table, clean Parquet, `reports/data/cleaning_report.json`. _Not started._
+- [ ] **P1-5:** pandera schemas for raw and clean, validated in `data build`. _Not started._
+- [ ] **P1-6:** splits (`sepsiscope data splits`): 60/20/20 by patient, seed 42, stratified; ADR. _Not started._
+- [ ] **P1-7:** data card (`docs/data_card.md`). _Not started._
+- [ ] **P1-8:** EDA notebook, figures, `docs/eda_findings.md`. _Not started._
+- [ ] **P1-9:** vendor the official scorer into `third_party/physionet_eval/` with licence and example test. _Not started._
+- [ ] **P1-10:** tests (mocked HTTP, fixture fingerprint, cleaning, schema, splits, Parquet round-trip, `data` marker). _Not started._
+- [ ] **P1-11:** Phase 0 leftovers: qSOFA Box 4 citation; explain the `ruff format` file count. _Not started._
+- [ ] **P1-12:** close the build: full Definition of Done, no data in git, push after scan, CI. _Not started._
+- [ ] **P1-13:** Milestone 2 evidence report, Parts A-F, delivered outside the repository (no files). _Not started._
 
 ## Open items (carried into later phases)
 
