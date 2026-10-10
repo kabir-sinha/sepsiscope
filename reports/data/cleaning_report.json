@@ -1,0 +1,251 @@
+{
+ "dataset": "PhysioNet/CinC Challenge 2019 v1.0.0",
+ "note": "Values outside [low, high] are set to missing. Bounds are conservative plausibility limits chosen for this project, not clinical standards.",
+ "rules": [
+  {
+   "column": "HR",
+   "low": 20,
+   "high": 300,
+   "unit": "beats/min",
+   "reason": "Guard only: observed range is 20-280, nothing is removed."
+  },
+  {
+   "column": "O2Sat",
+   "low": 20,
+   "high": 100,
+   "unit": "%",
+   "reason": "Guard only: observed range is 20-100, nothing is removed."
+  },
+  {
+   "column": "Temp",
+   "low": 25,
+   "high": 45,
+   "unit": "deg C",
+   "reason": "Removes readings near room temperature (20.9-23.6) and two of exactly 50.0; the lowest value kept is 26.6 and the highest is 42.2."
+  },
+  {
+   "column": "SBP",
+   "low": 20,
+   "high": 300,
+   "unit": "mm Hg",
+   "reason": "Guard only: observed range is 20-300, nothing is removed."
+  },
+  {
+   "column": "MAP",
+   "low": 10,
+   "high": 300,
+   "unit": "mm Hg",
+   "reason": "Guard only: observed range is 20-300, nothing is removed."
+  },
+  {
+   "column": "DBP",
+   "low": 5,
+   "high": 250,
+   "unit": "mm Hg",
+   "reason": "Removes diastolic readings of 251-300, which are above the 99.99th percentile (196); in 13 of the 53 rows it is higher than the systolic value on the same row."
+  },
+  {
+   "column": "Resp",
+   "low": 1,
+   "high": 80,
+   "unit": "breaths/min",
+   "reason": "Removes rates of 81-100, above the 99.99th percentile (60); the lower bound removes nothing (observed minimum is 1)."
+  },
+  {
+   "column": "FiO2",
+   "low": 0.21,
+   "high": 1.0,
+   "unit": "fraction",
+   "reason": "Stored as a fraction: room air is 0.21 and pure oxygen is 1.0. Values outside cannot be inspired-oxygen fractions; no values lie in 21-100, so they are not percentages and are not divided by 100."
+  },
+  {
+   "column": "pH",
+   "low": 6.5,
+   "high": 8.0,
+   "unit": "pH",
+   "reason": "Guard only: observed range is 6.62-7.93, nothing is removed."
+  }
+ ],
+ "counts": [
+  {
+   "column": "HR",
+   "low": 20,
+   "high": 300,
+   "hospital": "A",
+   "non_missing_before": 729026,
+   "below_low": 0,
+   "above_high": 0,
+   "set_to_missing": 0
+  },
+  {
+   "column": "HR",
+   "low": 20,
+   "high": 300,
+   "hospital": "B",
+   "non_missing_before": 669785,
+   "below_low": 0,
+   "above_high": 0,
+   "set_to_missing": 0
+  },
+  {
+   "column": "O2Sat",
+   "low": 20,
+   "high": 100,
+   "hospital": "A",
+   "non_missing_before": 695136,
+   "below_low": 0,
+   "above_high": 0,
+   "set_to_missing": 0
+  },
+  {
+   "column": "O2Sat",
+   "low": 20,
+   "high": 100,
+   "hospital": "B",
+   "non_missing_before": 654338,
+   "below_low": 0,
+   "above_high": 0,
+   "set_to_missing": 0
+  },
+  {
+   "column": "Temp",
+   "low": 25,
+   "high": 45,
+   "hospital": "A",
+   "non_missing_before": 266901,
+   "below_low": 4,
+   "above_high": 0,
+   "set_to_missing": 4
+  },
+  {
+   "column": "Temp",
+   "low": 25,
+   "high": 45,
+   "hospital": "B",
+   "non_missing_before": 258325,
+   "below_low": 0,
+   "above_high": 2,
+   "set_to_missing": 2
+  },
+  {
+   "column": "SBP",
+   "low": 20,
+   "high": 300,
+   "hospital": "A",
+   "non_missing_before": 670014,
+   "below_low": 0,
+   "above_high": 0,
+   "set_to_missing": 0
+  },
+  {
+   "column": "SBP",
+   "low": 20,
+   "high": 300,
+   "hospital": "B",
+   "non_missing_before": 655931,
+   "below_low": 0,
+   "above_high": 0,
+   "set_to_missing": 0
+  },
+  {
+   "column": "MAP",
+   "low": 10,
+   "high": 300,
+   "hospital": "A",
+   "non_missing_before": 709357,
+   "below_low": 0,
+   "above_high": 0,
+   "set_to_missing": 0
+  },
+  {
+   "column": "MAP",
+   "low": 10,
+   "high": 300,
+   "hospital": "B",
+   "non_missing_before": 649583,
+   "below_low": 0,
+   "above_high": 0,
+   "set_to_missing": 0
+  },
+  {
+   "column": "DBP",
+   "low": 5,
+   "high": 250,
+   "hospital": "A",
+   "non_missing_before": 409918,
+   "below_low": 0,
+   "above_high": 6,
+   "set_to_missing": 6
+  },
+  {
+   "column": "DBP",
+   "low": 5,
+   "high": 250,
+   "hospital": "B",
+   "non_missing_before": 655738,
+   "below_low": 0,
+   "above_high": 47,
+   "set_to_missing": 47
+  },
+  {
+   "column": "Resp",
+   "low": 1,
+   "high": 80,
+   "hospital": "A",
+   "non_missing_before": 712957,
+   "below_low": 0,
+   "above_high": 0,
+   "set_to_missing": 0
+  },
+  {
+   "column": "Resp",
+   "low": 1,
+   "high": 80,
+   "hospital": "B",
+   "non_missing_before": 600918,
+   "below_low": 0,
+   "above_high": 50,
+   "set_to_missing": 50
+  },
+  {
+   "column": "FiO2",
+   "low": 0.21,
+   "high": 1.0,
+   "hospital": "A",
+   "non_missing_before": 112155,
+   "below_low": 319,
+   "above_high": 2,
+   "set_to_missing": 321
+  },
+  {
+   "column": "FiO2",
+   "low": 0.21,
+   "high": 1.0,
+   "hospital": "B",
+   "non_missing_before": 17210,
+   "below_low": 46,
+   "above_high": 28,
+   "set_to_missing": 74
+  },
+  {
+   "column": "pH",
+   "low": 6.5,
+   "high": 8.0,
+   "hospital": "A",
+   "non_missing_before": 90615,
+   "below_low": 0,
+   "above_high": 0,
+   "set_to_missing": 0
+  },
+  {
+   "column": "pH",
+   "low": 6.5,
+   "high": 8.0,
+   "hospital": "B",
+   "non_missing_before": 16958,
+   "below_low": 0,
+   "above_high": 0,
+   "set_to_missing": 0
+  }
+ ]
+}
