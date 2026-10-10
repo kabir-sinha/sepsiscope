@@ -99,3 +99,42 @@ def write_splits(data_dir: Path, splits_dir: Path, seed: int) -> dict[str, dict[
         write_split(splits_dir / f"hospital_{hospital}.json", document)
         documents[hospital] = document
     return documents
+
+
+FIGURE_FILES: dict[str, str] = {
+    "missingness": "eda_missingness.png",
+    "frequency": "eda_measurement_frequency.png",
+    "stay_length": "eda_stay_length.png",
+    "label_timing": "eda_label_timing.png",
+    "shift": "eda_hospital_shift.png",
+    "units": "eda_unit_fingerprint.png",
+}
+
+
+def run_eda(data_dir: Path, figures_dir: Path | None = None) -> dict[str, pd.DataFrame]:
+    """Compute every EDA summary from the clean table; optionally write the figures."""
+    from sepsiscope.data import eda, figures
+
+    frame = to_frame(read_parquet(data_dir / CLEAN_PARQUET))
+    patients = eda.patient_table(frame)
+    tables = {
+        "patients": patients,
+        "cohort": eda.cohort_table(patients),
+        "missingness": eda.missingness(frame),
+        "frequency": eda.measurement_frequency(frame),
+        "shift": eda.hospital_shift(frame),
+        "units": eda.unit_fingerprint(frame),
+        "unit_rule_accuracy": pd.DataFrame({"accuracy": [eda.unit_rule_accuracy(frame)]}),
+    }
+    if figures_dir is not None:
+        made = {
+            "missingness": figures.missingness_figure(tables["missingness"]),
+            "frequency": figures.frequency_figure(tables["frequency"]),
+            "stay_length": figures.stay_length_figure(patients),
+            "label_timing": figures.label_timing_figure(patients),
+            "shift": figures.shift_figure(tables["shift"]),
+            "units": figures.unit_figure(tables["units"]),
+        }
+        for name, fig in made.items():
+            figures.save(fig, figures_dir / FIGURE_FILES[name])
+    return tables
