@@ -8,6 +8,7 @@ import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
+from sepsiscope.config import REPO_ROOT
 from sepsiscope.data.splits import (
     FRACTIONS,
     PARTS,
@@ -85,3 +86,24 @@ def test_document_round_trip(tmp_path: Path) -> None:
     write_split(path, document)
     assert read_split(path) == document
     assert set(document) >= {"hospital", "seed", "fractions", "stratified_by", *PARTS}
+
+
+@pytest.mark.parametrize(
+    ("hospital", "patients", "septic"), [("A", 20_336, 1_790), ("B", 20_000, 1_142)]
+)
+def test_committed_split_files(hospital: str, patients: int, septic: int) -> None:
+    """The files in splits/ are complete, disjoint and match the frozen fingerprint."""
+    document = read_split(REPO_ROOT / "splits" / f"hospital_{hospital}.json")
+    assert (document["hospital"], document["seed"]) == (hospital, 42)
+    parts = {name: document[name] for name in PARTS}
+    everyone = [pid for name in PARTS for pid in parts[name]]
+    assert len(everyone) == len(set(everyone)) == patients
+    prefix = "p0" if hospital == "A" else "p1"
+    assert all(pid.startswith(prefix) and len(pid) == 7 for pid in everyone)
+    counts = document["counts"]
+    assert isinstance(counts, dict)
+    assert sum(c["septic"] for c in counts.values()) == septic
+    for name, fraction in zip(PARTS, FRACTIONS, strict=True):
+        assert counts[name]["patients"] == len(parts[name])
+        assert abs(counts[name]["patients"] - patients * fraction) < 1
+        assert abs(counts[name]["septic"] - septic * fraction) < 1

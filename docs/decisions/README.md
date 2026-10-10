@@ -18,3 +18,5 @@ A decision is changed by a new ADR that supersedes it, never by editing history.
 | [0010](0010-frontend-scaffold.md) | Vite react-ts template, pins untouched | Accepted |
 | [0011](0011-protocol-citation-amendment.md) | Protocol amendment: citations only | Accepted |
 | [0012](0012-protocol-qsofa-citation.md) | Protocol amendment: qSOFA citation only | Accepted |
+| [0013](0013-stratified-patient-splits.md) | Patient-level splits are stratified by the septic flag | Accepted |
+| [0014](0014-cleaning-plausibility-bounds.md) | Cleaning: conservative plausibility bounds | Accepted |
