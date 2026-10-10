@@ -93,8 +93,8 @@ All four are done and pushed. Open pull requests: none (#1 closed, #2 merged).
 
 No models are trained in this phase.
 
-- [ ] **P1-1:** downloader (`sepsiscope data download`): S3 listing, resumable, size + MD5 checks, manifest summary. _Not started._
-- [ ] **P1-2:** verify (`sepsiscope data verify`): recompute the fingerprint, fail loudly on mismatch. _Not started._
+- [x] **P1-1:** downloader (`sepsiscope data download`): S3 listing, resumable, size + MD5 checks, manifest summary. All 40,336 files downloaded and verified by size and MD5 (code fc39560, manifest summary 45159b6).
+- [x] **P1-2:** verify (`sepsiscope data verify`): recompute the fingerprint, fail loudly on mismatch. Real data: all 28 checks match (code 8af0c9b).
 - [ ] **P1-3:** build (`sepsiscope data build`): raw Parquet with pid, hospital, t + 41 original columns. _Not started._
 - [ ] **P1-4:** cleaning rules table, clean Parquet, `reports/data/cleaning_report.json`. _Not started._
 - [ ] **P1-5:** pandera schemas for raw and clean, validated in `data build`. _Not started._
