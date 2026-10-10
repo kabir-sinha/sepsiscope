@@ -40,8 +40,22 @@ All four are done and pushed. Open pull requests: none (#1 closed, #2 merged).
   (an earlier note said page 10).
 - [x] **Close-out 3:** `ignore` rule for `@types/node` semver-major updates added (0c1b915).
 - [x] **Close-out 4:** state table in `docs/ops.md` refreshed (e82bbf1).
+- [x] **Close-out 5:** Definition of Done re-run on 2026-10-10, all green: `uv sync --locked`;
+  `doctor` PASS (OpenMP OK, telemetry off, nothing personal printed); pytest 48 passed, three
+  runs in a row; ruff and mypy clean; `pre-commit run --all-files` clean; web `npm ci`, lint
+  and build clean; pip-audit and npm audit report no vulnerabilities; full-history privacy
+  scan (100 blobs, 28 commits) clean. No files changed.
 - [ ] **Close-out 6:** add an "Open items" section here, then push after a privacy scan
   and record the CI result. _Not started._
+
+## Open items (carried into later phases)
+
+- Vendor the official `evaluate_sepsis_score.py` into `third_party/` together with its
+  BSD-2-Clause licence file (`LICENSE.txt` in the upstream repository). Phase 1 or 2.
+- Branch protection for `main`: pending. The exact
+  rules are in `docs/ops.md`.
+- Ubuntu runner: CI is pinned to `ubuntu-24.04`; upgrade deliberately later through a
+  pull request (see `docs/ops.md`).
 
 ## Next after these
 
