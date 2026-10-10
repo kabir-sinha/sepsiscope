@@ -135,7 +135,8 @@ The two columns are never both 1 and are always missing together. Their missingn
 differs by 19 points between hospitals. Guessing a patient's hospital from "unit missing or
 not" alone is right **58.1 %** of the time (against 50.4 % for always guessing A), so the
 unit columns leak the hospital only weakly by themselves. `ICULOS` is a stronger marker of
-recording practice: it starts at 1 for 93.5 % of B's patients but only 63.1 % of A's. These
+recording practice: it starts at 1 for 93.5 % of B's patients but only 63.1 % of A's, and
+the same kind of one-rule guess from it is right 65.0 % of the time (ADR 0015). These
 four columns (`Unit1`, `Unit2`, `ICULOS`, `HospAdmTime`) stay out of the main model and
 are added back only in an ablation, as the protocol says.
 
