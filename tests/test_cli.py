@@ -22,7 +22,7 @@ def test_version() -> None:
     assert result.stdout.strip() == __version__
 
 
-@pytest.mark.parametrize("args", [["data", "download"], ["train"], ["evaluate"], ["report"]])
+@pytest.mark.parametrize("args", [["train"], ["evaluate"], ["report"]])
 def test_stubs(args: list[str]) -> None:
     result = runner.invoke(app, args)
     assert result.exit_code == 0

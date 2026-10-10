@@ -104,10 +104,55 @@ def doctor() -> None:
         raise typer.Exit(code=1)
 
 
+def _raw_root() -> Path:
+    from sepsiscope.config import load_config
+
+    return REPO_ROOT / load_config().paths.data_dir / "raw"
+
+
 @data_app.command("download")
 def data_download() -> None:
-    """Download PhysioNet/CinC 2019 (Phase 1)."""
-    typer.echo(NOT_IMPLEMENTED)
+    """Download PhysioNet/CinC 2019 from the official public S3 bucket (resumable)."""
+    from sepsiscope.data.download import DownloadError, download_all
+
+    typer.echo("listing and downloading from the official PhysioNet S3 bucket ...")
+    try:
+        report, manifest_sha = download_all(_raw_root())
+    except DownloadError as exc:
+        typer.echo(f"download FAILED: {exc}")
+        raise typer.Exit(code=1) from exc
+    typer.echo(f"listed files        {report.listed}")
+    typer.echo(f"downloaded now      {report.downloaded}")
+    typer.echo(f"already present     {report.already_present}")
+    typer.echo(f"other keys ignored  {len(report.skipped_keys)}")
+    typer.echo(f"not MD5-verifiable  {len(report.unverifiable)}")
+    typer.echo(f"seconds             {report.seconds:.1f}")
+    typer.echo(f"manifest sha256     {manifest_sha}")
+
+
+@data_app.command("verify")
+def data_verify() -> None:
+    """Recompute the dataset fingerprint from the raw files; fail on any mismatch."""
+    from sepsiscope.data.fingerprint import compare, compute_fingerprints
+    from sepsiscope.data.io import RawDataError
+
+    try:
+        observed = compute_fingerprints(_raw_root())
+    except RawDataError as exc:
+        typer.echo(f"verify FAILED: {exc}")
+        raise typer.Exit(code=1) from exc
+    checks = compare(observed)
+    typer.echo(f"{'scope':<5} {'check':<24} {'expected':>10} {'observed':>10}  result")
+    for c in checks:
+        result = "ok" if c.ok else "MISMATCH"
+        typer.echo(f"{c.scope:<5} {c.name:<24} {c.expected:>10,} {c.observed:>10,}  {result}")
+    for scope in ("A", "B"):
+        fp = observed[scope]
+        typer.echo(f"{scope:<5} unit_missing_share       {fp.unit_missing / fp.rows:>21.4f}  info")
+    failed = [c for c in checks if not c.ok]
+    typer.echo("fingerprint     " + ("PASS" if not failed else f"FAIL ({len(failed)} mismatches)"))
+    if failed:
+        raise typer.Exit(code=1)
 
 
 @app.command()
