@@ -12,7 +12,9 @@ repos:
         args: ["--maxkb=1000"]
       - id: detect-private-key
       - id: end-of-file-fixer
+        exclude: ^third_party/  # vendored files stay byte-identical
       - id: trailing-whitespace
+        exclude: ^third_party/  # vendored files stay byte-identical
       - id: check-yaml
       - id: check-toml
       - id: check-merge-conflict
