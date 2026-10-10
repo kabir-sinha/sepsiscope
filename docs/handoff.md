@@ -39,9 +39,7 @@ All four are done and pushed. Open pull requests: none (#1 closed, #2 merged).
   full text; row counts verified in Table 2 of `manuscript.pdf`, on printed page 11
   (an earlier note said page 10).
 - [x] **Close-out 3:** `ignore` rule for `@types/node` semver-major updates added (0c1b915).
-- [ ] **Close-out 4:** refresh the state table in `docs/ops.md`. _Not started._
-- [ ] **Close-out 5:** re-run the full Phase 0 Definition of Done and record the results.
-  _Not started._
+- [x] **Close-out 4:** state table in `docs/ops.md` refreshed (e82bbf1).
 - [ ] **Close-out 6:** add an "Open items" section here, then push after a privacy scan
   and record the CI result. _Not started._
 
