@@ -83,7 +83,7 @@ files = ["src"]
 plugins = ["pydantic.mypy"]
 
 [[tool.mypy.overrides]]
-module = ["lightgbm", "lightgbm.*", "sklearn", "sklearn.*", "mlflow", "mlflow.*", "pyarrow", "pyarrow.*"]
+module = ["lightgbm", "lightgbm.*", "sklearn", "sklearn.*", "mlflow", "mlflow.*", "pyarrow", "pyarrow.*", "pandas", "pandas.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
