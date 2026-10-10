@@ -7,13 +7,22 @@
 | Repository | `kabir-sinha/sepsiscope`, **Private**, default branch `main` |
 | Created with | `gh repo create --private --source=. --remote=origin --push --disable-wiki` |
 | Features | Issues on; Wiki, Projects and Discussions off; delete head branch on merge on |
+| Auth method | GitHub CLI `gh` OAuth token in gh's credential store (details below); no PAT created |
 | Dependabot alerts | **Enabled** (`PUT /repos/{owner}/{repo}/vulnerability-alerts` accepted) |
 | Dependabot security updates | **Enabled** (`GET .../automated-security-fixes` returned `enabled: true`) |
-| Dependabot version updates | Enabled by `.github/dependabot.yml` (first PRs opened the same day) |
+| Dependabot version updates | `uv`, `npm` and `github-actions`, weekly; major updates of `typescript` and `@types/node` are ignored on purpose |
+| PR #1 (TypeScript 7.0.2) | **Closed** with `@dependabot ignore this major version`; the project stays on TypeScript ~6.0 |
+| PR #2 (`@types/node` 26.6.4) | **Merged** as `56a5bdb`, so the types match the Node 26 runtime in `web/.nvmrc` |
+| Open pull requests | None |
+| CI runner | Both jobs pinned to `ubuntu-24.04` (see the CI runner note) |
+| Latest green CI run | `38004754410` on `dfad15b` (jobs `python` and `web`); newer runs are in the Actions tab |
 | Watching | All Activity (`subscribed: true`, `ignored: false`) |
 | Collaborators | Only `kabir-sinha` (admin) |
-| Branch protection | **Pending** (see below) |
-| First CI run | Success on `main`; check names `python` and `web` |
+| Branch protection | **Pending**; rules below, to apply when enabled |
+
+Commit history: every commit is authored by the project's GitHub noreply address, except
+the merged Dependabot PR `56a5bdb`, whose author is `dependabot[bot]` (GitHub's bot
+identity, not personal data).
 
 Pre-push check: the full history was scanned three ways (git grep over every commit, every
 blob object, and a fresh clone including image metadata) for the macOS username, home
