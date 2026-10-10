@@ -2,7 +2,7 @@
 
 State of the work, so anyone can pick it up from the repository alone.
 
-## Phase 1 build closed. Task 13 (M2 evidence report) pending.
+## Phase 1 closed. M2 evidence report delivered (2026-10-10). Next: Phase 2.
 
 - Repository `kabir-sinha/sepsiscope` is **private**; default branch `main`.
 - First CI run is green: run `38003153138` (jobs `python` and `web`). After the four
@@ -66,7 +66,7 @@ No models are trained in this phase.
   Markdown files as well as Python files (it formats Python code blocks in Markdown), which
   explains the higher count; nothing unintended is included, no config change.
 - [x] **P1-12:** close the build: full Definition of Done, no data in git, push after scan, CI. Definition of Done green (137 tests ×3, clean clone 136 passed and 1 skipped, ruff, mypy, pre-commit, web build, audits); full-history scan clean; no data in git; 27 commits pushed (`52e271d..f71483a`); CI green on `f71483a`: run `38070758706`.
-- [ ] **P1-13:** Milestone 2 evidence report, Parts A-F, delivered outside the repository (no files). _Not started._
+- [x] **P1-13:** Milestone 2 evidence report, Parts A-F, delivered outside the repository (no files). Delivered on 2026-10-10, Parts A to F; no files were created for it.
 
 ## Phase 1 critique log
 
