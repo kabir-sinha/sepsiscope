@@ -35,8 +35,9 @@ All four are done and pushed. Open pull requests: none (#1 closed, #2 merged).
 
 - [x] **Close-out 1:** fetched; local `main` was 0 behind `origin/main` (`dfad15b`) and
   contains the PR #2 merge `56a5bdb`; no fast-forward needed.
-- [ ] **Close-out 2:** citations in `docs/protocol.md`: SIRS (Sepsis-3, Box 1, keeping
-  Bone 1992) and the paper's row counts (Reyna et al., Table 2). _Not started._
+- [x] **Close-out 2:** citations amended (c2c2892, ADR 0011): Sepsis-3 Box 1 verified in the
+  full text; row counts verified in Table 2 of `manuscript.pdf`, on printed page 11
+  (an earlier note said page 10).
 - [ ] **Close-out 3:** Dependabot `ignore` rule for `@types/node` semver-major updates.
   _Not started._
 - [ ] **Close-out 4:** refresh the state table in `docs/ops.md`. _Not started._
