@@ -1,6 +1,6 @@
 # 0011 — Protocol amendment: citations only
 
-**Date:** 2026-10-11 · **Status:** Accepted
+**Date:** 2026-10-10 · **Status:** Accepted
 
 ## Context
 `docs/protocol.md` is frozen (ADR 0007). Two references in it were imprecise: the SIRS
@@ -20,7 +20,7 @@ No dataset, label, split, metric, threshold, baseline or ablation changed.
 Leave the imprecise citations: rejected, every claim should be traceable for the viva.
 
 ## Consequences
-Both references were checked against the primary sources on 2026-10-11 (the Sepsis-3
+Both references were checked against the primary sources on 2026-10-10 (the Sepsis-3
 full text via NCBI E-utilities, PMC4968574, and the text of `manuscript.pdf`).
 
 ## Sources

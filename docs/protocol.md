@@ -1,7 +1,7 @@
 # SepsiScope evaluation protocol (frozen)
 
 **Status:** frozen on 2026-10-10, before any data was downloaded or any model trained.
-Citations were made more precise on 2026-10-11 (ADR 0011); no method changed.
+Citations were made more precise on 2026-10-10 (ADR 0011); no method changed.
 Any change after this date needs a new ADR in `docs/decisions/` that explains why, and
 results must be reported under both the old and the new protocol. This exists so results
 cannot be cherry-picked after seeing them.
