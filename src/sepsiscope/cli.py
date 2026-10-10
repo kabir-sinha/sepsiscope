@@ -155,6 +155,50 @@ def data_verify() -> None:
         raise typer.Exit(code=1)
 
 
+@data_app.command("build")
+def data_build() -> None:
+    """Build the raw and clean Parquet tables, validate both, write the cleaning report."""
+    from sepsiscope.config import load_config
+    from sepsiscope.data.pipeline import build_all
+    from sepsiscope.data.schema import DataSchemaError
+
+    cfg = load_config()
+    try:
+        result = build_all(
+            _raw_root(), REPO_ROOT / cfg.paths.data_dir, REPO_ROOT / cfg.paths.reports_dir
+        )
+    except DataSchemaError as exc:
+        typer.echo(f"build FAILED schema validation: {str(exc)[:500]}")
+        raise typer.Exit(code=1) from exc
+    typer.echo(f"rows                  {result.rows:,}")
+    typer.echo(f"patients              {result.patients:,}")
+    typer.echo(f"raw parquet           {result.raw_path.relative_to(REPO_ROOT)} (schema OK)")
+    typer.echo(f"clean parquet         {result.clean_path.relative_to(REPO_ROOT)} (schema OK)")
+    typer.echo(f"values set to missing {result.values_set_to_missing:,}")
+    typer.echo(f"cleaning report       {result.report_path.relative_to(REPO_ROOT)}")
+
+
+@data_app.command("splits")
+def data_splits() -> None:
+    """Write the patient-level 60/20/20 stratified split files for hospitals A and B."""
+    from sepsiscope.config import load_config
+    from sepsiscope.data.pipeline import write_splits
+
+    cfg = load_config()
+    documents = write_splits(
+        REPO_ROOT / cfg.paths.data_dir, REPO_ROOT / cfg.paths.splits_dir, cfg.seed
+    )
+    for hospital, document in documents.items():
+        counts = document["counts"]
+        assert isinstance(counts, dict)
+        for part, c in counts.items():
+            rate = c["septic"] / c["patients"]
+            typer.echo(
+                f"{hospital} {part:<12} patients {c['patients']:>6,}  "
+                f"septic {c['septic']:>5,}  rate {rate:.4f}"
+            )
+
+
 @app.command()
 def train() -> None:
     """Train models (later phase)."""

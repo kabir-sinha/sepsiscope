@@ -39,6 +39,7 @@ class Paths(_Strict):
     models_dir: RelPath
     mlruns_dir: RelPath
     reports_dir: RelPath
+    splits_dir: RelPath
 
 
 class FeatureSwitches(_Strict):

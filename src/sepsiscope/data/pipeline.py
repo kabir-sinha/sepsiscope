@@ -1,0 +1,101 @@
+"""Orchestration for `sepsiscope data build` and `sepsiscope data splits`."""
+
+from __future__ import annotations
+
+import json
+from dataclasses import asdict, dataclass
+from pathlib import Path
+
+import pandas as pd
+import pyarrow as pa
+
+from sepsiscope.data.build import (
+    CLEAN_PARQUET,
+    RAW_PARQUET,
+    build_raw_table,
+    parquet_schema,
+    read_parquet,
+    write_parquet,
+)
+from sepsiscope.data.clean import RULES, apply_rules
+from sepsiscope.data.schema import validate_clean, validate_raw
+from sepsiscope.data.splits import split_document, write_split
+
+CLEANING_REPORT = Path("data") / "cleaning_report.json"
+
+
+@dataclass(frozen=True)
+class BuildResult:
+    rows: int
+    patients: int
+    raw_path: Path
+    clean_path: Path
+    report_path: Path
+    values_set_to_missing: int
+
+
+def to_frame(table: pa.Table) -> pd.DataFrame:
+    return table.to_pandas()
+
+
+def to_table(frame: pd.DataFrame) -> pa.Table:
+    table = pa.Table.from_pandas(frame, schema=parquet_schema(), preserve_index=False)
+    return table.replace_schema_metadata(None)
+
+
+def cleaning_report(rows: list[dict[str, object]]) -> dict[str, object]:
+    """Counts only: safe to commit (no patient-level values)."""
+    return {
+        "dataset": "PhysioNet/CinC Challenge 2019 v1.0.0",
+        "note": (
+            "Values outside [low, high] are set to missing. Bounds are conservative "
+            "plausibility limits chosen for this project, not clinical standards."
+        ),
+        "rules": [asdict(rule) for rule in RULES],
+        "counts": rows,
+    }
+
+
+def build_all(raw_root: Path, data_dir: Path, reports_dir: Path) -> BuildResult:
+    """Raw files -> raw Parquet -> schema check -> clean Parquet -> schema check -> report."""
+    raw_path, clean_path = data_dir / RAW_PARQUET, data_dir / CLEAN_PARQUET
+    report_path = reports_dir / CLEANING_REPORT
+
+    raw_table = build_raw_table(raw_root).replace_schema_metadata(None)
+    raw_frame = to_frame(raw_table)
+    validate_raw(raw_frame)
+    write_parquet(raw_table, raw_path)
+
+    clean_frame, rows = apply_rules(raw_frame)
+    validate_clean(clean_frame)
+    write_parquet(to_table(clean_frame), clean_path)
+
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.write_text(json.dumps(cleaning_report(rows), indent=1) + "\n", encoding="utf-8")
+    return BuildResult(
+        rows=len(raw_frame),
+        patients=int(raw_frame["pid"].nunique()),
+        raw_path=raw_path,
+        clean_path=clean_path,
+        report_path=report_path,
+        values_set_to_missing=sum(int(str(r["set_to_missing"])) for r in rows),
+    )
+
+
+def septic_flags(frame: pd.DataFrame) -> dict[str, dict[str, bool]]:
+    """Per hospital: patient ID -> ever septic."""
+    flags = frame.groupby(["hospital", "pid"], sort=True)["SepsisLabel"].max() == 1
+    return {
+        str(hospital): {str(pid): bool(v) for (_, pid), v in group.items()}
+        for hospital, group in flags.groupby(level="hospital")
+    }
+
+
+def write_splits(data_dir: Path, splits_dir: Path, seed: int) -> dict[str, dict[str, object]]:
+    frame = read_parquet(data_dir / RAW_PARQUET).select(["pid", "hospital", "SepsisLabel"])
+    documents: dict[str, dict[str, object]] = {}
+    for hospital, flags in septic_flags(frame.to_pandas()).items():
+        document = split_document(hospital, flags, seed)
+        write_split(splits_dir / f"hospital_{hospital}.json", document)
+        documents[hospital] = document
+    return documents

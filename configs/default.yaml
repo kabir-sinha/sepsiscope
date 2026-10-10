@@ -5,6 +5,7 @@ paths:
   models_dir: models
   mlruns_dir: mlruns
   reports_dir: reports
+  splits_dir: splits          # patient-ID split files (committed)
 
 seed: 42
 
