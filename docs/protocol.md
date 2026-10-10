@@ -1,7 +1,7 @@
 # SepsiScope evaluation protocol (frozen)
 
 **Status:** frozen on 2026-10-10, before any data was downloaded or any model trained.
-Citations were made more precise on 2026-10-10 (ADR 0011); no method changed.
+Citations were made more precise on 2026-10-10 (ADRs 0011 and 0012); no method changed.
 Any change after this date needs a new ADR in `docs/decisions/` that explains why, and
 results must be reported under both the old and the new protocol. This exists so results
 cannot be cherry-picked after seeing them.
@@ -102,7 +102,9 @@ and Phase 1 asserts this per patient.
    source: [Bone et al. 1992](https://doi.org/10.1378/chest.101.6.1644).
 3. **Modified qSOFA** (0-2): respiratory rate >= 22/min; systolic BP <= 100 mmHg. Altered
    mentation is not in the data, so the maximum is 2
-   ([Seymour et al. 2016](https://doi.org/10.1001/jama.2016.0288)).
+   (criteria as listed in Singer M, et al., JAMA 2016;315(8):801-810, **Box 4**,
+   [doi:10.1001/jama.2016.0287](https://doi.org/10.1001/jama.2016.0287); derivation and
+   validation in [Seymour et al. 2016](https://doi.org/10.1001/jama.2016.0288)).
 4. **Logistic regression** on the same features as the main model.
 
 ## 8. Ablations
