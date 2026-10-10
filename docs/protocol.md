@@ -1,6 +1,7 @@
 # SepsiScope evaluation protocol (frozen)
 
 **Status:** frozen on 2026-10-10, before any data was downloaded or any model trained.
+Citations were made more precise on 2026-10-11 (ADR 0011); no method changed.
 Any change after this date needs a new ADR in `docs/decisions/` that explains why, and
 results must be reported under both the old and the new protocol. This exists so results
 cannot be cherry-picked after seeing them.
@@ -28,8 +29,12 @@ cannot be cherry-picked after seeing them.
 | Positive rows   | 17,136  | 10,780  |
 | Max stay        | 336 h   | 336 h   |
 
-The file counts match the PhysioNet page. The challenge paper reports 739,663 / 684,508
-rows; **the files are authoritative**, and Phase 1 records the counts it actually finds.
+The file counts match the PhysioNet page. The challenge manuscript reports 739,663 (A) /
+684,508 (B) rows: Reyna MA, et al., Critical Care Medicine 2020 challenge manuscript,
+Table 2 (printed page 11 of
+[`manuscript.pdf`](https://github.com/physionetchallenges/evaluation-2019/blob/master/manuscript.pdf)
+in the official evaluation repository). The actual files contain 790,215 / 761,995 rows;
+**the files are authoritative**, and Phase 1 records the counts it actually finds.
 
 ## 2. Label
 
@@ -90,9 +95,11 @@ and Phase 1 asserts this per patient.
    (for example, a temperature of 35.05 °C scores as 35.1-36.0).
 2. **SIRS** (0-4 criteria): temperature > 38 or < 36 °C; heart rate > 90/min;
    respiratory rate > 20/min or PaCO2 < 32 mmHg; WBC > 12 or < 4 ×10³/µL. The
-   immature-bands criterion is not used (not in the data). Sources:
-   [Bone et al. 1992](https://doi.org/10.1378/chest.101.6.1644) and
-   [Singer et al. 2016 (Sepsis-3)](https://doi.org/10.1001/jama.2016.0287).
+   immature-bands criterion is not used (not in the data). Source: Singer M, et al. "The
+   Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3)."
+   JAMA 2016;315(8):801-810, **Box 1**
+   ([doi:10.1001/jama.2016.0287](https://doi.org/10.1001/jama.2016.0287)). Original SIRS
+   source: [Bone et al. 1992](https://doi.org/10.1378/chest.101.6.1644).
 3. **Modified qSOFA** (0-2): respiratory rate >= 22/min; systolic BP <= 100 mmHg. Altered
    mentation is not in the data, so the maximum is 2
    ([Seymour et al. 2016](https://doi.org/10.1001/jama.2016.0288)).
