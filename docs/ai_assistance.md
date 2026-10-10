@@ -10,4 +10,5 @@ co-author trailer is used.
 
 | Phase | Date | What the assistant did | How it was verified |
 |---|---|---|---|
+| 1 — Data | 2026-10-10 | Downloader, fingerprint check, Parquet build, cleaning rules, schemas, splits, EDA code and figures, data card, vendored scorer, tests | Fingerprint matches on all 28 checks, 136 tests plus a real-data test, byte-identical rebuilds, schema validation, cleaning bounds checked against observed values (ADR 0014), critique log in `docs/handoff.md` |
 | 0 — Foundation | 2026-10-10 | Inventory, environment setup, repo skeleton, tests, hooks, CI, docs | Tests run 3× green, pre-commit clean, privacy hook demo, link check, critique loop (see the Phase 0 report) |

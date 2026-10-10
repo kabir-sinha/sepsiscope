@@ -32,14 +32,18 @@ cd web && npm ci && npm run build
 
 Run the checks: `uv run pytest`, `uv run ruff check .`, `uv run mypy src`.
 
+Get the data (about 320 MB, into the git-ignored `data/` folder) and build the tables:
+`uv run sepsiscope data download`, then `data verify`, `data build` and `data splits`.
+
 Dev servers bind to `http://127.0.0.1`. If a browser's HTTPS-only mode blocks plain-HTTP
 localhost, open the address in a normal window.
 
 ## Documentation
 
 - [Evaluation protocol (frozen)](docs/protocol.md)
+- [Data card](docs/data_card.md) · [EDA findings](docs/eda_findings.md) · [Data manifest](docs/data_manifest.md)
 - [Privacy](docs/privacy.md) · [Operations](docs/ops.md) · [Decisions](docs/decisions/README.md)
-- [Model card](docs/model_card.md) · [TRIPOD+AI](docs/tripod_ai.md)
+- [Model card](docs/model_card.md) · [TRIPOD+AI](docs/tripod_ai.md) · [Changelog](CHANGELOG.md)
 
 ## AI assistance
 

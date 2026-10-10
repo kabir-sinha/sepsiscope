@@ -2,8 +2,15 @@
 
 ## What SepsiScope collects
 
-**Nothing.** The project has no analytics, no accounts, no remote logging and no
-network calls of its own. The API (later phases) binds to `127.0.0.1` only.
+**Nothing.** The project has no analytics, no accounts and no remote logging. The API
+(later phases) binds to `127.0.0.1` only.
+
+**The only network call the project makes** is `sepsiscope data download`, and only when
+you run it: anonymous HTTPS GET requests to the official PhysioNet bucket
+(`physionet-open.s3.amazonaws.com`) to list and fetch the public dataset. It sends no
+credentials and no data about you, refuses any other host, follows no redirects and
+ignores proxy and netrc settings from the environment. Tests cannot use the network at
+all: `tests/conftest.py` blocks DNS lookups and connections at socket level.
 
 ## Where data lives
 
@@ -54,6 +61,7 @@ Checked on 2026-10-10 against each tool's own docs or source.
 - `.env` / `.env.*` files
 - `*.psv` / `*.parquet` anywhere, and `*.csv` under `data/`
 - files over 1 MB (also `check-added-large-files --maxkb=1000`)
+- PNG files that carry text, EXIF or time metadata chunks
 
 `detect-private-key` blocks committed private keys. CI runs the same privacy guard over
 every tracked file, so a commit made with `git commit --no-verify` still fails CI.

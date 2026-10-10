@@ -41,24 +41,35 @@ Commits: author = noreply address, **no `Co-Authored-By` AI trailer**; instead k
 - Telemetry off: `import sepsiscope` before anything that imports mlflow.
 - All logic in `src/sepsiscope/`; scripts and notebooks only call it.
 - `docs/protocol.md` is frozen; changes need a new ADR.
+- Raw values are never overwritten; the dataset and Parquets never enter git.
+- Tests never touch the network; only `sepsiscope data download` does, to one host.
 
 ## Decisions (see docs/decisions/)
 Python 3.13 via uv (`<3.14` for dcurves) · uv `required-version >=0.12.24,<0.13` ·
 exact pins + hashed `uv.lock` · pyarrow 25.0.1 (mlflow needs <26) · ruff 0.16.10 ·
 no torch / polars / MAPIE · Vite react-ts template pins untouched (TS ~6.0) ·
 no open-source licence (all rights reserved; ADR 0003) · public demo later
-on a Hugging Face static Space.
+on a Hugging Face static Space · splits stratified by septic flag (ADR 0013) ·
+cleaning = out-of-bound values to NaN, never clip or convert units (ADR 0014) ·
+Age 90+ is coded 100 by the dataset and stays uncapped.
 
 ## Repo map
 ```
 src/sepsiscope/   _privacy.py (imported first) · config.py · cli.py · _smoke.py
-                  data/ features/ models/ evaluation/ trust/ api/
+                  data/: download · io · fingerprint · build · clean · schema · splits ·
+                         pipeline · eda · figures
+                  features/ models/ evaluation/ trust/ api/   (later phases)
 configs/          default.yaml (relative paths, seed, alarm budget, label horizon, switches)
-tests/            smoke, privacy, config, cli
+tests/            smoke, privacy, config, cli, download, fingerprint, build/clean/schema,
+                  splits, eda/figures, official scorer, network guard (conftest blocks network)
 scripts/          privacy_guard.py (pre-commit hook)
-docs/             protocol, privacy, ops, model_card, tripod_ai, decisions/, learning/
+docs/             protocol, data_card, data_manifest, eda_findings, privacy, ops, handoff,
+                  model_card, tripod_ai, decisions/, learning/
+splits/           hospital_A.json, hospital_B.json (patient IDs; committed)
+reports/          figures/ (EDA PNGs, no metadata) · data/cleaning_report.json
+notebooks/        01_eda.ipynb (calls the package only; outputs stripped)
 web/              Vite react-ts scaffold + research banner
-third_party/      vendored code with its own licence
+third_party/      physionet_eval/ (official scorer, unmodified, BSD-2-Clause)
 data/ models/ mlruns/   git-ignored
 ```
 
@@ -66,7 +77,11 @@ data/ models/ mlruns/   git-ignored
 ```
 uv sync --locked --all-extras        # install exactly the lockfile
 uv run sepsiscope doctor             # environment + OpenMP + telemetry check
-uv run pytest                        # tests
+uv run pytest                        # tests (add -m "not data" to skip the real-data test)
+uv run sepsiscope data download      # official S3 bucket, resumable, verifies size + MD5
+uv run sepsiscope data verify        # fingerprint, 28 checks, fails on mismatch
+uv run sepsiscope data build         # raw + clean Parquet, schemas, cleaning report
+uv run sepsiscope data splits        # stratified 60/20/20 patient splits
 uv run ruff check . && uv run ruff format --check . && uv run mypy src
 uv run pre-commit run --all-files    # all hooks incl. privacy guard
 cd web && npm ci && npm run lint && npm run build
