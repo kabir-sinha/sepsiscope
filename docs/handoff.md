@@ -2,7 +2,7 @@
 
 State of the work, so anyone can pick it up from the repository alone.
 
-## Phase 0 closed. Phase 1 in progress (see the Phase 1 checklist).
+## Phase 1 build closed. Task 13 (M2 evidence report) pending.
 
 - Repository `kabir-sinha/sepsiscope` is **private**; default branch `main`.
 - First CI run is green: run `38003153138` (jobs `python` and `web`). After the four
@@ -65,7 +65,7 @@ No models are trained in this phase.
 - [x] **P1-11:** qSOFA Box 4 citation added (2387c6d, ADR 0012). `ruff format` counts
   Markdown files as well as Python files (it formats Python code blocks in Markdown), which
   explains the higher count; nothing unintended is included, no config change.
-- [ ] **P1-12:** close the build: full Definition of Done, no data in git, push after scan, CI. _Not started._
+- [x] **P1-12:** close the build: full Definition of Done, no data in git, push after scan, CI. Definition of Done green (137 tests ×3, clean clone 136 passed and 1 skipped, ruff, mypy, pre-commit, web build, audits); full-history scan clean; no data in git; 27 commits pushed (`52e271d..f71483a`); CI green on `f71483a`: run `38070758706`.
 - [ ] **P1-13:** Milestone 2 evidence report, Parts A-F, delivered outside the repository (no files). _Not started._
 
 ## Phase 1 critique log
@@ -79,8 +79,9 @@ No models are trained in this phase.
 
 ## Open items (carried into later phases)
 
-- Vendor the official `evaluate_sepsis_score.py` into `third_party/` together with its
-  BSD-2-Clause licence file (`LICENSE.txt` in the upstream repository). Phase 1 or 2.
+- Phase 2: run the unit-columns-only ablation declared in ADR 0015.
+
+- Done in Phase 1: the official scorer is vendored in `third_party/physionet_eval/`.
 - Branch protection for `main`: pending. The exact
   rules are in `docs/ops.md`.
 - Ubuntu runner: CI is pinned to `ubuntu-24.04`; upgrade deliberately later through a
