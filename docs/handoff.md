@@ -33,8 +33,8 @@ All four are done and pushed. Open pull requests: none (#1 closed, #2 merged).
 
 ## Phase 0 close-out
 
-- [ ] **Close-out 1:** sync: `git fetch`, confirm local `main` == `origin/main`
-  (fast-forward only, never force). _Not started._
+- [x] **Close-out 1:** fetched; local `main` was 0 behind `origin/main` (`dfad15b`) and
+  contains the PR #2 merge `56a5bdb`; no fast-forward needed.
 - [ ] **Close-out 2:** citations in `docs/protocol.md`: SIRS (Sepsis-3, Box 1, keeping
   Bone 1992) and the paper's row counts (Reyna et al., Table 2). _Not started._
 - [ ] **Close-out 3:** Dependabot `ignore` rule for `@types/node` semver-major updates.
