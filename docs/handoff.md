@@ -48,61 +48,20 @@ All four are done and pushed. Open pull requests: none (#1 closed, #2 merged).
 - [x] **Close-out 6:** "Open items" section added; ten commits pushed after a clean privacy
   scan (`dfad15b..c92c9c5`); CI green on `c92c9c5`: run `38028938070` (jobs `python` and `web`).
 
-## Paused on 2026-10-10: exactly where things stand
-
-- **Last code commit before this note:** `8526542` (`test: block DNS and connect_ex in the
-  network guard, allow AF_UNIX`). Working tree clean.
-- **Download:** 30,651 of 40,336 files on disk when paused (set A 20,336 of 20,336,
-  set B 10,315 of 20,000), in the git-ignored `data/raw/`. The background download was
-  still running and may finish or be killed; either is fine because it is resumable.
-- **Not run yet:** `sepsiscope data verify`, `data build`, `data splits`. No real-data
-  result exists yet, so nothing about the fingerprint is confirmed.
-- **Phase 1 tasks done:** P1-9 (vendored scorer) and P1-11 (Phase 0 leftovers).
-- **Code written, tested on synthetic data and committed, but not yet run on real data**
-  (so not ticked): P1-1 downloader, P1-2 verify, P1-3 build, P1-4 cleaning rules,
-  P1-5 schemas, P1-6 splits code, most of P1-10 tests, the EDA functions, figure code
-  and notebook for P1-8. 133 tests pass with the network blocked.
-- **Dependencies added with approval:** `defusedxml==0.7.1` (runtime),
-  `types-defusedxml` and `pandas-stubs==3.0.5.260914` (dev).
-
-### Next three steps
-
-1. Re-run `uv run sepsiscope data download`. It resumes, re-checks the size and MD5 of
-   every file (including those fetched earlier), removes stale temp files and writes
-   `data/raw/MANIFEST.json`. Record the manifest SHA-256 in `docs/data_manifest.md`.
-2. Run `uv run sepsiscope data verify` and compare with the expected fingerprint. On any
-   mismatch: stop and show expected vs observed.
-3. Stage 2 on real data: `data build`; check observed distributions against each cleaning
-   bound; ADR 0013 (stratified splits) and ADR 0014 (cleaning bounds, with per-hospital
-   counts and the values just outside each bound); `data splits`; then tick P1-1 to P1-6.
-
-### Pending
-
-- **16 local commits are not pushed.** The push waits for the Stage 3 privacy scan.
-- Still to write: `docs/data_manifest.md`, `docs/data_card.md` (include Age 90+ coded as
-  100 as a de-identification quirk; Age stays uncapped), `docs/eda_findings.md`, the
-  figures, a CHANGELOG entry for Phase 1, and the `docs/ai_assistance.md` Phase 1 row.
-- Cleaning-rule reasons in `src/sepsiscope/data/clean.py` are provisional until checked
-  against the real distributions.
-- Commit `b4ac7f6` also contains `build.py`, although its title mentions only cleaning
-  and schemas.
-- Evidence report (P1-13): Pollard et al. 2026 (Nature Health 1(8):792-795) is verified on
-  Crossref and on the PhysioNet page; cite it alongside Goldberger 2000.
-
 ## Phase 1 checklist
 
 No models are trained in this phase.
 
 - [x] **P1-1:** downloader (`sepsiscope data download`): S3 listing, resumable, size + MD5 checks, manifest summary. All 40,336 files downloaded and verified by size and MD5 (code fc39560, manifest summary 45159b6).
 - [x] **P1-2:** verify (`sepsiscope data verify`): recompute the fingerprint, fail loudly on mismatch. Real data: all 28 checks match (code 8af0c9b).
-- [ ] **P1-3:** build (`sepsiscope data build`): raw Parquet with pid, hospital, t + 41 original columns. _Not started._
-- [ ] **P1-4:** cleaning rules table, clean Parquet, `reports/data/cleaning_report.json`. _Not started._
-- [ ] **P1-5:** pandera schemas for raw and clean, validated in `data build`. _Not started._
-- [ ] **P1-6:** splits (`sepsiscope data splits`): 60/20/20 by patient, seed 42, stratified; ADR. _Not started._
+- [x] **P1-3:** build (`sepsiscope data build`): raw Parquet with pid, hospital, t + 41 original columns. Real data: 1,552,210 rows, 40,336 patients, 14.7 MB, byte-identical on rebuild (b4ac7f6, 6e3365b).
+- [x] **P1-4:** cleaning rules table, clean Parquet, `reports/data/cleaning_report.json`. Real data: 504 values set to missing; report and ADR 0014 (1db5443, fcced96).
+- [x] **P1-5:** pandera schemas for raw and clean, validated in `data build`. Both Parquets validate in `data build` (b4ac7f6).
+- [x] **P1-6:** splits (`sepsiscope data splits`): 60/20/20 by patient, seed 42, stratified; ADR. Split files committed, septic rate preserved, ADR 0013 (1e75e03, 2dcc210).
 - [ ] **P1-7:** data card (`docs/data_card.md`). _Not started._
 - [ ] **P1-8:** EDA notebook, figures, `docs/eda_findings.md`. _Not started._
 - [x] **P1-9:** vendor the official scorer into `third_party/physionet_eval/` with licence and example test (e5fec2d).
-- [ ] **P1-10:** tests (mocked HTTP, fixture fingerprint, cleaning, schema, splits, Parquet round-trip, `data` marker). _Not started._
+- [x] **P1-10:** tests (mocked HTTP, fixture fingerprint, cleaning, schema, splits, Parquet round-trip, `data` marker). 136 tests plus one real-data test; network blocked in tests (8526542).
 - [x] **P1-11:** qSOFA Box 4 citation added (2387c6d, ADR 0012). `ruff format` counts
   Markdown files as well as Python files (it formats Python code blocks in Markdown), which
   explains the higher count; nothing unintended is included, no config change.
