@@ -31,6 +31,20 @@ State of the work, so anyone can pick it up from the repository alone.
 
 All four are done and pushed. Open pull requests: none (#1 closed, #2 merged).
 
+## Phase 0 close-out
+
+- [ ] **Close-out 1:** sync: `git fetch`, confirm local `main` == `origin/main`
+  (fast-forward only, never force). _Not started._
+- [ ] **Close-out 2:** citations in `docs/protocol.md`: SIRS (Sepsis-3, Box 1, keeping
+  Bone 1992) and the paper's row counts (Reyna et al., Table 2). _Not started._
+- [ ] **Close-out 3:** Dependabot `ignore` rule for `@types/node` semver-major updates.
+  _Not started._
+- [ ] **Close-out 4:** refresh the state table in `docs/ops.md`. _Not started._
+- [ ] **Close-out 5:** re-run the full Phase 0 Definition of Done and record the results.
+  _Not started._
+- [ ] **Close-out 6:** add an "Open items" section here, then push after a privacy scan
+  and record the CI result. _Not started._
+
 ## Next after these
 
 Phase 1 (data download + fingerprint check).
