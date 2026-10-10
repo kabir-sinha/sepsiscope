@@ -60,7 +60,7 @@ No models are trained in this phase.
 - [ ] **P1-6:** splits (`sepsiscope data splits`): 60/20/20 by patient, seed 42, stratified; ADR. _Not started._
 - [ ] **P1-7:** data card (`docs/data_card.md`). _Not started._
 - [ ] **P1-8:** EDA notebook, figures, `docs/eda_findings.md`. _Not started._
-- [ ] **P1-9:** vendor the official scorer into `third_party/physionet_eval/` with licence and example test. _Not started._
+- [x] **P1-9:** vendor the official scorer into `third_party/physionet_eval/` with licence and example test (e5fec2d).
 - [ ] **P1-10:** tests (mocked HTTP, fixture fingerprint, cleaning, schema, splits, Parquet round-trip, `data` marker). _Not started._
 - [ ] **P1-11:** Phase 0 leftovers: qSOFA Box 4 citation; explain the `ruff format` file count. _Not started._
 - [ ] **P1-12:** close the build: full Definition of Done, no data in git, push after scan, CI. _Not started._
