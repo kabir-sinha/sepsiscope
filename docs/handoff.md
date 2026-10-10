@@ -68,6 +68,15 @@ No models are trained in this phase.
 - [ ] **P1-12:** close the build: full Definition of Done, no data in git, push after scan, CI. _Not started._
 - [ ] **P1-13:** Milestone 2 evidence report, Parts A-F, delivered outside the repository (no files). _Not started._
 
+## Phase 1 critique log
+
+- An old Phase 0 test (`test_stubs`) still invoked `sepsiscope data download` after the
+  command became real, so a test run started the approved download early. It wrote only
+  inside `data/raw/` (git-ignored). Fixed: the test no longer calls it; `tests/conftest.py`
+  has an autouse socket-level guard that fails any test opening a real connection (no new
+  package); every run of the downloader re-checks the size and MD5 of every file, including
+  those fetched early, and removes stale temp files.
+
 ## Open items (carried into later phases)
 
 - Vendor the official `evaluate_sepsis_score.py` into `third_party/` together with its
