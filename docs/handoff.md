@@ -58,8 +58,8 @@ No models are trained in this phase.
 - [x] **P1-4:** cleaning rules table, clean Parquet, `reports/data/cleaning_report.json`. Real data: 504 values set to missing; report and ADR 0014 (1db5443, fcced96).
 - [x] **P1-5:** pandera schemas for raw and clean, validated in `data build`. Both Parquets validate in `data build` (b4ac7f6).
 - [x] **P1-6:** splits (`sepsiscope data splits`): 60/20/20 by patient, seed 42, stratified; ADR. Split files committed, septic rate preserved, ADR 0013 (1e75e03, 2dcc210).
-- [ ] **P1-7:** data card (`docs/data_card.md`). _Not started._
-- [ ] **P1-8:** EDA notebook, figures, `docs/eda_findings.md`. _Not started._
+- [x] **P1-7:** data card (`docs/data_card.md`) (92a3d19).
+- [x] **P1-8:** EDA notebook, figures, `docs/eda_findings.md`. Notebook runs on real data with 0 errors; six figures, byte-identical on re-run (6ce5480, 1ad25e2).
 - [x] **P1-9:** vendor the official scorer into `third_party/physionet_eval/` with licence and example test (e5fec2d).
 - [x] **P1-10:** tests (mocked HTTP, fixture fingerprint, cleaning, schema, splits, Parquet round-trip, `data` marker). 136 tests plus one real-data test; network blocked in tests (8526542).
 - [x] **P1-11:** qSOFA Box 4 citation added (2387c6d, ADR 0012). `ruff format` counts
