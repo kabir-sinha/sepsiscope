@@ -11,7 +11,7 @@ import pytest
 from conftest import WritePatient
 
 from sepsiscope.data.build import ALL_COLUMNS, build_raw_table, read_parquet, write_parquet
-from sepsiscope.data.clean import RULES, Rule, apply_rules, boundary_evidence
+from sepsiscope.data.clean import RULES, RULES_BY_COLUMN, Rule, apply_rules, boundary_evidence
 from sepsiscope.data.io import COLUMNS, MEASUREMENTS
 from sepsiscope.data.pipeline import build_all, septic_flags, to_frame, to_table
 from sepsiscope.data.schema import DataSchemaError, validate_clean, validate_raw
@@ -223,3 +223,14 @@ def test_failing_build_writes_nothing(
     with pytest.raises(DataSchemaError):
         build_all(raw_root, tmp_path / "data", tmp_path / "reports")
     assert not (tmp_path / "data").exists()
+
+
+def test_float32_values_exactly_on_a_bound_are_kept() -> None:
+    """0.21 stored as float32 is slightly below the float64 0.21; it must not be dropped."""
+    raw = _frame_with("FiO2", [0.21, 1.0, 0.2, 1.1])
+    assert float(raw["FiO2"].iloc[0]) < 0.21  # the float32 representation really is lower
+    clean, _ = apply_rules(raw)
+    assert clean["FiO2"].notna().tolist() == [True, True, False, False]
+    evidence = boundary_evidence(raw, RULES_BY_COLUMN["FiO2"], k=2)
+    assert evidence["highest_below_low"] == [0.2]
+    assert evidence["lowest_inside"][0] == 0.21

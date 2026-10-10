@@ -29,53 +29,58 @@ class Rule:
 
 
 RULES: tuple[Rule, ...] = (
-    Rule(
-        "HR",
-        20,
-        300,
-        "beats/min",
-        "Below 20 is not a sustained rhythm; above 300 is beyond recorded tachyarrhythmias.",
-    ),
-    Rule(
-        "O2Sat",
-        20,
-        100,
-        "%",
-        "Saturation cannot exceed 100; pulse oximetry below 20 is a probe artefact.",
-    ),
+    Rule("HR", 20, 300, "beats/min", "Guard only: observed range is 20-280, nothing is removed."),
+    Rule("O2Sat", 20, 100, "%", "Guard only: observed range is 20-100, nothing is removed."),
     Rule(
         "Temp",
         25,
         45,
         "deg C",
-        "Covers deep hypothermia to extreme hyperpyrexia; outside is a unit or entry error.",
+        "Removes readings near room temperature (20.9-23.6) and two of exactly 50.0; "
+        "the lowest value kept is 26.6 and the highest is 42.2.",
     ),
-    Rule("SBP", 20, 300, "mm Hg", "Outside this range a cuff or arterial line is not reading."),
-    Rule("MAP", 10, 300, "mm Hg", "Outside this range the line is damped, flushed or zeroing."),
-    Rule("DBP", 5, 250, "mm Hg", "Outside this range the line is damped, flushed or zeroing."),
+    Rule("SBP", 20, 300, "mm Hg", "Guard only: observed range is 20-300, nothing is removed."),
+    Rule("MAP", 10, 300, "mm Hg", "Guard only: observed range is 20-300, nothing is removed."),
+    Rule(
+        "DBP",
+        5,
+        250,
+        "mm Hg",
+        "Removes diastolic readings of 251-300, which are above the 99.99th percentile "
+        "(196); in 13 of the 53 rows it is higher than the systolic value on the same row.",
+    ),
     Rule(
         "Resp",
         1,
         80,
         "breaths/min",
-        "Zero is 'not measured' rather than apnoea here; above 80 is an artefact.",
+        "Removes rates of 81-100, above the 99.99th percentile (60); the lower bound "
+        "removes nothing (observed minimum is 1).",
     ),
     Rule(
         "FiO2",
         0.21,
         1.0,
         "fraction",
-        "Stored as a fraction: room air is 0.21 and pure oxygen is 1.0; nothing else exists.",
+        "Stored as a fraction: room air is 0.21 and pure oxygen is 1.0. Values outside "
+        "cannot be inspired-oxygen fractions; no values lie in 21-100, so they are not "
+        "percentages and are not divided by 100.",
     ),
-    Rule("pH", 6.5, 8.0, "pH", "Blood pH outside 6.5-8.0 is not compatible with a measurement."),
+    Rule("pH", 6.5, 8.0, "pH", "Guard only: observed range is 6.62-7.93, nothing is removed."),
 )
 
 RULES_BY_COLUMN: dict[str, Rule] = {rule.column: rule for rule in RULES}
 
 
 def out_of_bounds(values: pd.Series, rule: Rule) -> tuple[pd.Series, pd.Series]:
-    """Boolean masks (below, above); missing values are in neither."""
-    return values < rule.low, values > rule.high
+    """Boolean masks (below, above); missing values are in neither.
+
+    The bounds are converted to the column's own type first. The table stores float32,
+    where 0.21 is 0.2099999934...; comparing that with a float64 0.21 would wrongly put
+    room-air FiO2 values "below" the bound.
+    """
+    kind = values.to_numpy().dtype.type
+    return values < kind(rule.low), values > kind(rule.high)
 
 
 def apply_rules(
@@ -107,15 +112,15 @@ def apply_rules(
 
 def boundary_evidence(raw: pd.DataFrame, rule: Rule, k: int = 5) -> dict[str, object]:
     """Observed values nearest to each bound, inside and outside (for the ADR)."""
-    values = raw[rule.column].dropna().astype("float64")
+    values = raw[rule.column].dropna()
 
     def uniq(series: pd.Series, largest: bool) -> list[float]:
         distinct = np.sort(series.unique())
         picked = distinct[-k:][::-1] if largest else distinct[:k]
         return [round(float(v), 4) for v in picked]
 
-    below, above = values[values < rule.low], values[values > rule.high]
-    inside = values[(values >= rule.low) & (values <= rule.high)]
+    is_below, is_above = out_of_bounds(values, rule)
+    below, above, inside = values[is_below], values[is_above], values[~(is_below | is_above)]
     quantiles = values.quantile([0.0001, 0.001, 0.5, 0.999, 0.9999])
     return {
         "column": rule.column,
