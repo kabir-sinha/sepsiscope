@@ -4,6 +4,29 @@ State of the work, so anyone can pick it up from the repository alone.
 
 ## Phase 1 closed; privacy hardening done (2026-10-22, ADR 0016). Next: Phase 2.
 
+## Resume here
+
+**Current state (2026-10-22).** The eight privacy-hardening commits `8b1c9ed..94bcf25`
+(HEAD of that work: `94bcf25`) and the commit adding this section are pushed together to
+`origin/main` with `TZ=UTC git push origin main`; the pre-push hook checks every outgoing
+commit. If that push failed, the failure is recorded directly below this section and
+nothing was pushed.
+
+1. **Confirm CI is green** on the pushed commits, including the new step
+   "Commit check (+0000 offsets, allowed identities, messages)". Read-only.
+2. **Fix the pip-audit findings** (not started). Official PyPI releases only; plan first,
+   show the diff before committing:
+   - `certifi` to 2026.10.19 or later; `virtualenv` to 21.14.7 or later.
+   - `pillow` 13.0.0 only after confirming matplotlib's requirement allows it, reading
+     pillow's release notes, and checking whether the regenerated EDA figures change bytes
+     (keep the figure reproducibility test meaningful).
+   - Check for matching Dependabot PRs first and apply those changes locally with `TZ=UTC`
+     instead of merging on GitHub.
+   - Then the full Definition of Done, `pip-audit` clean, the double privacy check
+     (`sepsiscope privacy-audit` plus a full-history scan), and stop before pushing.
+3. **Phase 2**, once its plan is approved: Dependabot PRs #3 and #4 first, applied locally
+   with `TZ=UTC`.
+
 - Repository `kabir-sinha/sepsiscope` is **private**; default branch `main`.
 - First CI run is green: run `38003153138` (jobs `python` and `web`). After the four
   follow-up tasks, CI is green on `df74bd2`: run `38004614423`, on `ubuntu-24.04`.
