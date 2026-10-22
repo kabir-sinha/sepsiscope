@@ -3,6 +3,9 @@
 # locked in uv.lock (no second copy pinned here that could drift).
 # `language: unsupported` is the pre-commit >= 4.4 name for the old `system`.
 minimum_pre_commit_version: "4.4.0"
+# `pre-commit install` sets up all three git hooks; existing hooks stay commit-time only.
+default_install_hook_types: [pre-commit, commit-msg, pre-push]
+default_stages: [pre-commit]
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -49,3 +52,15 @@ repos:
         entry: uv run --frozen nbstripout
         language: unsupported
         types: [jupyter]
+      - id: commit-msg-check
+        name: commit message (no AI trailers, nothing personal)
+        entry: uv run --frozen python -m sepsiscope.audit.hooks commit-msg
+        language: unsupported
+        stages: [commit-msg]
+      - id: pre-push-check
+        name: outgoing commits (+0000 offsets, allowed identities, messages)
+        entry: uv run --frozen python -m sepsiscope.audit.hooks pre-push
+        language: unsupported
+        stages: [pre-push]
+        pass_filenames: false
+        always_run: true

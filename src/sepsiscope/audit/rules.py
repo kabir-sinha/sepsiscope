@@ -18,6 +18,7 @@ from sepsiscope.audit.notebook import check_notebook
 ALLOWED_EMAIL_PATTERNS = (
     re.compile(r"^[\w.+-]+@example\.(com|org|net)$"),
     re.compile(r"^\d+\+[\w-]+\[bot\]@users\.noreply\.github\.com$"),
+    re.compile(r"^(noreply|support)@github\.com$"),  # GitHub service addresses in bot commits
 )
 MAX_BYTES = 1_000_000  # 1 MB
 DATA_SUFFIXES = {".psv", ".parquet", ".csv"}
