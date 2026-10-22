@@ -2,7 +2,7 @@
 
 State of the work, so anyone can pick it up from the repository alone.
 
-## Phase 1 closed. M2 evidence report delivered (2026-10-10). Next: Phase 2.
+## Phase 1 closed; privacy hardening done (2026-10-22, ADR 0016). Next: Phase 2.
 
 - Repository `kabir-sinha/sepsiscope` is **private**; default branch `main`.
 - First CI run is green: run `38003153138` (jobs `python` and `web`). After the four
@@ -70,9 +70,40 @@ No models are trained in this phase.
   package); every run of the downloader re-checks the size and MD5 of every file, including
   those fetched early, and removes stale temp files.
 
+## Privacy hardening (2026-10-22, ADR 0016)
+
+- [x] `.gitignore` covers local-only files, MLflow artifacts, SQLite stores, logs, web coverage.
+- [x] `CLAUDE.md` is project-neutral; personal notes are in the gitignored `CLAUDE.local.md`.
+- [x] Neutral, OS-neutral docs; account-tier wording removed; name only in the copyright
+  line, the pyproject author field and the git author.
+- [x] Guard rules moved to `src/sepsiscope/audit/`, with new generic rules, the notebook
+  check and the optional local denylist (`.privacy-denylist.local`).
+- [x] `commit-msg` and `pre-push` hooks; CI checks every pushed commit.
+- [x] `sepsiscope privacy-audit` (non-strict until the pre-sharing rewrite).
+- [x] All commits from 2026-10-22 on are made with `TZ=UTC` (`+0000`).
+
 ## Open items (carried into later phases)
 
+- **Phase 2, first step:** Dependabot PRs #3 (`@types/node` 26.6.5) and #4 (`uv-build`
+  range): apply each locally as a squash commit with `TZ=UTC` (never merge in the web
+  interface), then let Dependabot close the PRs.
 - Phase 2: run the unit-columns-only ablation declared in ADR 0015.
+- `pip-audit` (2026-10-22) reports advisories in `pillow` 12.3.0 (fixed in 13.0.0),
+  `virtualenv` 21.14.6 (fixed in 21.14.7+) and `certifi` 2026.7.22 (fixed in 2026.10.19);
+  `npm audit` is clean. Upgrade after approval, checking `pillow` 13 against matplotlib.
+- **Phase 2/3, when the code is written:**
+  - MLflow runs set the `mlflow.user` and `mlflow.source.name` tags explicitly (a fixed
+    project value and a repository-relative path), record no git remote URL, keep
+    `mlruns/`, `mlflow.db` and `mlartifacts/` untracked, and a test fails if any run tag or
+    parameter contains a home path. Verify tag names in the MLflow docs first.
+  - A logging filter rewrites the home directory to `~` and repository paths to relative
+    ones in log files and CLI error output, with a test.
+  - The FastAPI host is typed as `Literal["127.0.0.1"]` in the config, with a test.
+- **Pre-sharing task (before anyone else gets access):** rewrite history with
+  `git filter-repo` locally (text replacements kept outside the repository, commit dates
+  converted to `+0000`), push the result to a **new** private repository, archive the old
+  one, and decide on a secret scanner (gitleaks). After the history rewrite, switch
+  privacy-audit to strict mode by default. Each install and push needs approval.
 
 - Done in Phase 1: the official scorer is vendored in `third_party/physionet_eval/`.
 - Branch protection for `main`: pending; the exact rules, to apply when enabled, are in

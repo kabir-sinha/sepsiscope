@@ -84,7 +84,9 @@ then merge. Dependabot does not update runner labels.
 ## Release and visibility checklist (going public later)
 
 1. `uv run pre-commit run --all-files` is clean.
-2. `git log --format='%ae %ce' | sort -u` shows only the noreply address.
+2. `git log --format='%ae %ce' | sort -u` shows only the noreply address, and
+   `uv run sepsiscope privacy-audit --strict` passes (after the pre-sharing history
+   rewrite recorded in `docs/handoff.md`).
 3. `git grep -nI -e "$HOME" -e "$(whoami)"` finds nothing; no data, models or `mlruns/` are tracked (`git ls-files`).
 4. The README disclaimer, licence notice and data attribution are present.
 5. `third_party/` has each vendored file's own licence.

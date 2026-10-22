@@ -21,3 +21,4 @@ A decision is changed by a new ADR that supersedes it, never by editing history.
 | [0013](0013-stratified-patient-splits.md) | Patient-level splits are stratified by the septic flag | Accepted |
 | [0014](0014-cleaning-plausibility-bounds.md) | Cleaning: conservative plausibility bounds | Accepted |
 | [0015](0015-hospital-marker-strength.md) | Measured strength of the hospital markers; unit columns to be revisited | Accepted |
+| [0016](0016-privacy-hardening.md) | Privacy hardening: UTC commits, local denylist, git hooks, privacy-audit | Accepted |

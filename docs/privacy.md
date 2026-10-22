@@ -51,25 +51,57 @@ Checked on 2026-10-10 against each tool's own docs or source.
 - **Public later:** code, docs, figures and aggregate metrics only. Never the data,
   never patient-level outputs.
 
-## Guardrails (pre-commit)
+## Guardrails (pre-commit, git hooks, CI)
 
-`scripts/privacy_guard.py` runs on every commit and **blocks**:
+The rules live in `src/sepsiscope/audit/` (ADR 0016). `scripts/privacy_guard.py` runs
+them on every commit and **blocks**:
 
-- any line containing an absolute macOS home path (`/` + `Users/`)
-- any email address other than the noreply address (plus `@example.*` placeholders and
-  GitHub `[bot]` noreply addresses, e.g. Dependabot)
+- absolute home paths: macOS (`/` + `Users/`, also in UTF-16 and binary content), Linux
+  (`/` + `home/<name>`) and Windows (`C:` + `\Users\`)
+- any email address other than the noreply address (plus `@example.*` placeholders,
+  GitHub `[bot]` noreply addresses and GitHub's own service addresses)
+- account-tier wording (plan, payment or verification status) and enrollment-ID shapes
+  (lockfiles are exempt from these two)
 - `.env` / `.env.*` files
 - `*.psv` / `*.parquet` anywhere, and `*.csv` under `data/`
 - files over 1 MB (also `check-added-large-files --maxkb=1000`)
 - PNG files that carry text, EXIF or time metadata chunks
+- notebooks with outputs, execution counts, cell metadata or environment metadata
+- values from the optional local denylist (below)
 
-`detect-private-key` blocks committed private keys. CI runs the same privacy guard over
-every tracked file, so a commit made with `git commit --no-verify` still fails CI.
+`detect-private-key` blocks committed private keys. Two more hooks (installed by
+`uv run pre-commit install`):
+
+- **commit-msg:** no `Co-Authored-By` trailer (GitHub bot co-authors excepted), no AI-tool
+  trailers or "generated with" lines, no chat session URLs, nothing personal.
+- **pre-push:** every outgoing commit must have `+0000` author and committer offsets, the
+  noreply address (or a GitHub bot identity) and a clean message.
+
+CI runs the file rules over every tracked file and the commit check over the pushed range,
+so `git commit --no-verify` or `git push --no-verify` still fails CI.
+
+### Local denylist
+
+`.privacy-denylist.local` (gitignored, mode 600) lists personal values, one per line;
+`#` starts a comment. It is read only when present, so CI uses generic patterns only.
+Matches are whole-word and case-insensitive; the GitHub handle inside the noreply address
+and the repository URL is not a hit. The maintainer's name is allowed only on the README
+copyright line and the pyproject author line. Output always masks the value.
+
+### Commit timezone
+
+Every commit is made with `TZ=UTC` so it does not record the local timezone. For your own
+commits, a repo-local alias helps: `git config --local alias.c '!TZ=UTC git commit'`, then
+`git c -m "..."`.
 
 ### How to check the guardrails yourself
 
 ```bash
 uv run pre-commit run --all-files
+```
+
+```bash
+uv run sepsiscope privacy-audit
 ```
 
 ```bash
