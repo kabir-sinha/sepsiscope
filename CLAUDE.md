@@ -1,21 +1,24 @@
 # CLAUDE.md — SepsiScope project memory
 
 Explainable, alarm-budgeted sepsis early warning (PhysioNet/CinC 2019). Every change must
-be explainable line by line: explain
-what you do and why, in plain language.
+be explainable line by line: say what you do and why, in plain language.
+Personal, machine-specific notes live in the gitignored `CLAUDE.local.md`.
 
 ## Priority 1 — privacy and security (overrides everything)
 - Read-only, narrowly scoped inspection. Never print env vars wholesale, shell profiles,
   SSH/cloud credentials, gh hosts, OS keychains, browser data, serials or files outside
   this repository.
 - Nothing leaves the local machine without maintainer approval: no push, no remote
-  creation, no sign-ins, no API calls with the maintainer's tokens. GitHub settings
-  changes are written up as click-by-click steps for the maintainer.
+  creation, no uploads, no sign-ins, no API calls with the maintainer's tokens. GitHub
+  settings changes are written up as click-by-click steps for the maintainer.
 - Installs only from Homebrew / PyPI via uv / npm, exact names, shown and approved first.
   No sudo, no `curl | sh`, no `brew upgrade` / `brew cleanup`, no global changes.
 - Only work inside this repository. No `rm -rf` outside it.
 - Never pickle/joblib; `yaml.safe_load` only.
-- No username/home paths, no email except `222482936+kabir-sinha@users.noreply.github.com`.
+- No personal data in the repository: no usernames, home paths, hostnames, device or
+  account details, and no email except `222482936+kabir-sinha@users.noreply.github.com`.
+  The maintainer's name appears only in the README copyright line, the pyproject author
+  field and the git author.
 - Network services bind to 127.0.0.1 only. Telemetry off (see `_privacy.py`).
 - Anything privacy-related that is not covered here: stop and ask.
 
@@ -23,12 +26,12 @@ what you do and why, in plain language.
 Reuse the installed Python 3.13, Node 26, git and gh. Added for this project: uv 0.12.24
 and, on macOS, libomp (keg-only).
 
-## Working rules
-Plan first and wait for approval · verify versions/flags live from official sources ·
-prove each step with output · critique loop at the end · small conventional commits,
-never push without OK · ask before adding enhancements.
-Commits: author = noreply address, **no `Co-Authored-By` AI trailer**; instead keep
-`docs/ai_assistance.md` (and the README section) updated each phase.
+## Working rules (maintainer approval required)
+Plan first and wait for maintainer approval · verify versions/flags live from official
+sources · prove each step with output · critique loop at the end · small conventional
+commits, diffs shown before committing, never push without approval · propose
+enhancements before adding them · every git command runs with `TZ=UTC`.
+Commits: author = noreply address, **no `Co-Authored-By` AI trailer**; AI help is disclosed in `docs/ai_assistance.md` and the README instead.
 
 ## Invariants
 - Patient-level splits only (external A→B and B→A; 60/20/20 inside, seed 42).
