@@ -2,7 +2,11 @@
 /data/
 /models/
 /mlruns/
+mlartifacts/
 mlflow.db
+# Optuna / MLflow SQLite stores
+*.db
+*.sqlite3
 *.parquet
 *.psv
 *.feather
@@ -10,6 +14,12 @@ mlflow.db
 # --- Secrets / local env ---
 .env
 .env.*
+
+# --- Local-only files (never committed) ---
+CLAUDE.local.md
+.claude/settings.local.json
+.privacy-denylist.local
+/*.log
 
 # --- Python ---
 .venv/
@@ -35,6 +45,7 @@ htmlcov/
 # --- Node / web ---
 node_modules/
 web/dist/
+web/coverage/
 
 # --- OS / editors ---
 .DS_Store
