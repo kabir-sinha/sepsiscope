@@ -25,7 +25,7 @@ the merged Dependabot PR `56a5bdb`, whose author is `dependabot[bot]` (GitHub's 
 identity, not personal data).
 
 Pre-push check: the full history was scanned three ways (git grep over every commit, every
-blob object, and a fresh clone including image metadata) for the macOS username, home
+blob object, and a fresh clone including image metadata) for the local username, home
 path, hostname, non-noreply emails, IP/MAC addresses, UUIDs, tokens and keys. Clean.
 
 ## Authentication to GitHub

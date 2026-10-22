@@ -1,6 +1,7 @@
 # 0003 — No open-source licence during evaluation
 
 **Date:** 2026-10-10 · **Status:** Accepted
+**Amended:** 2026-10-22 (privacy wording only; decision unchanged)
 
 ## Context
 This is assessed coursework. The author keeps all rights while it is being evaluated.

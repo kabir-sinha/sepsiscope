@@ -8,7 +8,8 @@ onset from routine ICU data, validated across two hospitals.
 
 ## Setup
 
-Prerequisites: Homebrew with `python@3.13`, `uv`, `libomp` and `node`.
+Prerequisites: Python 3.13, [uv](https://docs.astral.sh/uv/) 0.12 and Node 26.
+**macOS:** LightGBM also needs the OpenMP runtime `libomp` (for example `brew install libomp`).
 
 ```bash
 git clone https://github.com/kabir-sinha/sepsiscope.git && cd sepsiscope

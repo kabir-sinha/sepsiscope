@@ -1,6 +1,7 @@
 # 0006 — Telemetry off, enforced in code and tested
 
 **Date:** 2026-10-10 · **Status:** Accepted
+**Amended:** 2026-10-22 (privacy wording only; decision unchanged)
 
 ## Context
 MLflow (>= 3.2) collects anonymous usage data by default. MLflow also turns it off on

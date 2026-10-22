@@ -1,6 +1,7 @@
 # 0008 — CI and pre-commit design
 
 **Date:** 2026-10-10 · **Status:** Accepted
+**Amended:** 2026-10-22 (privacy wording only; decision unchanged)
 
 ## Context
 A workflow that hard-codes a Python version (e.g. 3.11) drifts from the project's

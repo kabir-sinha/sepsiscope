@@ -11,13 +11,6 @@ State of the work, so anyone can pick it up from the repository alone.
   pushed.
 - Branch protection: pending; rules in `docs/ops.md`, to apply when enabled.
 
-## Rules for this work
-
-- Show diffs before committing.
-- Verify every flag, option and label against official docs first.
-- Never push without a clean privacy scan (username, home path, non-noreply emails).
-- Never leave a half-applied change; stop only at a clean commit and record where.
-
 ## Pending tasks
 
 - [x] **Task 1:** pushed `1e7b118` and `bceb8db` after a clean privacy scan.
@@ -82,11 +75,11 @@ No models are trained in this phase.
 - Phase 2: run the unit-columns-only ablation declared in ADR 0015.
 
 - Done in Phase 1: the official scorer is vendored in `third_party/physionet_eval/`.
-- Branch protection for `main`: pending. The exact
-  rules are in `docs/ops.md`.
+- Branch protection for `main`: pending; the exact rules, to apply when enabled, are in
+  `docs/ops.md`.
 - Ubuntu runner: CI is pinned to `ubuntu-24.04`; upgrade deliberately later through a
   pull request (see `docs/ops.md`).
 
-## Next after these
+## Next
 
-Phase 1 (data download + fingerprint check).
+Phase 2 (features and models), once its plan is approved.

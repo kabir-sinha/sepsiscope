@@ -1,6 +1,7 @@
 # 0001 — Reuse existing tools; install only what is missing
 
 **Date:** 2026-10-10 · **Status:** Accepted
+**Amended:** 2026-10-22 (privacy wording only; decision unchanged)
 
 ## Context
 The local machine already hosts other projects that depend on the installed Python 3.13,
