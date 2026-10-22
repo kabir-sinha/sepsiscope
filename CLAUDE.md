@@ -31,7 +31,8 @@ Plan first and wait for maintainer approval · verify versions/flags live from o
 sources · prove each step with output · critique loop at the end · small conventional
 commits, diffs shown before committing, never push without approval · propose
 enhancements before adding them · every git command runs with `TZ=UTC`.
-Commits: author = noreply address, **no `Co-Authored-By` AI trailer**; AI help is disclosed in `docs/ai_assistance.md` and the README instead.
+Commits: author = noreply address, **no `Co-Authored-By` AI trailer** (the commit-msg hook
+rejects it); AI help is disclosed in `docs/ai_assistance.md` and the README instead.
 
 ## Invariants
 - Patient-level splits only (external A→B and B→A; 60/20/20 inside, seed 42).
@@ -59,13 +60,15 @@ Age 90+ is coded 100 by the dataset and stays uncapped.
 ## Repo map
 ```
 src/sepsiscope/   _privacy.py (imported first) · config.py · cli.py · _smoke.py
+                  audit/: rules · denylist · notebook · gitchecks · hooks · history · mask
                   data/: download · io · fingerprint · build · clean · schema · splits ·
                          pipeline · eda · figures
                   features/ models/ evaluation/ trust/ api/   (later phases)
 configs/          default.yaml (relative paths, seed, alarm budget, label horizon, switches)
 tests/            smoke, privacy, config, cli, download, fingerprint, build/clean/schema,
-                  splits, eda/figures, official scorer, network guard (conftest blocks network)
-scripts/          privacy_guard.py (pre-commit hook)
+                  splits, eda/figures, official scorer, network guard (conftest blocks network),
+                  audit rules / git hooks / privacy-audit (throwaway git repos)
+scripts/          privacy_guard.py (pre-commit hook; rules in sepsiscope.audit)
 docs/             protocol, data_card, data_manifest, eda_findings, privacy, ops, handoff,
                   model_card, tripod_ai, decisions/, learning/
 splits/           hospital_A.json, hospital_B.json (patient IDs; committed)
@@ -86,6 +89,8 @@ uv run sepsiscope data verify        # fingerprint, 28 checks, fails on mismatch
 uv run sepsiscope data build         # raw + clean Parquet, schemas, cleaning report
 uv run sepsiscope data splits        # stratified 60/20/20 patient splits
 uv run ruff check . && uv run ruff format --check . && uv run mypy src
+uv run pre-commit install            # pre-commit, commit-msg and pre-push hooks
 uv run pre-commit run --all-files    # all hooks incl. privacy guard
+uv run sepsiscope privacy-audit      # tree + full history + offsets, masked output
 cd web && npm ci && npm run lint && npm run build
 ```

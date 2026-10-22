@@ -199,6 +199,22 @@ def data_splits() -> None:
             )
 
 
+@app.command("privacy-audit")
+def privacy_audit(
+    strict: bool = typer.Option(
+        False, "--strict", help="Also fail on known findings in commits made before the cutoff."
+    ),
+) -> None:
+    """Scan tracked files, all of git history, messages, offsets and refs (masked output)."""
+    from sepsiscope.audit.history import format_report, run_audit
+
+    report = run_audit(REPO_ROOT)
+    for line in format_report(report, strict=strict):
+        typer.echo(line)
+    if report.blocking(strict):
+        raise typer.Exit(code=1)
+
+
 @app.command()
 def train() -> None:
     """Train models (later phase)."""

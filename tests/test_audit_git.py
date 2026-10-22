@@ -6,14 +6,12 @@ disabled, so the developer's own git settings and hooks never take part.
 
 from __future__ import annotations
 
-import os
-import shutil
-import subprocess
 from pathlib import Path
 
 import pytest
+from conftest import git_commit as commit
 
-from sepsiscope.audit.denylist import ALLOWED_EMAIL, DENYLIST_FILE
+from sepsiscope.audit.denylist import DENYLIST_FILE
 from sepsiscope.audit.gitchecks import (
     ZERO_SHA,
     check_commit,
@@ -23,39 +21,13 @@ from sepsiscope.audit.gitchecks import (
 )
 from sepsiscope.audit.hooks import main as hooks_main
 
-GIT = shutil.which("git") or "git"
 BOT = "49699333+dependabot[bot]@users.noreply.github.com"
 FOREIGN = "zq" + "@" + "mail.example-domain.net"
 
 
 @pytest.fixture
-def repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
-    monkeypatch.setenv("GIT_CONFIG_GLOBAL", os.devnull)
-    monkeypatch.setenv("GIT_CONFIG_NOSYSTEM", "1")
-    monkeypatch.setenv("HOME", str(tmp_path))
-    monkeypatch.setenv("TZ", "UTC")
-    root = tmp_path / "repo"
-    root.mkdir()
-    monkeypatch.chdir(root)
-    subprocess.run([GIT, "init", "-q", "-b", "main"], check=True)
-    return root
-
-
-def commit(
-    message: str, *, tz: str = "UTC", email: str = ALLOWED_EMAIL, committer: str | None = None
-) -> str:
-    env = {
-        **os.environ,
-        "TZ": tz,
-        "GIT_AUTHOR_NAME": "Maintainer",
-        "GIT_AUTHOR_EMAIL": email,
-        "GIT_COMMITTER_NAME": "Maintainer",
-        "GIT_COMMITTER_EMAIL": committer or email,
-    }
-    subprocess.run([GIT, "commit", "-q", "--allow-empty", "-m", message], check=True, env=env)
-    return subprocess.run(
-        [GIT, "rev-parse", "HEAD"], check=True, capture_output=True, text=True
-    ).stdout.strip()
+def repo(git_repo: Path) -> Path:
+    return git_repo
 
 
 # --- commit messages -----------------------------------------------------------------
