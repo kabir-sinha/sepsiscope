@@ -30,11 +30,12 @@ jobs:
       # No `python-version` input on purpose: uv reads .python-version itself,
       # so that file is the single source of truth.
       - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
-      - name: Privacy guard (all tracked files)
-        # Also catches anything committed with `git commit --no-verify`.
-        run: git ls-files -z | xargs -0 python3 scripts/privacy_guard.py
       - name: Install locked dependencies
         run: uv sync --locked --all-extras
+      - name: Privacy guard (all tracked files)
+        # Also catches anything committed with `git commit --no-verify`. Generic patterns
+        # only: the local denylist is gitignored and never exists in CI.
+        run: git ls-files -z | xargs -0 uv run --frozen python scripts/privacy_guard.py
       - name: Ruff lint
         run: uv run --frozen ruff check .
       - name: Ruff format

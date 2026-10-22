@@ -22,7 +22,7 @@ repos:
   - repo: local
     hooks:
       - id: privacy-guard
-        name: privacy guard (home paths, emails, .env, data, >1 MB)
+        name: privacy guard (paths, emails, account wording, denylist, data, notebooks, >1 MB)
         entry: uv run --frozen python scripts/privacy_guard.py
         language: unsupported
         types: [file]
