@@ -27,6 +27,14 @@ fraction in `[0.21, 1.0]` (ADR 0014).
 Modified NEWS2 may under-score patients on oxygen whose FiO2 was not charted every hour; the
 24-hour sensitivity analysis shows how much this matters.
 
+## Limitations
+- **A vital sign or lab that has never been measured scores 0 points** (approved by the
+  maintainer, 2026-11-13). Early in a stay, or for a patient whose vitals are charted
+  rarely, the score can be lower than the patient's true state; "no data" is treated as
+  "normal". This applies to all modified NEWS2 (max 17) items and, by the same rule, to
+  SIRS and modified qSOFA (max 2) criteria, which count only when a value meets them.
+- Missing FiO2 also scores 0 (see the decision above), so the oxygen item can under-score.
+
 ## Sources
 `docs/protocol.md` section 7 · `src/sepsiscope/data/clean.py` (FiO2 rule) · ADR 0014 ·
 `docs/plan/batch-a.md` A0.1

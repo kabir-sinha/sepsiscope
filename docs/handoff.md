@@ -6,9 +6,17 @@ State of the work, so anyone can pick it up from the repository alone.
 
 ## Resume here
 
-**Batch S (security and privacy lockdown) closed 2026-11-13.** Batch A (Milestone 3) is
-in progress; its approved plan is in `docs/plan/batch-a.md`. Batch S and Batch A are
-pushed together after the Batch A gate (maintainer decision, 2026-11-13).
+**Batch S (security and privacy lockdown) and Batch A (Milestone 3) closed 2026-11-13.**
+Both were pushed together by the maintainer from their own terminal at `ce231b2`; CI #11
+green on `ce231b2`, 0 open Dependabot alerts. Next: Batch B (plan to be presented).
+
+**Sandbox decisions (maintainer, 2026-11-13), kept as they are:**
+- Fetch and push stay in the maintainer's own terminal (sandbox proof 6 fails by design;
+  no sandbox exclusion for git).
+- Unix-socket binding stays off in the sandbox; `test_unix_domain_sockets_still_work`
+  fails locally under the sandbox and is covered by CI.
+- After the restart: `~/.ssh` read blocked, `uv sync --locked` exit 0, `npm ci` exit 0,
+  reading a file in `~/Documents` blocked from both the shell and Claude Code's Read tool.
 
 ### Batch A
 
@@ -37,7 +45,8 @@ pushed together after the Batch A gate (maintainer decision, 2026-11-13).
   evaluation byte-identical on re-run. pytest: 234 passed, **1 failed**:
   `test_network_guard.py::test_unix_domain_sockets_still_work` cannot bind a Unix socket
   inside the Claude Code sandbox (EPERM); not a code change, it passed before the sandbox.
-  Evidence report delivered as text. Batch S + A are not pushed yet (8 commits ahead).
+  Evidence report delivered as text. Pushed by the maintainer at `ce231b2`; CI #11 green
+  (the socket test passes in CI).
 
 ### Batch S
 
@@ -58,8 +67,7 @@ pushed together after the Batch A gate (maintainer decision, 2026-11-13).
   6. `git fetch --dry-run origin`: **fails** (exit 128). The repository's credential helper
      (`gh auth git-credential`) must read `~/.config/gh`, which the sandbox denies, so git
      cannot authenticate to the private repository. Consequence: fetch and push run in the
-     maintainer's own terminal. Possible fix (not applied, maintainer decides): exclude
-     `git fetch` / `git push` from the sandbox, or keep remote operations manual.
+     maintainer's own terminal. Maintainer decision: keep it that way (no sandbox change).
 - [x] **S4** Package security fixes (`pip-audit` clean, `npm audit` clean): pillow 13.0.0,
   mlflow 3.18.0 (+ skinny, tracing), certifi 2026.10.23, virtualenv 21.15.6, filelock
   4.2.10, gitpython 3.2.1, pyasn1 0.6.5, soupsieve 4.1, tornado 6.6.1 (`d11a2ee`). EDA
