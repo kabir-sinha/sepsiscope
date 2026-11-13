@@ -17,7 +17,7 @@ Batch S is pushed and CI is green.
 - [x] **S2** uv `required-version >=0.13.4,<0.14`, `requires-python >=3.13.18,<3.14`
   (lockfile: that line only); `.venv` recreated on 3.13.18; `doctor` PASS and prints only
   the OS family and architecture; Parquets and cleaning report byte-identical on rebuild.
-- [ ] **S3** Claude Code sandbox snippet (applied by the maintainer), then proofs.
+- [ ] **S3** Claude Code sandbox snippet drafted (2026-11-13); waiting for the maintainer to apply it, then run the proofs.
 - [ ] **S4** Package security fixes (waits for the Dependabot alert list), Dependabot PRs
   applied locally, EDA figures regenerated.
 - [ ] **S5** gitleaks hook, CI job (pinned, checksum-verified), full-history scan.
