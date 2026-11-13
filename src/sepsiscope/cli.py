@@ -15,7 +15,21 @@ from sepsiscope import __version__
 from sepsiscope._privacy import TELEMETRY_ENV, telemetry_env_ok
 from sepsiscope.config import REPO_ROOT
 
-app = typer.Typer(help="SepsiScope research prototype. Not for clinical use.", no_args_is_help=True)
+app = typer.Typer(
+    help="SepsiScope research prototype. Not for clinical use.",
+    no_args_is_help=True,
+    pretty_exceptions_enable=False,  # plain tracebacks, scrubbed of personal paths
+)
+
+
+@app.callback()
+def _setup() -> None:
+    """Rewrite personal paths in log records and error tracebacks (B6)."""
+    from sepsiscope.logscrub import install
+
+    install()
+
+
 data_app = typer.Typer(help="Dataset commands.", no_args_is_help=True)
 app.add_typer(data_app, name="data")
 features_app = typer.Typer(help="Feature commands.", no_args_is_help=True)
@@ -241,6 +255,7 @@ def privacy_audit(
 def train(
     model: str = typer.Option("lgbm", help="Only lgbm (baselines are fitted inside evaluate)."),
     direction: str | None = typer.Option(None, help="A2B or B2A."),
+    track: bool = typer.Option(True, "--track/--no-track", help="Log to the local MLflow DB."),
 ) -> None:
     """Train the LightGBM model on the source hospital's training split; save to models/."""
     from sepsiscope.config import load_config
@@ -262,6 +277,24 @@ def train(
         f"{r.direction} trees {r.num_trees}  rows {r.train_rows:,}  patients {r.train_patients:,}  "
         f"fit {r.seconds:.1f} s  {r.folder.relative_to(REPO_ROOT)}"
     )
+    if track:
+        import json
+
+        from sepsiscope.tracking import log_run
+
+        info = json.loads((r.folder / "model.json").read_text(encoding="utf-8"))
+        run_id = log_run(
+            REPO_ROOT / cfg.paths.mlruns_dir,
+            run_name=f"train_lgbm_{direction}",
+            step="B1-train",
+            params={**info["params"], "direction": direction, "data_sha256": info["data_sha256"]},
+            metrics={
+                "num_trees": r.num_trees,
+                "train_rows": r.train_rows,
+                "fit_seconds": r.seconds,
+            },
+        )
+        typer.echo(f"tracked run {run_id} in the local MLflow DB")
 
 
 @app.command()

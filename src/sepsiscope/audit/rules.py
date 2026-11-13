@@ -22,6 +22,8 @@ ALLOWED_EMAIL_PATTERNS = (
 )
 MAX_BYTES = 1_000_000  # 1 MB
 DATA_SUFFIXES = {".psv", ".parquet", ".csv"}
+# MLflow SQLite stores and Optuna journal files (ADR 0022, plan P1): never committed.
+STORE_SUFFIXES = {".db", ".sqlite", ".sqlite3", ".journal"}
 
 # Built from pieces so this file does not trip its own rules.
 HOME_PREFIX = "/" + "Users/"
@@ -78,6 +80,8 @@ def check_path(name: str) -> list[str]:
         problems.append(f"data file ({path.suffix}) under data/")
     if path.suffix.lower() in {".psv", ".parquet"}:
         problems.append(f"dataset file type {path.suffix}")
+    if path.suffix.lower() in STORE_SUFFIXES or (path.parts and path.parts[0] == "mlruns"):
+        problems.append("tracking or tuning store (mlflow.db, Optuna journal, mlruns/)")
     return problems
 
 

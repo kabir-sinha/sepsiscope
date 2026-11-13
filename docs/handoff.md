@@ -26,7 +26,14 @@ maintainer's own terminal.
   because the default learning rate 0.1 overfits within a few rounds (inner hold-out AP
   peaks early; at 0.03 it keeps improving). Fit 3.9 s / 2.5 s, peak 2.45 GiB.
   Measured 0.033-0.093 s per boosting round on a fold-sized set (num_leaves 15-255).
-- [ ] **B6** MLflow tracking (SQLite, no artifacts, personal tags overridden) and logging filter.
+- [x] **B6** MLflow tracking (`tracking.py`): local SQLite `mlruns/mlflow.db`; runs created
+  with `MlflowClient.create_run`, which adds no automatic context tags (checked in the
+  installed MLflow 3.18 source: `mlflow.start_run` would add the OS username, the absolute
+  script path and the git remote URL); only six allowlisted tags; no artifacts. The SQLite
+  store keeps an absolute artifact location inside the DB only (allowed by ADR 0022 item
+  4; nothing is written there). `sepsiscope train` logs each run (`--no-track` to skip).
+  Logging filter and scrubbed tracebacks (`logscrub.py`). Privacy guard blocks `.db`,
+  `.sqlite`, `.sqlite3`, `.journal` and `mlruns/`. Real DB scan: 53 texts, 0 personal hits.
 - [ ] **B2** Optuna tuning per ADR 0021 (only on "go").
 - [ ] **B3** Calibration (Platt headline, isotonic sensitivity) and per-alert explanations.
 - [ ] **B4** Evaluate LightGBM vs the 4 baselines with paired difference CIs.

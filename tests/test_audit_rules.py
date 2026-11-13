@@ -115,10 +115,19 @@ def test_utf16_and_binary_home_paths() -> None:
         ("data/raw/a.csv", "data file"),
         ("notes/p000001.psv", "dataset file type"),
         ("x/table.parquet", "dataset file type"),
+        ("mlflow.db", "tracking or tuning store"),
+        ("mlruns/mlflow.db", "tracking or tuning store"),
+        ("mlruns/optuna/lgbm_A2B.journal", "tracking or tuning store"),
+        ("notes/study.sqlite3", "tracking or tuning store"),
     ],
 )
 def test_path_rules(name: str, expected: str) -> None:
     assert any(expected in p for p in check_path(name))
+
+
+def test_ordinary_paths_are_not_stores() -> None:
+    assert check_path("docs/plan/batch-b.md") == []
+    assert check_path("src/sepsiscope/tracking.py") == []
 
 
 def test_large_file(tmp_path: Path) -> None:
