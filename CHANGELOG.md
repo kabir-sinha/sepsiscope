@@ -3,6 +3,21 @@
 Notable changes per phase. Dates are ISO 8601. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## Security lockdown (2026-11-13)
+
+### Changed
+- Toolchain minimums: uv 0.13.4, Python 3.13.18, Node 26.13.1; CI prints and enforces them
+  (ADR 0017).
+- Security upgrades: pillow 13.0.0, mlflow 3.18.0, certifi 2026.10.23, virtualenv 21.15.6,
+  filelock 4.2.10, gitpython 3.2.1, pyasn1 0.6.5, soupsieve 4.1, tornado 6.6.1; web:
+  react and react-dom 19.3.1, vite 8.3.5, oxlint 1.89.0, @types/node 26.6.5; setup-uv
+  v10.3.3; `uv_build <0.14`. EDA figures are byte-identical after the upgrade.
+- `sepsiscope doctor` prints only the OS family and CPU architecture.
+
+### Added
+- gitleaks: pre-commit hook and a checksum-verified CI job over the full history.
+- `docs/plan/batch-a.md` (Milestone 3 spec, queued) and ADR 0017.
+
 ## Privacy hardening (2026-10-22)
 
 ### Added
