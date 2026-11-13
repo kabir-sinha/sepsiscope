@@ -17,7 +17,10 @@ pushed together after the Batch A gate (maintainer decision, 2026-11-13).
 - [x] **A1** Causal hourly features (`sepsiscope features build`): 130 float32 features per
   hospital in `data/processed/features_{A,B}.parquet` (A 790,215 rows, B 761,995), about 6 s,
   byte-identical on rebuild; schema in `reports/features/feature_schema.json`.
-- [ ] **A2** Baselines.
+- [x] **A2** Baselines (`sepsiscope.models.baselines`): modified NEWS2 (bands verified against
+  RCP NEWS2 Chart 1 on 2026-11-13), SIRS, modified qSOFA, logistic regression (median
+  imputation + indicators + scaling, fitted on the training split only; stored as JSON),
+  NEWS2-as-probability. Never-measured items score 0 (ADR 0018).
 - [ ] **A3** Metrics library.
 - [ ] **A4** `sepsiscope evaluate` and result files.
 - [ ] **A5** `docs/traceability.md`.
