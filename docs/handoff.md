@@ -34,7 +34,12 @@ maintainer's own terminal.
   4; nothing is written there). `sepsiscope train` logs each run (`--no-track` to skip).
   Logging filter and scrubbed tracebacks (`logscrub.py`). Privacy guard blocks `.db`,
   `.sqlite`, `.sqlite3`, `.journal` and `mlruns/`. Real DB scan: 53 texts, 0 personal hits.
-- [ ] **B2** Optuna tuning per ADR 0021 (only on "go").
+- [ ] **B2** Optuna tuning per ADR 0021 (`models/tuning.py`, `sepsiscope tune --direction`):
+  maintainer said "go" 2026-11-13; launched A2B then B2A under `caffeinate -i`. Journal,
+  status JSON and log in the ignored `mlruns/tuning/`. 6 h guard from the 5th trial
+  (exit code 3, status JSON, no prompt). Resumable: the same command continues from the
+  journal; TPE state restarts on resume, so a resumed run is not byte-identical to an
+  uninterrupted one (the tuned JSON records `resumed`).
 - [ ] **B3** Calibration (Platt headline, isotonic sensitivity) and per-alert explanations.
 - [ ] **B4** Evaluate LightGBM vs the 4 baselines with paired difference CIs.
 - [ ] **B5** Ablations and drift analysis.

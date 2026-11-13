@@ -232,6 +232,60 @@ def features_build() -> None:
         )
 
 
+@app.command()
+def tune(
+    direction: str = typer.Option(..., help="A2B or B2A."),
+) -> None:
+    """Tune LightGBM per ADR 0021 (resumable); then fit the final model. Exit 3 = 6 h guard."""
+    from sepsiscope.config import load_config
+    from sepsiscope.evaluation.run import DIRECTIONS
+    from sepsiscope.models import tuning
+    from sepsiscope.models.pipeline import train_direction
+    from sepsiscope.tracking import log_run
+
+    if direction not in DIRECTIONS:
+        typer.echo("give --direction {A2B,B2A}")
+        raise typer.Exit(code=2)
+    cfg = load_config()
+    mlruns = REPO_ROOT / cfg.paths.mlruns_dir
+    store = mlruns / tuning.STORE_SUBDIR
+    tuning.add_log_file(store / "tuning.log")
+    data = tuning.load_training(
+        direction, REPO_ROOT / cfg.paths.data_dir, REPO_ROOT / cfg.paths.splits_dir
+    )
+    result_path = REPO_ROOT / cfg.paths.reports_dir / "tuning" / f"lgbm_{direction}.json"
+    outcome = tuning.tune(data, direction, store, result_path)
+    del data
+    if outcome.state == "guard_exit":
+        typer.echo(f"{direction} guard exit after {outcome.completed_trials} trials")
+        raise typer.Exit(code=tuning.GUARD_EXIT_CODE)
+    assert outcome.best_params is not None and outcome.median_rounds is not None
+    r = train_direction(
+        direction,
+        cfg,
+        REPO_ROOT / cfg.paths.data_dir,
+        REPO_ROOT / cfg.paths.splits_dir,
+        REPO_ROOT / cfg.paths.models_dir,
+        tuning.final_tunable(outcome.best_params),
+        outcome.median_rounds,
+    )
+    log_run(
+        mlruns,
+        run_name=f"tune_lgbm_{direction}",
+        step="B2-tune",
+        params={**tuning.final_tunable(outcome.best_params), "direction": direction},
+        metrics={
+            "best_mean_auprc": float(outcome.best_value or 0.0),
+            "completed_trials": outcome.completed_trials,
+            "final_trees": r.num_trees,
+        },
+    )
+    typer.echo(
+        f"{direction} finished: trials {outcome.completed_trials}, best mean AUPRC "
+        f"{outcome.best_value:.4f}, final trees {r.num_trees}, resumed {outcome.resumed}"
+    )
+
+
 @app.command("privacy-audit")
 def privacy_audit(
     strict: bool = typer.Option(
