@@ -1,0 +1,161 @@
+{
+ "model": "sirs",
+ "model_label": "SIRS (max 4)",
+ "direction": "A2B",
+ "source": "A",
+ "target": "B",
+ "alarm_budget": 0.05,
+ "seed": 42,
+ "bootstrap_resamples": 1000,
+ "strict_external": {
+  "patients": 20000,
+  "septic_patients": 1142,
+  "septic_from_row_zero": 223,
+  "rows": 761995,
+  "threshold": 4.0,
+  "point": {
+   "auroc": 0.6651611335215183,
+   "auprc": 0.027588277880712338,
+   "utility": 0.027783364503173334,
+   "alert_rate": 0.006308440344096746,
+   "timely_sensitivity": 0.11643090315560392,
+   "median_lead_hours": 5.0,
+   "false_alerts_per_100_patient_days": 11.593134537664008,
+   "row0_timely_sensitivity": 0.04035874439461883
+  },
+  "ci95": {
+   "auroc": [
+    0.6532024868582482,
+    0.6767413065308967
+   ],
+   "auprc": [
+    0.025176334408937486,
+    0.030203173820298315
+   ],
+   "utility": [
+    0.02041321616429521,
+    0.03614353475606919
+   ],
+   "alert_rate": [
+    0.0057098178712089095,
+    0.006935279727129311
+   ],
+   "timely_sensitivity": [
+    0.09705213322508276,
+    0.13674321503131523
+   ],
+   "median_lead_hours": [
+    4.0,
+    7.0
+   ],
+   "false_alerts_per_100_patient_days": [
+    10.38832133556286,
+    12.777471311828851
+   ],
+   "row0_timely_sensitivity": [
+    0.017463468118489957,
+    0.06827309236947791
+   ]
+  },
+  "source_validation_alert_rate": 0.011824292400829023,
+  "subgroups": {
+   "gender_0": {
+    "patients": 9268,
+    "auroc": 0.6741257230690578,
+    "auprc": 0.027726527442771327,
+    "utility": 0.03450377680398147,
+    "alert_rate": 0.006649239760741519,
+    "timely_sensitivity": 0.11557788944723618,
+    "median_lead_hours": 5.5,
+    "false_alerts_per_100_patient_days": 11.489915135561661,
+    "row0_timely_sensitivity": 0.07216494845360824
+   },
+   "gender_1": {
+    "patients": 10732,
+    "auroc": 0.6584763930794378,
+    "auprc": 0.027633090962487124,
+    "utility": 0.022649570338483516,
+    "alert_rate": 0.006018285675411039,
+    "timely_sensitivity": 0.11708253358925144,
+    "median_lead_hours": 5.0,
+    "false_alerts_per_100_patient_days": 11.681643132220795,
+    "row0_timely_sensitivity": 0.015873015873015872
+   },
+   "age_lt_65": {
+    "patients": 11096,
+    "auroc": 0.6605832134793614,
+    "auprc": 0.026672881534714667,
+    "utility": 0.026959820174206287,
+    "alert_rate": 0.007980705456738017,
+    "timely_sensitivity": 0.12704918032786885,
+    "median_lead_hours": 5.0,
+    "false_alerts_per_100_patient_days": 14.984391259105099,
+    "row0_timely_sensitivity": 0.050359712230215826
+   },
+   "age_ge_65": {
+    "patients": 8904,
+    "auroc": 0.6707165719430594,
+    "auprc": 0.02925231576806637,
+    "utility": 0.028772095533666085,
+    "alert_rate": 0.004312404640584967,
+    "timely_sensitivity": 0.10440835266821345,
+    "median_lead_hours": 5.0,
+    "false_alerts_per_100_patient_days": 7.52860737856702,
+    "row0_timely_sensitivity": 0.023809523809523808
+   }
+  }
+ },
+ "deployment_adaptation": {
+  "patients": 16000,
+  "septic_patients": 914,
+  "septic_from_row_zero": 183,
+  "rows": 610207,
+  "threshold": 4.0,
+  "point": {
+   "auroc": 0.6659880279944392,
+   "auprc": 0.027623813473203928,
+   "utility": 0.02827048144406331,
+   "alert_rate": 0.006427327120141198,
+   "timely_sensitivity": 0.11764705882352941,
+   "median_lead_hours": 5.0,
+   "false_alerts_per_100_patient_days": 11.523491548936384,
+   "row0_timely_sensitivity": 0.04371584699453552
+  },
+  "ci95": {
+   "auroc": [
+    0.6512459174049389,
+    0.680214283829228
+   ],
+   "auprc": [
+    0.02491380996999742,
+    0.030781534196892616
+   ],
+   "utility": [
+    0.019552453908952366,
+    0.03777028203667953
+   ],
+   "alert_rate": [
+    0.005697934968741928,
+    0.007193206556210903
+   ],
+   "timely_sensitivity": [
+    0.09449592119297481,
+    0.14190474980089132
+   ],
+   "median_lead_hours": [
+    4.0,
+    7.0
+   ],
+   "false_alerts_per_100_patient_days": [
+    10.24927460369612,
+    12.987193230789176
+   ],
+   "row0_timely_sensitivity": [
+    0.01675977653631285,
+    0.0753930471068794
+   ]
+  },
+  "target_calibration_alert_rate": 0.005830500434816982
+ },
+ "fitted": {}
+}

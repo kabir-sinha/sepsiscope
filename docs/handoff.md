@@ -12,20 +12,24 @@ pushed together after the Batch A gate (maintainer decision, 2026-11-13).
 
 ### Batch A
 
-- [x] **A0** ADRs 0018 (NEWS2 oxygen item), 0019 (strict external validation headline),
+- [x] **A0** ADRs 0018 (modified NEWS2 (max 17) oxygen item), 0019 (strict external validation headline),
   0020 (deferral metrics), 0021 (tuning protocol).
 - [x] **A1** Causal hourly features (`sepsiscope features build`): 130 float32 features per
   hospital in `data/processed/features_{A,B}.parquet` (A 790,215 rows, B 761,995), about 6 s,
   byte-identical on rebuild; schema in `reports/features/feature_schema.json`.
-- [x] **A2** Baselines (`sepsiscope.models.baselines`): modified NEWS2 (bands verified against
-  RCP NEWS2 Chart 1 on 2026-11-13), SIRS, modified qSOFA, logistic regression (median
+- [x] **A2** Baselines (`sepsiscope.models.baselines`): modified NEWS2 (max 17; bands verified against
+  RCP NEWS2 Chart 1 on 2026-11-13), SIRS, modified qSOFA (max 2), logistic regression (median
   imputation + indicators + scaling, fitted on the training split only; stored as JSON),
-  NEWS2-as-probability. Never-measured items score 0 (ADR 0018).
+  modified NEWS2 (max 17) as a probability. Never-measured items score 0 (ADR 0018).
 - [x] **A3** Metrics library (`sepsiscope.evaluation.metrics`): official normalised utility
   (per-patient parts from the vendored scorer; equals `evaluate_sepsis_score` in a test),
   tie-aware AUROC/AUPRC (equal sklearn), tie-safe budget threshold, event metrics, ECE,
   weighted patient-level bootstrap, dcurves decision curves.
-- [ ] **A4** `sepsiscope evaluate` and result files.
+- [x] **A4** `sepsiscope evaluate --all-baselines`: 10 result JSON files in `reports/results/`
+  and 4 figures in `reports/figures/results/`; strict external validation plus the
+  deployment-adaptation analysis (ADR 0019); about 215 s and 5.5 GiB peak on the local
+  machine; byte-identical on re-run. LR models saved as JSON with `feature_schema.json` in
+  the ignored `models/baselines/`.
 - [ ] **A5** `docs/traceability.md`.
 - [ ] **A6** Full gate; Milestone 3 evidence report (text only).
 

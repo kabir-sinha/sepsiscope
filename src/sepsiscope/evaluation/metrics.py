@@ -83,7 +83,7 @@ class UtilityParts:
     def normalized(self, weights: np.ndarray | None = None) -> float:
         w = np.ones(len(self.observed)) if weights is None else weights
         o, b, i = (float(np.dot(w, x)) for x in (self.observed, self.best, self.inaction))
-        return (o - i) / (b - i)
+        return (o - i) / (b - i) if b != i else float("nan")  # undefined without septic patients
 
 
 def reference_utilities(labels: np.ndarray, patient: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
@@ -140,12 +140,16 @@ class Ranking:
     def auroc(self, weights: np.ndarray | None = None) -> float:
         """Probability a positive row outranks a negative row; ties count one half."""
         pos, neg = self.counts(weights)
+        if pos.sum() == 0 or neg.sum() == 0:
+            return float("nan")  # undefined with a single class
         neg_below = neg.sum() - np.cumsum(neg)  # negatives with a strictly lower score
         return float(np.sum(pos * (neg_below + 0.5 * neg)) / (pos.sum() * neg.sum()))
 
     def auprc(self, weights: np.ndarray | None = None) -> float:
         """Average precision (scikit-learn's definition: step-wise, no interpolation)."""
         pos, neg = self.counts(weights)
+        if pos.sum() == 0:
+            return float("nan")
         tp, fp = np.cumsum(pos), np.cumsum(neg)
         with np.errstate(invalid="ignore", divide="ignore"):
             precision = np.where(tp + fp > 0, tp / (tp + fp), 0.0)
@@ -223,12 +227,14 @@ def event_metrics(ev: PatientEvents, weights: np.ndarray | None = None) -> dict[
     w = np.ones(len(ev.septic)) if weights is None else weights
     main = ev.septic & ~ev.from_row_zero
     clean = ~ev.septic
+    clean_days = float(np.dot(w[clean], ev.hours[clean])) / 24.0
+    clean_alerts = float(np.dot(w[clean], ev.alerts[clean]))
     out = {
         "timely_sensitivity": _wmean(ev.timely, w, main),
         "median_lead_hours": _wmedian(ev.lead, w, main & ev.timely),
-        "false_alerts_per_100_patient_days": 100.0
-        * float(np.dot(w[clean], ev.alerts[clean]))
-        / (float(np.dot(w[clean], ev.hours[clean])) / 24.0),
+        "false_alerts_per_100_patient_days": (
+            100.0 * clean_alerts / clean_days if clean_days > 0 else float("nan")
+        ),
         "row0_timely_sensitivity": _wmean(ev.timely, w, ev.from_row_zero),
     }
     return out
@@ -298,10 +304,14 @@ def bootstrap_ci(
         for key, value in statistic(w.astype(np.float64)).items():
             samples.setdefault(key, []).append(value)
     lo, hi = (1 - level) / 2 * 100, (1 + level) / 2 * 100
-    return {
-        key: (float(np.nanpercentile(v, lo)), float(np.nanpercentile(v, hi)))
-        for key, v in samples.items()
-    }
+    out: dict[str, tuple[float, float]] = {}
+    for key, v in samples.items():
+        arr = np.asarray(v, dtype=np.float64)
+        if np.isnan(arr).all():
+            out[key] = (float("nan"), float("nan"))
+        else:
+            out[key] = (float(np.nanpercentile(arr, lo)), float(np.nanpercentile(arr, hi)))
+    return out
 
 
 # --- decision curves --------------------------------------------------------------------

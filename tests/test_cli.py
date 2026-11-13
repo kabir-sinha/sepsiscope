@@ -23,11 +23,17 @@ def test_version() -> None:
     assert result.stdout.strip() == __version__
 
 
-@pytest.mark.parametrize("args", [["train"], ["evaluate"], ["report"]])
+@pytest.mark.parametrize("args", [["train"], ["report"]])
 def test_stubs(args: list[str]) -> None:
     result = runner.invoke(app, args)
     assert result.exit_code == 0
     assert "not implemented in Phase 0" in result.stdout
+
+
+def test_evaluate_needs_model_and_direction() -> None:
+    result = runner.invoke(app, ["evaluate", "--model", "xgb", "--direction", "A2B"])
+    assert result.exit_code == 2
+    assert "--all-baselines" in result.stdout
 
 
 def test_doctor_passes_and_is_not_personal() -> None:

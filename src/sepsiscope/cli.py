@@ -244,9 +244,40 @@ def train() -> None:
 
 
 @app.command()
-def evaluate() -> None:
-    """Evaluate models against the frozen protocol (later phase)."""
-    typer.echo(NOT_IMPLEMENTED)
+def evaluate(
+    model: str | None = typer.Option(
+        None, help="news2 = modified NEWS2 (max 17), sirs, qsofa = modified qSOFA (max 2), lr."
+    ),
+    direction: str | None = typer.Option(None, help="A2B or B2A."),
+    all_baselines: bool = typer.Option(False, "--all-baselines", help="All models, both ways."),
+) -> None:
+    """Evaluate baselines under strict external validation; writes reports/results/."""
+    from sepsiscope.config import load_config
+    from sepsiscope.evaluation.run import DIRECTIONS, MODELS, run
+
+    if all_baselines:
+        models, directions = list(MODELS), list(DIRECTIONS)
+    elif model in MODELS and direction in DIRECTIONS:
+        models, directions = [model], [direction]
+    else:
+        typer.echo(
+            "give --model {news2,sirs,qsofa,lr} and --direction {A2B,B2A}, or --all-baselines"
+        )
+        raise typer.Exit(code=2)
+    cfg = load_config()
+    reports = REPO_ROOT / cfg.paths.reports_dir
+    written = run(
+        models,
+        directions,
+        cfg,
+        REPO_ROOT / cfg.paths.data_dir,
+        REPO_ROOT / cfg.paths.splits_dir,
+        reports / "results",
+        REPO_ROOT / cfg.paths.models_dir,
+        reports / "figures" / "results",
+    )
+    for path in written:
+        typer.echo(f"wrote {path.relative_to(REPO_ROOT)}")
 
 
 @app.command()
