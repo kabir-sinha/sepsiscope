@@ -18,8 +18,12 @@ Batch S is pushed and CI is green.
   (lockfile: that line only); `.venv` recreated on 3.13.18; `doctor` PASS and prints only
   the OS family and architecture; Parquets and cleaning report byte-identical on rebuild.
 - [ ] **S3** Claude Code sandbox snippet drafted (2026-11-13); waiting for the maintainer to apply it, then run the proofs.
-- [ ] **S4** Package security fixes (waits for the Dependabot alert list), Dependabot PRs
-  applied locally, EDA figures regenerated.
+- [x] **S4** Package security fixes (`pip-audit` clean, `npm audit` clean): pillow 13.0.0,
+  mlflow 3.18.0 (+ skinny, tracing), certifi 2026.10.23, virtualenv 21.15.6, filelock
+  4.2.10, gitpython 3.2.1, pyasn1 0.6.5, soupsieve 4.1, tornado 6.6.1 (`eaf4b0a`). EDA
+  figures regenerated: byte-identical. Dependabot PRs applied locally: #3, #5, #6, #7, #9
+  (`dc43e63`); #4, #10 (`83b474b`). Those PRs can be closed. Still to add: any extra items
+  from the Dependabot alert list, when it arrives.
 - [ ] **S5** gitleaks hook, CI job (pinned, checksum-verified), full-history scan.
 - [ ] **S6** CI prints and enforces uv >= 0.13.4, Python >= 3.13.18, Node >= 26.13.1.
 - [ ] **S7** Batch gate; history rewrite into a new private repository; push after approval.
