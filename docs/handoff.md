@@ -31,7 +31,13 @@ pushed together after the Batch A gate (maintainer decision, 2026-11-13).
   machine; byte-identical on re-run. LR models saved as JSON with `feature_schema.json` in
   the ignored `models/baselines/`.
 - [x] **A5** `docs/traceability.md`: protocol section / ADR → code → test → result.
-- [ ] **A6** Full gate; Milestone 3 evidence report (text only).
+- [x] **A6** Full gate (2026-11-13): `uv sync --locked`, `doctor` PASS, ruff, format, mypy,
+  pre-commit (all files), `pip-audit --skip-editable` clean, web `npm ci` / lint / build /
+  `npm audit` clean, `privacy-audit` strict PASS, gitleaks 0, independent history scan 0;
+  evaluation byte-identical on re-run. pytest: 234 passed, **1 failed**:
+  `test_network_guard.py::test_unix_domain_sockets_still_work` cannot bind a Unix socket
+  inside the Claude Code sandbox (EPERM); not a code change, it passed before the sandbox.
+  Evidence report delivered as text. Batch S + A are not pushed yet (8 commits ahead).
 
 ### Batch S
 
