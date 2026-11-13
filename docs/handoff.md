@@ -30,7 +30,7 @@ pushed together after the Batch A gate (maintainer decision, 2026-11-13).
   deployment-adaptation analysis (ADR 0019); about 215 s and 5.5 GiB peak on the local
   machine; byte-identical on re-run. LR models saved as JSON with `feature_schema.json` in
   the ignored `models/baselines/`.
-- [ ] **A5** `docs/traceability.md`.
+- [x] **A5** `docs/traceability.md`: protocol section / ADR → code → test → result.
 - [ ] **A6** Full gate; Milestone 3 evidence report (text only).
 
 ### Batch S
