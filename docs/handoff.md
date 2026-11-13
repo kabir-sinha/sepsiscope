@@ -42,7 +42,9 @@ maintainer's own terminal.
   log in the ignored `mlruns/tuning/`. Pruned trials show a partial mean (folds seen so far),
   not comparable with complete trials. Resumability: the same command continues from the
   journal; TPE state restarts on resume, so a resumed run is not byte-identical.
-- [ ] **B3** Calibration (Platt headline, isotonic sensitivity) and per-alert explanations.
+- [x] **B3a** Calibration (`models/calibration.py`): Platt (headline, unpenalised) and isotonic
+  (sensitivity) on raw log-odds, JSON only; fitted on the source calibration split in B4.
+- [ ] **B3b** Per-alert explanations from `pred_contrib`.
 - [ ] **B4** Evaluate LightGBM vs the 4 baselines with paired difference CIs.
 - [ ] **B5** Ablations and drift analysis.
 - [ ] **B7** Local demo: API on 127.0.0.1 and dashboard.
