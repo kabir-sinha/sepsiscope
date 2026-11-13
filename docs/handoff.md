@@ -28,7 +28,8 @@ Batch S is pushed and CI is green.
   block a token-shaped string); CI job downloads the official 8.30.1 release and checks it
   against pinned SHA-256 values for both the tarball and the checksums file; full-history
   scan: 0 findings.
-- [ ] **S6** CI prints and enforces uv >= 0.13.4, Python >= 3.13.18, Node >= 26.13.1.
+- [x] **S6** CI prints uv, Python, Node and npm versions and fails below uv 0.13.4,
+  Python 3.13.18 or Node 26.13.1 (setup-uv reads `required-version` from `pyproject.toml`).
 - [ ] **S7** Batch gate; history rewrite into a new private repository; push after approval.
 
 Older notes (still valid until S7 replaces the repository):

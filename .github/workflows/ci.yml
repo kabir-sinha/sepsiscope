@@ -33,6 +33,19 @@ jobs:
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
       - name: Install locked dependencies
         run: uv sync --locked --all-extras
+      - name: Toolchain versions (security minimums, ADR 0017)
+        run: |
+          set -euo pipefail
+          floor() {  # fail if version $1 is below minimum $2
+            [ "$(printf '%s\n%s\n' "$2" "$1" | sort -V | head -n1)" = "$2" ] \
+              || { echo "::error::$3 $1 is below the security minimum $2"; exit 1; }
+          }
+          uv_v="$(uv --version | awk '{print $2}')"
+          py_v="$(uv run --frozen python -c 'import platform; print(platform.python_version())')"
+          echo "uv ${uv_v}"
+          echo "python ${py_v}"
+          floor "$uv_v" 0.13.4 uv
+          floor "$py_v" 3.13.18 Python
       - name: Privacy guard (all tracked files)
         # Also catches anything committed with `git commit --no-verify`. Generic patterns
         # only: the local denylist is gitignored and never exists in CI.
@@ -99,6 +112,17 @@ jobs:
           node-version-file: web/.nvmrc
           cache: npm
           cache-dependency-path: web/package-lock.json
+      - name: Toolchain versions (security minimums, ADR 0017)
+        run: |
+          set -euo pipefail
+          floor() {  # fail if version $1 is below minimum $2
+            [ "$(printf '%s\n%s\n' "$2" "$1" | sort -V | head -n1)" = "$2" ] \
+              || { echo "::error::$3 $1 is below the security minimum $2"; exit 1; }
+          }
+          node_v="$(node --version | sed 's/^v//')"
+          echo "node ${node_v}"
+          echo "npm $(npm --version)"
+          floor "$node_v" 26.13.1 Node
       - run: npm ci
       - run: npm run lint
       - run: npm run build
