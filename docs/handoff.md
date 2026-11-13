@@ -14,7 +14,9 @@ pushed together after the Batch A gate (maintainer decision, 2026-11-13).
 
 - [x] **A0** ADRs 0018 (NEWS2 oxygen item), 0019 (strict external validation headline),
   0020 (deferral metrics), 0021 (tuning protocol).
-- [ ] **A1** Causal hourly features.
+- [x] **A1** Causal hourly features (`sepsiscope features build`): 130 float32 features per
+  hospital in `data/processed/features_{A,B}.parquet` (A 790,215 rows, B 761,995), about 6 s,
+  byte-identical on rebuild; schema in `reports/features/feature_schema.json`.
 - [ ] **A2** Baselines.
 - [ ] **A3** Metrics library.
 - [ ] **A4** `sepsiscope evaluate` and result files.

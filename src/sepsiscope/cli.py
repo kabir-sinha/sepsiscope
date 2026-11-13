@@ -18,6 +18,8 @@ from sepsiscope.config import REPO_ROOT
 app = typer.Typer(help="SepsiScope research prototype. Not for clinical use.", no_args_is_help=True)
 data_app = typer.Typer(help="Dataset commands.", no_args_is_help=True)
 app.add_typer(data_app, name="data")
+features_app = typer.Typer(help="Feature commands.", no_args_is_help=True)
+app.add_typer(features_app, name="features")
 
 KEY_PACKAGES = (
     "numpy",
@@ -197,6 +199,23 @@ def data_splits() -> None:
                 f"{hospital} {part:<12} patients {c['patients']:>6,}  "
                 f"septic {c['septic']:>5,}  rate {rate:.4f}"
             )
+
+
+@features_app.command("build")
+def features_build() -> None:
+    """Build causal hourly features per hospital (data/processed) and the feature schema."""
+    from sepsiscope.config import load_config
+    from sepsiscope.features.pipeline import build_features
+
+    cfg = load_config()
+    results = build_features(
+        REPO_ROOT / cfg.paths.data_dir, REPO_ROOT / cfg.paths.reports_dir, cfg.features
+    )
+    for r in results:
+        typer.echo(
+            f"{r.hospital} rows {r.rows:>9,}  patients {r.patients:>6,}  "
+            f"features {r.features}  {r.path.relative_to(REPO_ROOT)}"
+        )
 
 
 @app.command("privacy-audit")

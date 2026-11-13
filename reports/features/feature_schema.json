@@ -1,0 +1,802 @@
+{
+ "dataset": "PhysioNet/CinC Challenge 2019 v1.0.0",
+ "causal": "each feature at hour t uses only the same patient's rows with hour <= t",
+ "keys": [
+  "pid",
+  "hospital",
+  "t",
+  "SepsisLabel"
+ ],
+ "dtype": "float32",
+ "switches": {
+  "vitals": true,
+  "labs": true,
+  "demographics": true,
+  "measurement_process": true,
+  "trends": true,
+  "icu_time": false
+ },
+ "count": 130,
+ "features": [
+  {
+   "name": "HR",
+   "group": "vitals",
+   "source": "HR",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "O2Sat",
+   "group": "vitals",
+   "source": "O2Sat",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "Temp",
+   "group": "vitals",
+   "source": "Temp",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "SBP",
+   "group": "vitals",
+   "source": "SBP",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "MAP",
+   "group": "vitals",
+   "source": "MAP",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "DBP",
+   "group": "vitals",
+   "source": "DBP",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "Resp",
+   "group": "vitals",
+   "source": "Resp",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "EtCO2",
+   "group": "vitals",
+   "source": "EtCO2",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "BaseExcess",
+   "group": "labs",
+   "source": "BaseExcess",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "HCO3",
+   "group": "labs",
+   "source": "HCO3",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "FiO2",
+   "group": "labs",
+   "source": "FiO2",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "pH",
+   "group": "labs",
+   "source": "pH",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "PaCO2",
+   "group": "labs",
+   "source": "PaCO2",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "SaO2",
+   "group": "labs",
+   "source": "SaO2",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "AST",
+   "group": "labs",
+   "source": "AST",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "BUN",
+   "group": "labs",
+   "source": "BUN",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "Alkalinephos",
+   "group": "labs",
+   "source": "Alkalinephos",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "Calcium",
+   "group": "labs",
+   "source": "Calcium",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "Chloride",
+   "group": "labs",
+   "source": "Chloride",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "Creatinine",
+   "group": "labs",
+   "source": "Creatinine",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "Bilirubin_direct",
+   "group": "labs",
+   "source": "Bilirubin_direct",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "Glucose",
+   "group": "labs",
+   "source": "Glucose",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "Lactate",
+   "group": "labs",
+   "source": "Lactate",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "Magnesium",
+   "group": "labs",
+   "source": "Magnesium",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "Phosphate",
+   "group": "labs",
+   "source": "Phosphate",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "Potassium",
+   "group": "labs",
+   "source": "Potassium",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "Bilirubin_total",
+   "group": "labs",
+   "source": "Bilirubin_total",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "TroponinI",
+   "group": "labs",
+   "source": "TroponinI",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "Hct",
+   "group": "labs",
+   "source": "Hct",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "Hgb",
+   "group": "labs",
+   "source": "Hgb",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "PTT",
+   "group": "labs",
+   "source": "PTT",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "WBC",
+   "group": "labs",
+   "source": "WBC",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "Fibrinogen",
+   "group": "labs",
+   "source": "Fibrinogen",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "Platelets",
+   "group": "labs",
+   "source": "Platelets",
+   "description": "last value carried forward"
+  },
+  {
+   "name": "shock_index",
+   "group": "vitals",
+   "source": "HR,SBP",
+   "description": "HR / SBP, last values"
+  },
+  {
+   "name": "bun_creatinine",
+   "group": "labs",
+   "source": "BUN,Creatinine",
+   "description": "BUN / Creatinine, last values"
+  },
+  {
+   "name": "Age",
+   "group": "demographics",
+   "source": "Age",
+   "description": "as recorded"
+  },
+  {
+   "name": "Gender",
+   "group": "demographics",
+   "source": "Gender",
+   "description": "as recorded"
+  },
+  {
+   "name": "HR__hsl",
+   "group": "measurement_process",
+   "source": "HR",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "O2Sat__hsl",
+   "group": "measurement_process",
+   "source": "O2Sat",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "Temp__hsl",
+   "group": "measurement_process",
+   "source": "Temp",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "SBP__hsl",
+   "group": "measurement_process",
+   "source": "SBP",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "MAP__hsl",
+   "group": "measurement_process",
+   "source": "MAP",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "DBP__hsl",
+   "group": "measurement_process",
+   "source": "DBP",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "Resp__hsl",
+   "group": "measurement_process",
+   "source": "Resp",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "EtCO2__hsl",
+   "group": "measurement_process",
+   "source": "EtCO2",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "BaseExcess__hsl",
+   "group": "measurement_process",
+   "source": "BaseExcess",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "HCO3__hsl",
+   "group": "measurement_process",
+   "source": "HCO3",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "FiO2__hsl",
+   "group": "measurement_process",
+   "source": "FiO2",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "pH__hsl",
+   "group": "measurement_process",
+   "source": "pH",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "PaCO2__hsl",
+   "group": "measurement_process",
+   "source": "PaCO2",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "SaO2__hsl",
+   "group": "measurement_process",
+   "source": "SaO2",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "AST__hsl",
+   "group": "measurement_process",
+   "source": "AST",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "BUN__hsl",
+   "group": "measurement_process",
+   "source": "BUN",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "Alkalinephos__hsl",
+   "group": "measurement_process",
+   "source": "Alkalinephos",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "Calcium__hsl",
+   "group": "measurement_process",
+   "source": "Calcium",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "Chloride__hsl",
+   "group": "measurement_process",
+   "source": "Chloride",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "Creatinine__hsl",
+   "group": "measurement_process",
+   "source": "Creatinine",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "Bilirubin_direct__hsl",
+   "group": "measurement_process",
+   "source": "Bilirubin_direct",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "Glucose__hsl",
+   "group": "measurement_process",
+   "source": "Glucose",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "Lactate__hsl",
+   "group": "measurement_process",
+   "source": "Lactate",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "Magnesium__hsl",
+   "group": "measurement_process",
+   "source": "Magnesium",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "Phosphate__hsl",
+   "group": "measurement_process",
+   "source": "Phosphate",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "Potassium__hsl",
+   "group": "measurement_process",
+   "source": "Potassium",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "Bilirubin_total__hsl",
+   "group": "measurement_process",
+   "source": "Bilirubin_total",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "TroponinI__hsl",
+   "group": "measurement_process",
+   "source": "TroponinI",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "Hct__hsl",
+   "group": "measurement_process",
+   "source": "Hct",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "Hgb__hsl",
+   "group": "measurement_process",
+   "source": "Hgb",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "PTT__hsl",
+   "group": "measurement_process",
+   "source": "PTT",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "WBC__hsl",
+   "group": "measurement_process",
+   "source": "WBC",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "Fibrinogen__hsl",
+   "group": "measurement_process",
+   "source": "Fibrinogen",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "Platelets__hsl",
+   "group": "measurement_process",
+   "source": "Platelets",
+   "description": "hours since last measured"
+  },
+  {
+   "name": "HR__n",
+   "group": "measurement_process",
+   "source": "HR",
+   "description": "measurements so far"
+  },
+  {
+   "name": "O2Sat__n",
+   "group": "measurement_process",
+   "source": "O2Sat",
+   "description": "measurements so far"
+  },
+  {
+   "name": "Temp__n",
+   "group": "measurement_process",
+   "source": "Temp",
+   "description": "measurements so far"
+  },
+  {
+   "name": "SBP__n",
+   "group": "measurement_process",
+   "source": "SBP",
+   "description": "measurements so far"
+  },
+  {
+   "name": "MAP__n",
+   "group": "measurement_process",
+   "source": "MAP",
+   "description": "measurements so far"
+  },
+  {
+   "name": "DBP__n",
+   "group": "measurement_process",
+   "source": "DBP",
+   "description": "measurements so far"
+  },
+  {
+   "name": "Resp__n",
+   "group": "measurement_process",
+   "source": "Resp",
+   "description": "measurements so far"
+  },
+  {
+   "name": "EtCO2__n",
+   "group": "measurement_process",
+   "source": "EtCO2",
+   "description": "measurements so far"
+  },
+  {
+   "name": "BaseExcess__n",
+   "group": "measurement_process",
+   "source": "BaseExcess",
+   "description": "measurements so far"
+  },
+  {
+   "name": "HCO3__n",
+   "group": "measurement_process",
+   "source": "HCO3",
+   "description": "measurements so far"
+  },
+  {
+   "name": "FiO2__n",
+   "group": "measurement_process",
+   "source": "FiO2",
+   "description": "measurements so far"
+  },
+  {
+   "name": "pH__n",
+   "group": "measurement_process",
+   "source": "pH",
+   "description": "measurements so far"
+  },
+  {
+   "name": "PaCO2__n",
+   "group": "measurement_process",
+   "source": "PaCO2",
+   "description": "measurements so far"
+  },
+  {
+   "name": "SaO2__n",
+   "group": "measurement_process",
+   "source": "SaO2",
+   "description": "measurements so far"
+  },
+  {
+   "name": "AST__n",
+   "group": "measurement_process",
+   "source": "AST",
+   "description": "measurements so far"
+  },
+  {
+   "name": "BUN__n",
+   "group": "measurement_process",
+   "source": "BUN",
+   "description": "measurements so far"
+  },
+  {
+   "name": "Alkalinephos__n",
+   "group": "measurement_process",
+   "source": "Alkalinephos",
+   "description": "measurements so far"
+  },
+  {
+   "name": "Calcium__n",
+   "group": "measurement_process",
+   "source": "Calcium",
+   "description": "measurements so far"
+  },
+  {
+   "name": "Chloride__n",
+   "group": "measurement_process",
+   "source": "Chloride",
+   "description": "measurements so far"
+  },
+  {
+   "name": "Creatinine__n",
+   "group": "measurement_process",
+   "source": "Creatinine",
+   "description": "measurements so far"
+  },
+  {
+   "name": "Bilirubin_direct__n",
+   "group": "measurement_process",
+   "source": "Bilirubin_direct",
+   "description": "measurements so far"
+  },
+  {
+   "name": "Glucose__n",
+   "group": "measurement_process",
+   "source": "Glucose",
+   "description": "measurements so far"
+  },
+  {
+   "name": "Lactate__n",
+   "group": "measurement_process",
+   "source": "Lactate",
+   "description": "measurements so far"
+  },
+  {
+   "name": "Magnesium__n",
+   "group": "measurement_process",
+   "source": "Magnesium",
+   "description": "measurements so far"
+  },
+  {
+   "name": "Phosphate__n",
+   "group": "measurement_process",
+   "source": "Phosphate",
+   "description": "measurements so far"
+  },
+  {
+   "name": "Potassium__n",
+   "group": "measurement_process",
+   "source": "Potassium",
+   "description": "measurements so far"
+  },
+  {
+   "name": "Bilirubin_total__n",
+   "group": "measurement_process",
+   "source": "Bilirubin_total",
+   "description": "measurements so far"
+  },
+  {
+   "name": "TroponinI__n",
+   "group": "measurement_process",
+   "source": "TroponinI",
+   "description": "measurements so far"
+  },
+  {
+   "name": "Hct__n",
+   "group": "measurement_process",
+   "source": "Hct",
+   "description": "measurements so far"
+  },
+  {
+   "name": "Hgb__n",
+   "group": "measurement_process",
+   "source": "Hgb",
+   "description": "measurements so far"
+  },
+  {
+   "name": "PTT__n",
+   "group": "measurement_process",
+   "source": "PTT",
+   "description": "measurements so far"
+  },
+  {
+   "name": "WBC__n",
+   "group": "measurement_process",
+   "source": "WBC",
+   "description": "measurements so far"
+  },
+  {
+   "name": "Fibrinogen__n",
+   "group": "measurement_process",
+   "source": "Fibrinogen",
+   "description": "measurements so far"
+  },
+  {
+   "name": "Platelets__n",
+   "group": "measurement_process",
+   "source": "Platelets",
+   "description": "measurements so far"
+  },
+  {
+   "name": "HR__mean6",
+   "group": "trends",
+   "source": "HR",
+   "description": "mean of values in hours t-5..t"
+  },
+  {
+   "name": "HR__std6",
+   "group": "trends",
+   "source": "HR",
+   "description": "sample SD of values in hours t-5..t"
+  },
+  {
+   "name": "HR__d6",
+   "group": "trends",
+   "source": "HR",
+   "description": "last value now minus at hour t-6"
+  },
+  {
+   "name": "O2Sat__mean6",
+   "group": "trends",
+   "source": "O2Sat",
+   "description": "mean of values in hours t-5..t"
+  },
+  {
+   "name": "O2Sat__std6",
+   "group": "trends",
+   "source": "O2Sat",
+   "description": "sample SD of values in hours t-5..t"
+  },
+  {
+   "name": "O2Sat__d6",
+   "group": "trends",
+   "source": "O2Sat",
+   "description": "last value now minus at hour t-6"
+  },
+  {
+   "name": "Temp__mean6",
+   "group": "trends",
+   "source": "Temp",
+   "description": "mean of values in hours t-5..t"
+  },
+  {
+   "name": "Temp__std6",
+   "group": "trends",
+   "source": "Temp",
+   "description": "sample SD of values in hours t-5..t"
+  },
+  {
+   "name": "Temp__d6",
+   "group": "trends",
+   "source": "Temp",
+   "description": "last value now minus at hour t-6"
+  },
+  {
+   "name": "SBP__mean6",
+   "group": "trends",
+   "source": "SBP",
+   "description": "mean of values in hours t-5..t"
+  },
+  {
+   "name": "SBP__std6",
+   "group": "trends",
+   "source": "SBP",
+   "description": "sample SD of values in hours t-5..t"
+  },
+  {
+   "name": "SBP__d6",
+   "group": "trends",
+   "source": "SBP",
+   "description": "last value now minus at hour t-6"
+  },
+  {
+   "name": "MAP__mean6",
+   "group": "trends",
+   "source": "MAP",
+   "description": "mean of values in hours t-5..t"
+  },
+  {
+   "name": "MAP__std6",
+   "group": "trends",
+   "source": "MAP",
+   "description": "sample SD of values in hours t-5..t"
+  },
+  {
+   "name": "MAP__d6",
+   "group": "trends",
+   "source": "MAP",
+   "description": "last value now minus at hour t-6"
+  },
+  {
+   "name": "DBP__mean6",
+   "group": "trends",
+   "source": "DBP",
+   "description": "mean of values in hours t-5..t"
+  },
+  {
+   "name": "DBP__std6",
+   "group": "trends",
+   "source": "DBP",
+   "description": "sample SD of values in hours t-5..t"
+  },
+  {
+   "name": "DBP__d6",
+   "group": "trends",
+   "source": "DBP",
+   "description": "last value now minus at hour t-6"
+  },
+  {
+   "name": "Resp__mean6",
+   "group": "trends",
+   "source": "Resp",
+   "description": "mean of values in hours t-5..t"
+  },
+  {
+   "name": "Resp__std6",
+   "group": "trends",
+   "source": "Resp",
+   "description": "sample SD of values in hours t-5..t"
+  },
+  {
+   "name": "Resp__d6",
+   "group": "trends",
+   "source": "Resp",
+   "description": "last value now minus at hour t-6"
+  },
+  {
+   "name": "EtCO2__mean6",
+   "group": "trends",
+   "source": "EtCO2",
+   "description": "mean of values in hours t-5..t"
+  },
+  {
+   "name": "EtCO2__std6",
+   "group": "trends",
+   "source": "EtCO2",
+   "description": "sample SD of values in hours t-5..t"
+  },
+  {
+   "name": "EtCO2__d6",
+   "group": "trends",
+   "source": "EtCO2",
+   "description": "last value now minus at hour t-6"
+  }
+ ]
+}
