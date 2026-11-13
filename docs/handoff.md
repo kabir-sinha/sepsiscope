@@ -7,7 +7,21 @@ State of the work, so anyone can pick it up from the repository alone.
 ## Resume here
 
 **Batch S (security and privacy lockdown) closed 2026-11-13.** Batch A (Milestone 3) is
-next; its approved plan is in `docs/plan/batch-a.md`.
+in progress; its approved plan is in `docs/plan/batch-a.md`. Batch S and Batch A are
+pushed together after the Batch A gate (maintainer decision, 2026-11-13).
+
+### Batch A
+
+- [x] **A0** ADRs 0018 (NEWS2 oxygen item), 0019 (strict external validation headline),
+  0020 (deferral metrics), 0021 (tuning protocol).
+- [ ] **A1** Causal hourly features.
+- [ ] **A2** Baselines.
+- [ ] **A3** Metrics library.
+- [ ] **A4** `sepsiscope evaluate` and result files.
+- [ ] **A5** `docs/traceability.md`.
+- [ ] **A6** Full gate; Milestone 3 evidence report (text only).
+
+### Batch S
 
 - [x] **S1** Homebrew tools upgraded by name (no global upgrade, no cleanup, dependents
   untouched): uv 0.13.8, Python 3.13.18, Node 26.13.1, git 2.56.1, gh 2.104.0,

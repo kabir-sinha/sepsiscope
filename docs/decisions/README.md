@@ -23,3 +23,7 @@ A decision is changed by a new ADR that supersedes it, never by editing history.
 | [0015](0015-hospital-marker-strength.md) | Measured strength of the hospital markers; unit columns to be revisited | Accepted |
 | [0016](0016-privacy-hardening.md) | Privacy hardening: UTC commits, local denylist, git hooks, privacy-audit | Accepted |
 | [0017](0017-security-lockdown.md) | Security lockdown: patched toolchain, package fixes, gitleaks, sandbox, clean history | Accepted |
+| [0018](0018-news2-oxygen-item.md) | NEWS2 oxygen item: missing FiO2 scores 0; 24 h carry-forward sensitivity | Accepted |
+| [0019](0019-strict-external-validation-headline.md) | Headline = strict external validation; deployment adaptation secondary | Accepted |
+| [0020](0020-deferral-metrics.md) | Deferral metrics for the trust layer | Accepted |
+| [0021](0021-tuning-protocol.md) | Tuning: Optuna TPE, 50 trials, mean AUPRC over GroupKFold(5) | Accepted |
