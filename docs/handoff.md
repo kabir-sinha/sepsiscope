@@ -44,7 +44,8 @@ maintainer's own terminal.
   journal; TPE state restarts on resume, so a resumed run is not byte-identical.
 - [x] **B3a** Calibration (`models/calibration.py`): Platt (headline, unpenalised) and isotonic
   (sensitivity) on raw log-odds, JSON only; fitted on the source calibration split in B4.
-- [ ] **B3b** Per-alert explanations from `pred_contrib`.
+- [x] **B3b** Per-alert explanations (`trust/explain.py`): LightGBM `pred_contrib` on raw
+  log-odds, chunked; contributions + base = raw score (tested to 1e-9).
 - [ ] **B4** Evaluate LightGBM vs the 4 baselines with paired difference CIs.
 - [ ] **B5** Ablations and drift analysis.
 - [ ] **B7** Local demo: API on 127.0.0.1 and dashboard.
