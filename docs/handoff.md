@@ -30,6 +30,8 @@ Batch S is pushed and CI is green.
   scan: 0 findings.
 - [x] **S6** CI prints uv, Python, Node and npm versions and fails below uv 0.13.4,
   Python 3.13.18 or Node 26.13.1 (setup-uv reads `required-version` from `pyproject.toml`).
+- [x] **S4 follow-up** Dependabot alert list cross-checked; `nbconvert` 7.17.2; security
+  floors in `[tool.uv] constraint-dependencies` (ADR 0017 amendment).
 - [ ] **S7** Batch gate; history rewrite into a new private repository; push after approval.
 
 Older notes (still valid until S7 replaces the repository):

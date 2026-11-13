@@ -38,6 +38,16 @@ and in CI. Older commits still held personal wording and local timezone offsets
   repository; the old one is renamed `sepsiscope-legacy`, kept private, and deleted by the
   maintainer later. Afterwards `privacy-audit` is strict by default.
 
+## Amendment (2026-11-13): security floors
+The Dependabot alert list was cross-checked against `uv.lock`: every alerted package is at
+or above its patched release; `nbconvert` was the only one below (7.17.1 < 7.17.2) and was
+upgraded on its own. Every package upgraded for security in this batch now has a floor in
+`[tool.uv] constraint-dependencies` at the version locked today (certifi, filelock,
+gitpython, mlflow, mlflow-skinny, mlflow-tracing, nbconvert, pillow, pyasn1, soupsieve,
+tornado, virtualenv). Constraints only restrict versions and never add packages, so a
+later `uv lock` cannot silently fall back below a patched release; uv records them in
+`uv.lock`. ([uv settings: constraint-dependencies](https://docs.astral.sh/uv/reference/settings/#constraint-dependencies))
+
 ## Alternatives
 - Rewriting the existing repository in place with a force-push: rejected; the hosting
   service keeps pull-request references to old commits.

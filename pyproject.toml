@@ -47,6 +47,22 @@ build-backend = "uv_build"
 python-preference = "system"
 # Same uv minor locally and in CI (setup-uv reads this).
 required-version = ">=0.13.4,<0.14"
+# Security floors (ADR 0017, amended 2026-11-13): never resolve below the patched releases.
+# Constraints only restrict versions; they never add packages to the environment.
+constraint-dependencies = [
+    "certifi>=2026.10.23",
+    "filelock>=4.2.10",
+    "gitpython>=3.2.1",
+    "mlflow>=3.18.0",
+    "mlflow-skinny>=3.18.0",
+    "mlflow-tracing>=3.18.0",
+    "nbconvert>=7.17.2",
+    "pillow>=13.0.0",
+    "pyasn1>=0.6.5",
+    "soupsieve>=4.1",
+    "tornado>=6.6.1",
+    "virtualenv>=21.15.6",
+]
 
 [dependency-groups]
 dev = [
