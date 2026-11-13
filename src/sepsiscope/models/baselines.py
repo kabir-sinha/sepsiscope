@@ -1,4 +1,4 @@
-"""Baselines (protocol section 7): modified NEWS2, SIRS, modified qSOFA, logistic regression.
+"""Baselines (protocol section 7): modified NEWS2 (max 17), SIRS, modified qSOFA (max 2), LR.
 
 All rule scores read the causal feature table (``sepsiscope.features``): vital signs and
 labs are the last value carried forward within the patient, so a score at hour t uses only
@@ -58,7 +58,7 @@ def on_oxygen(features: pd.DataFrame, carry_hours: int | None = None) -> np.ndar
 
 
 def news2(features: pd.DataFrame, carry_hours: int | None = None) -> np.ndarray:
-    """Modified NEWS2, 0-17."""
+    """Modified NEWS2 (max 17): no consciousness item, SpO2 Scale 1 only."""
     total = np.zeros(len(features), dtype=np.int16)
     for column, (uppers, points) in NEWS2_BANDS.items():
         total += band_points(features[column].to_numpy(), uppers, points)
@@ -98,7 +98,7 @@ def sirs(features: pd.DataFrame) -> np.ndarray:
 
 
 def qsofa(features: pd.DataFrame) -> np.ndarray:
-    """Modified qSOFA, 0-2 (Sepsis-3 Box 4; no mentation item)."""
+    """Modified qSOFA (max 2): Sepsis-3 Box 4 without the mentation item."""
     score: np.ndarray = _ge(features, "Resp", 22).astype(np.int16) + _le(features, "SBP", 100)
     return score.astype(np.int16)
 
@@ -171,7 +171,9 @@ def fit_logistic(
 
 
 def fit_news2_probability(scores: np.ndarray, labels: np.ndarray, seed: int) -> tuple[float, float]:
-    """NEWS2 as a probability: one-feature logistic regression on the source training split.
+    """Modified NEWS2 (max 17) as a probability.
+
+    One-feature logistic regression on the source hospital's training split.
 
     Returns (coefficient, intercept); probability = sigmoid(coef * score + intercept).
     """

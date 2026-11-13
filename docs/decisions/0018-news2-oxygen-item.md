@@ -1,9 +1,9 @@
-# 0018 — NEWS2 oxygen item: missing FiO2 scores 0
+# 0018 — Modified NEWS2 (max 17) oxygen item: missing FiO2 scores 0
 
 **Date:** 2026-11-13 · **Status:** Accepted · **Does not change** `docs/protocol.md`
 
 ## Context
-The protocol (section 7) scores the NEWS2 "air or oxygen" item as "on oxygen" when
+The protocol (section 7) scores the modified NEWS2 (max 17) "air or oxygen" item as "on oxygen" when
 `FiO2 > 0.21`. FiO2 is a laboratory/ventilator column and is missing in most hours, so the
 protocol needs a rule for hours without an FiO2 value. Cleaning keeps FiO2 only as a
 fraction in `[0.21, 1.0]` (ADR 0014).
@@ -14,7 +14,7 @@ fraction in `[0.21, 1.0]` (ADR 0014).
   hour is used; it is not carried forward.
 - **Sensitivity analysis:** FiO2 is carried forward within the patient for up to
   **24 hours** after its last measurement; after that it counts as missing (0 points).
-- The other NEWS2 items use the last value carried forward within the patient (causal,
+- The other modified NEWS2 items use the last value carried forward within the patient (causal,
   hours `<= t` only); an item that has never been measured scores 0. The modified score
   has no consciousness item, so its maximum is 17 (protocol section 7).
 
@@ -24,7 +24,7 @@ fraction in `[0.21, 1.0]` (ADR 0014).
 - Score missing FiO2 as "on oxygen": rejected, it would add 2 points to most hours.
 
 ## Consequences
-NEWS2 may under-score patients on oxygen whose FiO2 was not charted every hour; the
+Modified NEWS2 may under-score patients on oxygen whose FiO2 was not charted every hour; the
 24-hour sensitivity analysis shows how much this matters.
 
 ## Sources

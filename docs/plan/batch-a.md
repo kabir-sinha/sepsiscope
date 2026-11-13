@@ -7,7 +7,7 @@ the end, and a stop before the push.
 
 ## A0. Decisions to record as ADRs (approved)
 
-1. **NEWS2 oxygen item.** Missing FiO2 means "no supplemental oxygen recorded" (0 points).
+1. **Modified NEWS2 (max 17) oxygen item.** Missing FiO2 means "no supplemental oxygen recorded" (0 points).
    Sensitivity analysis: carry FiO2 forward for up to 24 hours.
 2. **Headline result = strict external validation.** The threshold comes from the source
    hospital's validation split. A secondary, clearly labelled "deployment adaptation"
@@ -37,7 +37,7 @@ are absent; output is deterministic.
 
 ## A2. Baselines
 
-- **Modified NEWS2:** no consciousness item, maximum 17. Expected bands, to be verified
+- **Modified NEWS2 (max 17):** no consciousness item, SpO2 Scale 1 only. Expected bands, to be verified
   against the official RCP NEWS2 chart and quoted before use:
   - respiration rate ≤8 / 9–11 / 12–20 / 21–24 / ≥25
   - SpO2 scale 1 ≤91 / 92–93 / 94–95 / ≥96; supplemental oxygen +2
@@ -46,10 +46,10 @@ are absent; output is deterministic.
   - temperature ≤35.0 / 35.1–36.0 / 36.1–38.0 / 38.1–39.0 / ≥39.1
 - **SIRS:** Sepsis-3 Box 1 / Bone 1992, without the band-count criterion; PaCO2 < 32 mmHg
   as the respiratory alternative.
-- **Modified qSOFA:** respiration rate ≥22, systolic BP ≤100, maximum 2.
+- **Modified qSOFA (max 2):** respiration rate ≥22, systolic BP ≤100 (both inclusive).
 - **Logistic regression:** imputation and scaling fitted on the training split only, plus
   missing-value indicators.
-- **NEWS2 as a probability:** logistic regression on the source hospital's training split.
+- **Modified NEWS2 (max 17) as a probability:** logistic regression on the source hospital's training split.
 
 ## A3. Metrics library
 

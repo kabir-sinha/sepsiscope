@@ -1,4 +1,4 @@
-"""Baselines: hand-checked band edges (RCP NEWS2 Chart 1), SIRS, qSOFA and the JSON LR."""
+"""Baselines: modified NEWS2 (max 17) band edges from RCP Chart 1, SIRS, modified qSOFA (max 2)."""
 
 from __future__ import annotations
 
@@ -69,7 +69,7 @@ def test_oxygen_rule_main_and_24h_sensitivity() -> None:
 
 def test_sirs_criteria() -> None:
     f = rows(
-        Temp=[38.1, 36.0, 35.9, NAN, NAN],
+        Temp=[38.1, 36.0, 35.9, NAN, 38.0],
         HR=[91, 90, NAN, NAN, NAN],
         Resp=[21, 20, NAN, NAN, NAN],
         PaCO2=[NAN, 32, 31, NAN, NAN],
