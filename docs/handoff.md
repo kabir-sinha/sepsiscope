@@ -21,7 +21,10 @@ pushed together after the Batch A gate (maintainer decision, 2026-11-13).
   RCP NEWS2 Chart 1 on 2026-11-13), SIRS, modified qSOFA, logistic regression (median
   imputation + indicators + scaling, fitted on the training split only; stored as JSON),
   NEWS2-as-probability. Never-measured items score 0 (ADR 0018).
-- [ ] **A3** Metrics library.
+- [x] **A3** Metrics library (`sepsiscope.evaluation.metrics`): official normalised utility
+  (per-patient parts from the vendored scorer; equals `evaluate_sepsis_score` in a test),
+  tie-aware AUROC/AUPRC (equal sklearn), tie-safe budget threshold, event metrics, ECE,
+  weighted patient-level bootstrap, dcurves decision curves.
 - [ ] **A4** `sepsiscope evaluate` and result files.
 - [ ] **A5** `docs/traceability.md`.
 - [ ] **A6** Full gate; Milestone 3 evidence report (text only).
