@@ -6,26 +6,25 @@ State of the work, so anyone can pick it up from the repository alone.
 
 ## Resume here
 
-**Current state (2026-10-22).** The eight privacy-hardening commits `8b1c9ed..94bcf25`
-(HEAD of that work: `94bcf25`) and the commit adding this section are pushed together to
-`origin/main` with `TZ=UTC git push origin main`; the pre-push hook checks every outgoing
-commit. If that push failed, the failure is recorded directly below this section and
-nothing was pushed.
+**Batch S (security and privacy lockdown) in progress.** Plan approved 2026-11-13. Batch A
+(Milestone 3) is queued: its spec is in `docs/plan/batch-a.md`; present its plan only after
+Batch S is pushed and CI is green.
 
-1. **Confirm CI is green** on the pushed commits, including the new step
-   "Commit check (+0000 offsets, allowed identities, messages)". Read-only.
-2. **Fix the pip-audit findings** (not started). Official PyPI releases only; plan first,
-   show the diff before committing:
-   - `certifi` to 2026.10.19 or later; `virtualenv` to 21.14.7 or later.
-   - `pillow` 13.0.0 only after confirming matplotlib's requirement allows it, reading
-     pillow's release notes, and checking whether the regenerated EDA figures change bytes
-     (keep the figure reproducibility test meaningful).
-   - Check for matching Dependabot PRs first and apply those changes locally with `TZ=UTC`
-     instead of merging on GitHub.
-   - Then the full Definition of Done, `pip-audit` clean, the double privacy check
-     (`sepsiscope privacy-audit` plus a full-history scan), and stop before pushing.
-3. **Phase 2**, once its plan is approved: Dependabot PRs #3 and #4 first, applied locally
-   with `TZ=UTC`.
+- [x] **S1** Homebrew tools upgraded by name (no global upgrade, no cleanup, dependents
+  untouched): uv 0.13.8, Python 3.13.18, Node 26.13.1, git 2.56.1, gh 2.104.0,
+  ca-certificates 2026-11-05, libomp 23.1.5; gitleaks 8.30.1 and git-filter-repo 2.47.0
+  installed.
+- [x] **S2** uv `required-version >=0.13.4,<0.14`, `requires-python >=3.13.18,<3.14`
+  (lockfile: that line only); `.venv` recreated on 3.13.18; `doctor` PASS and prints only
+  the OS family and architecture; Parquets and cleaning report byte-identical on rebuild.
+- [ ] **S3** Claude Code sandbox snippet (applied by the maintainer), then proofs.
+- [ ] **S4** Package security fixes (waits for the Dependabot alert list), Dependabot PRs
+  applied locally, EDA figures regenerated.
+- [ ] **S5** gitleaks hook, CI job (pinned, checksum-verified), full-history scan.
+- [ ] **S6** CI prints and enforces uv >= 0.13.4, Python >= 3.13.18, Node >= 26.13.1.
+- [ ] **S7** Batch gate; history rewrite into a new private repository; push after approval.
+
+Older notes (still valid until S7 replaces the repository):
 
 - Repository `kabir-sinha/sepsiscope` is **private**; default branch `main`.
 - First CI run is green: run `38003153138` (jobs `python` and `web`). After the four

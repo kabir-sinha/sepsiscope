@@ -68,8 +68,8 @@ def doctor() -> None:
     typer.echo(f"interpreter     {_describe_interpreter(sys.executable)}")
     base = getattr(sys, "_base_executable", sys.executable)
     typer.echo(f"base python     {_describe_interpreter(base)}")
-    # platform.platform() has OS/arch only; platform.node() (hostname) is never printed.
-    typer.echo(f"platform        {platform.platform()}")
+    # OS family and CPU architecture only: no OS version, hostname (platform.node()) or model.
+    typer.echo(f"platform        {platform.system()} {platform.machine()}")
     for name in KEY_PACKAGES:
         typer.echo(f"{name:<15} {_pkg(name)}")
 

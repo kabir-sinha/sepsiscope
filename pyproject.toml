@@ -6,7 +6,7 @@ readme = "README.md"
 authors = [
     { name = "Kabir Sinha", email = "222482936+kabir-sinha@users.noreply.github.com" }
 ]
-requires-python = ">=3.13,<3.14"
+requires-python = ">=3.13.18,<3.14"
 dependencies = [
     "dcurves==1.1.7",
     "defusedxml==0.7.1",
@@ -46,7 +46,7 @@ build-backend = "uv_build"
 # uv-managed copy. CI (no system 3.13) can still fall back to a managed one.
 python-preference = "system"
 # Same uv minor locally and in CI (setup-uv reads this).
-required-version = ">=0.12.24,<0.13"
+required-version = ">=0.13.4,<0.14"
 
 [dependency-groups]
 dev = [

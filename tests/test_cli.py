@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import getpass
+import platform
 import re
 import socket
 from pathlib import Path
@@ -42,3 +43,6 @@ def test_doctor_passes_and_is_not_personal() -> None:
     assert "/" + "Users/" not in out
     assert socket.gethostname() not in out
     assert not re.search(r"[\w.+-]+@[\w-]+\.[\w.]+", out)
+    # No OS version either: only the OS family and CPU architecture.
+    assert platform.release() not in out
+    assert f"platform        {platform.system()} {platform.machine()}\n" in out
