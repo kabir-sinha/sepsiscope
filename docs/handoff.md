@@ -6,9 +6,27 @@ State of the work, so anyone can pick it up from the repository alone.
 
 ## Resume here
 
-**Batch S (security and privacy lockdown) and Batch A (Milestone 3) closed 2026-11-13.**
-Both were pushed together by the maintainer from their own terminal at `ce231b2`; CI #11
-green on `ce231b2`, 0 open Dependabot alerts. Next: Batch B (plan to be presented).
+**Batch S and Batch A (Milestone 3) closed 2026-11-13** and pushed by the maintainer from
+their own terminal (latest `3e0da73`; CI #11 green on `ce231b2`, 0 open Dependabot alerts).
+The Milestone 3 evidence document is done.
+
+**Batch B (Milestone 4: trained model) approved 2026-11-13** with amendments; plan in
+`docs/plan/batch-b.md`, decisions in ADR 0022. B0 is done. **Next step: B1** (LightGBM model
+and `sepsiscope train`). Order: B1 → B6 → B2 → B3 → B4 → B5 → B7 → gate.
+**B2 tuning waits for the maintainer's explicit "go".** Pushes happen from the
+maintainer's own terminal.
+
+### Batch B
+
+- [x] **B0** Plan `docs/plan/batch-b.md` and ADR 0022.
+- [ ] **B1** LightGBM model and `sepsiscope train`.
+- [ ] **B6** MLflow tracking (SQLite, no artifacts, personal tags overridden) and logging filter.
+- [ ] **B2** Optuna tuning per ADR 0021 (only on "go").
+- [ ] **B3** Calibration (Platt headline, isotonic sensitivity) and per-alert explanations.
+- [ ] **B4** Evaluate LightGBM vs the 4 baselines with paired difference CIs.
+- [ ] **B5** Ablations and drift analysis.
+- [ ] **B7** Local demo: API on 127.0.0.1 and dashboard.
+- [ ] Gate and M4 evidence report (text).
 
 **Sandbox decisions (maintainer, 2026-11-13), kept as they are:**
 - Fetch and push stay in the maintainer's own terminal (sandbox proof 6 fails by design;
