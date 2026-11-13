@@ -19,7 +19,13 @@ maintainer's own terminal.
 ### Batch B
 
 - [x] **B0** Plan `docs/plan/batch-b.md` and ADR 0022.
-- [ ] **B1** LightGBM model and `sepsiscope train`.
+- [x] **B1** LightGBM model and `sepsiscope train` (`models/lgbm.py`, `models/pipeline.py`):
+  text + whitelisted JSON + feature schema in the ignored `models/lgbm_{direction}/`;
+  deterministic, no class weights; data fingerprint = SHA-256 of contents. Default
+  parameters (placeholder until B2): early stopping picks 19 trees (A2B) and 3 trees (B2A),
+  because the default learning rate 0.1 overfits within a few rounds (inner hold-out AP
+  peaks early; at 0.03 it keeps improving). Fit 3.9 s / 2.5 s, peak 2.45 GiB.
+  Measured 0.033-0.093 s per boosting round on a fold-sized set (num_leaves 15-255).
 - [ ] **B6** MLflow tracking (SQLite, no artifacts, personal tags overridden) and logging filter.
 - [ ] **B2** Optuna tuning per ADR 0021 (only on "go").
 - [ ] **B3** Calibration (Platt headline, isotonic sensitivity) and per-alert explanations.

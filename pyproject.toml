@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Explainable, alarm-budgeted sepsis early-warning research prototype (PhysioNet/CinC 2019)."
 readme = "README.md"
 authors = [
-    { name = "Kabir Sinha", email = "222482936+kabir-sinha@users.noreply.github.com" }
+    { name = "SepsiScope contributors", email = "222482936+kabir-sinha@users.noreply.github.com" }
 ]
 requires-python = ">=3.13.18,<3.14"
 dependencies = [

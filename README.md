@@ -59,6 +59,6 @@ repository.
 
 ## Licence
 
-© 2026 Kabir Sinha. All rights reserved.
+© 2026 SepsiScope contributors. All rights reserved.
 
 Third-party material in `third_party/` keeps its own licence.

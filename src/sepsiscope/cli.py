@@ -238,9 +238,30 @@ def privacy_audit(
 
 
 @app.command()
-def train() -> None:
-    """Train models (later phase)."""
-    typer.echo(NOT_IMPLEMENTED)
+def train(
+    model: str = typer.Option("lgbm", help="Only lgbm (baselines are fitted inside evaluate)."),
+    direction: str | None = typer.Option(None, help="A2B or B2A."),
+) -> None:
+    """Train the LightGBM model on the source hospital's training split; save to models/."""
+    from sepsiscope.config import load_config
+    from sepsiscope.evaluation.run import DIRECTIONS
+    from sepsiscope.models.pipeline import train_direction
+
+    if model != "lgbm" or direction not in DIRECTIONS:
+        typer.echo("give --model lgbm and --direction {A2B,B2A}")
+        raise typer.Exit(code=2)
+    cfg = load_config()
+    r = train_direction(
+        direction,
+        cfg,
+        REPO_ROOT / cfg.paths.data_dir,
+        REPO_ROOT / cfg.paths.splits_dir,
+        REPO_ROOT / cfg.paths.models_dir,
+    )
+    typer.echo(
+        f"{r.direction} trees {r.num_trees}  rows {r.train_rows:,}  patients {r.train_patients:,}  "
+        f"fit {r.seconds:.1f} s  {r.folder.relative_to(REPO_ROOT)}"
+    )
 
 
 @app.command()
