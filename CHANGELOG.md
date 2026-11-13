@@ -67,7 +67,7 @@ Notable changes per phase. Dates are ISO 8601. The format follows
 - Config: new `paths.splits_dir`.
 
 ### Notes
-- Commit `b4ac7f6` ("add cleaning rules table and pandera schemas") also contains
+- Commit `6b50fbc` ("add cleaning rules table and pandera schemas") also contains
   `src/sepsiscope/data/build.py`; its title under-describes it. History was not rewritten.
 - ADR 0015 records the measured hospital-marker strength (unit columns 58.1 %, `ICULOS`
   start 65.0 %, baseline 50.4 %) and schedules a unit-columns-only ablation for Phase 2.

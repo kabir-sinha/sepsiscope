@@ -12,16 +12,16 @@
 | Dependabot security updates | **Enabled** (`GET .../automated-security-fixes` returned `enabled: true`) |
 | Dependabot version updates | `uv`, `npm` and `github-actions`, weekly; major updates of `typescript` and `@types/node` are ignored on purpose |
 | PR #1 (TypeScript 7.0.2) | **Closed** with `@dependabot ignore this major version`; the project stays on TypeScript ~6.0 |
-| PR #2 (`@types/node` 26.6.4) | **Merged** as `56a5bdb`, so the types match the Node 26 runtime in `web/.nvmrc` |
+| PR #2 (`@types/node` 26.6.4) | **Merged** as `3c3cb0b`, so the types match the Node 26 runtime in `web/.nvmrc` |
 | Open pull requests | None |
 | CI runner | Both jobs pinned to `ubuntu-24.04` (see the CI runner note) |
-| Latest green CI run | `38004754410` on `dfad15b` (jobs `python` and `web`); newer runs are in the Actions tab |
+| Latest green CI run | `38004754410` on `a39e37a` (jobs `python` and `web`); newer runs are in the Actions tab |
 | Watching | All Activity (`subscribed: true`, `ignored: false`) |
 | Collaborators | Only `kabir-sinha` (admin) |
 | Branch protection | **Pending**; rules below, to apply when enabled |
 
 Commit history: every commit is authored by the project's GitHub noreply address, except
-the merged Dependabot PR `56a5bdb`, whose author is `dependabot[bot]` (GitHub's bot
+the merged Dependabot PR `3c3cb0b`, whose author is `dependabot[bot]` (GitHub's bot
 identity, not personal data).
 
 Pre-push check: the full history was scanned three ways (git grep over every commit, every
