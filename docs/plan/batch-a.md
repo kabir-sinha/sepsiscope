@@ -1,7 +1,7 @@
-# Batch A — Milestone 3: data and baselines (queued)
+# Batch A — Milestone 3: data and baselines
 
-Status: **queued**. Its plan is presented for approval only after Batch S (security
-lockdown) is pushed and CI is green. Same working mode as Batch S: one plan, one approval,
+Status: **approved 2026-11-13, in progress** (Batch S is pushed and CI is green).
+Same working mode as Batch S: one plan, one approval,
 fast checks per step, a commit per step with `docs/handoff.md` updated, the full gate at
 the end, and a stop before the push.
 

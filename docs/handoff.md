@@ -6,9 +6,8 @@ State of the work, so anyone can pick it up from the repository alone.
 
 ## Resume here
 
-**Batch S (security and privacy lockdown) in progress.** Plan approved 2026-11-13. Batch A
-(Milestone 3) is queued: its spec is in `docs/plan/batch-a.md`; present its plan only after
-Batch S is pushed and CI is green.
+**Batch S (security and privacy lockdown) closed 2026-11-13.** Batch A (Milestone 3) is
+next; its approved plan is in `docs/plan/batch-a.md`.
 
 - [x] **S1** Homebrew tools upgraded by name (no global upgrade, no cleanup, dependents
   untouched): uv 0.13.8, Python 3.13.18, Node 26.13.1, git 2.56.1, gh 2.104.0,
@@ -17,7 +16,18 @@ Batch S is pushed and CI is green.
 - [x] **S2** uv `required-version >=0.13.4,<0.14`, `requires-python >=3.13.18,<3.14`
   (lockfile: that line only); `.venv` recreated on 3.13.18; `doctor` PASS and prints only
   the OS family and architecture; Parquets and cleaning report byte-identical on rebuild.
-- [ ] **S3** Claude Code sandbox snippet drafted (2026-11-13); waiting for the maintainer to apply it, then run the proofs.
+- [x] **S3** Claude Code sandbox applied by the maintainer; proofs run 2026-11-13:
+  1. write outside the repository: blocked (pass)
+  2. connection to a domain not on the allowlist: blocked by the proxy, HTTP 403 (pass)
+  3. read `~/.ssh`: blocked (pass)
+  4. `uv sync --locked --all-extras`: exit 0 (pass)
+  5. `npm ci` in `web/`: exit 0 (pass; npm notes that `fsevents` install scripts are not
+     run, which is expected and harmless)
+  6. `git fetch --dry-run origin`: **fails** (exit 128). The repository's credential helper
+     (`gh auth git-credential`) must read `~/.config/gh`, which the sandbox denies, so git
+     cannot authenticate to the private repository. Consequence: fetch and push run in the
+     maintainer's own terminal. Possible fix (not applied, maintainer decides): exclude
+     `git fetch` / `git push` from the sandbox, or keep remote operations manual.
 - [x] **S4** Package security fixes (`pip-audit` clean, `npm audit` clean): pillow 13.0.0,
   mlflow 3.18.0 (+ skinny, tracing), certifi 2026.10.23, virtualenv 21.15.6, filelock
   4.2.10, gitpython 3.2.1, pyasn1 0.6.5, soupsieve 4.1, tornado 6.6.1 (`d11a2ee`). EDA
@@ -34,7 +44,9 @@ Batch S is pushed and CI is green.
   floors in `[tool.uv] constraint-dependencies` (ADR 0017 amendment).
 - [x] **S7 (part)** History rewritten in a scratch clone (identical HEAD tree, all offsets
   `+0000`, `privacy-audit --strict` and gitleaks clean); `privacy-audit` strict by default.
-- [ ] **S7** Batch gate; history rewrite into a new private repository; push after approval.
+- [x] **S7** Batch gate passed; rewritten history pushed to a new private repository at
+  `2811720`; CI green; 0 open Dependabot alerts; the legacy repository was deleted by the
+  maintainer and the local backups were removed.
 
 Older notes. Commit hashes below were remapped to the rewritten history on 2026-11-13; CI
 run numbers from before that date belong to the legacy repository.
@@ -148,4 +160,5 @@ No models are trained in this phase.
 
 ## Next
 
-Phase 2 (features and models), once its plan is approved.
+Batch A (Milestone 3: causal features, baselines, metrics, evaluation), plan in
+`docs/plan/batch-a.md`.
