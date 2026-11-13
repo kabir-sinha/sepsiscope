@@ -1,9 +1,9 @@
 """``sepsiscope privacy-audit``: tracked files, every blob in history, commit messages,
 identities, timezone offsets and ref names, with masked output.
 
-Findings that exist only in commits made before ``UTC_REQUIRED_FROM`` are *known*: they
-are listed but do not fail the run until the planned pre-sharing history rewrite, after
-which ``--strict`` (fail on everything) becomes the default (ADR 0016).
+Strict by default since the history rewrite (ADR 0017): every finding fails the run. With
+``strict=False`` (``--no-strict``), findings that exist only in commits made before
+``UTC_REQUIRED_FROM`` are listed as *known* instead of failing.
 """
 
 from __future__ import annotations
@@ -39,10 +39,10 @@ class AuditReport:
     findings: list[Finding] = field(default_factory=list)
     scanned: dict[str, int] = field(default_factory=dict)
 
-    def blocking(self, strict: bool = False) -> list[Finding]:
+    def blocking(self, strict: bool = True) -> list[Finding]:
         return [f for f in self.findings if strict or not f.known]
 
-    def known(self, strict: bool = False) -> list[Finding]:
+    def known(self, strict: bool = True) -> list[Finding]:
         return [] if strict else [f for f in self.findings if f.known]
 
 
@@ -132,7 +132,7 @@ def run_audit(root: Path) -> AuditReport:
     return report
 
 
-def format_report(report: AuditReport, strict: bool = False) -> list[str]:
+def format_report(report: AuditReport, strict: bool = True) -> list[str]:
     """Human-readable, masked report lines."""
     lines = ["scanned  " + ", ".join(f"{k} {v}" for k, v in report.scanned.items())]
     lines += [f"FAIL     {f.area:<8} {f.where}: {f.problem}" for f in report.blocking(strict)]
@@ -153,6 +153,6 @@ def format_report(report: AuditReport, strict: bool = False) -> list[str]:
     lines.append(
         f"result   {'FAIL' if blocking else 'PASS'} ({mode}): {blocking} blocking, "
         f"{len(known)} known (only in commits before {UTC_REQUIRED_FROM:%Y-%m-%d}, "
-        "pending the pre-sharing history rewrite)"
+        "listed only with --no-strict)"
     )
     return lines

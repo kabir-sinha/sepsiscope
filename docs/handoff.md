@@ -32,6 +32,8 @@ Batch S is pushed and CI is green.
   Python 3.13.18 or Node 26.13.1 (setup-uv reads `required-version` from `pyproject.toml`).
 - [x] **S4 follow-up** Dependabot alert list cross-checked; `nbconvert` 7.17.2; security
   floors in `[tool.uv] constraint-dependencies` (ADR 0017 amendment).
+- [x] **S7 (part)** History rewritten in a scratch clone (identical HEAD tree, all offsets
+  `+0000`, `privacy-audit --strict` and gitleaks clean); `privacy-audit` strict by default.
 - [ ] **S7** Batch gate; history rewrite into a new private repository; push after approval.
 
 Older notes (still valid until S7 replaces the repository):

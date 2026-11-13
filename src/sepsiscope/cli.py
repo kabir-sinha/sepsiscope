@@ -202,7 +202,10 @@ def data_splits() -> None:
 @app.command("privacy-audit")
 def privacy_audit(
     strict: bool = typer.Option(
-        False, "--strict", help="Also fail on known findings in commits made before the cutoff."
+        True,
+        "--strict/--no-strict",
+        help="Fail on every finding (default). --no-strict lists findings that exist only in "
+        "commits made before the UTC cutoff as known instead of failing.",
     ),
 ) -> None:
     """Scan tracked files, all of git history, messages, offsets and refs (masked output)."""

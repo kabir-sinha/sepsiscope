@@ -88,6 +88,13 @@ Matches are whole-word and case-insensitive; the GitHub handle inside the norepl
 and the repository URL is not a hit. The maintainer's name is allowed only on the README
 copyright line and the pyproject author line. Output always masks the value.
 
+### Full audit
+
+`uv run sepsiscope privacy-audit` scans the tracked files, every blob in history, commit
+messages, identities, offsets and ref names, and prints masked output. It is strict by
+default (any finding fails); `--no-strict` lists findings that exist only in commits made
+before 2026-10-22 as known instead.
+
 ### Commit timezone
 
 Every commit is made with `TZ=UTC` so it does not record the local timezone. For your own

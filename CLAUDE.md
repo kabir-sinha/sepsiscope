@@ -91,6 +91,6 @@ uv run sepsiscope data splits        # stratified 60/20/20 patient splits
 uv run ruff check . && uv run ruff format --check . && uv run mypy src
 uv run pre-commit install            # pre-commit, commit-msg and pre-push hooks
 uv run pre-commit run --all-files    # all hooks incl. privacy guard
-uv run sepsiscope privacy-audit      # tree + full history + offsets, masked output
+uv run sepsiscope privacy-audit      # strict: tree + full history + offsets, masked output
 cd web && npm ci && npm run lint && npm run build
 ```

@@ -40,6 +40,8 @@ timestamps.
   identities, offsets and ref names, and prints masked output only. Findings that exist
   only in commits before 2026-10-22 are reported as *known* and do not fail the run until
   the pre-sharing history rewrite; after it, `--strict` becomes the default.
+  *Amended 2026-11-13:* the rewrite is done (ADR 0017) and strict is now the default;
+  `--no-strict` restores the lenient view.
 
 ## Alternatives
 - Rewrite history now with `git filter-repo`: deferred. It is approved in principle as one

@@ -34,7 +34,7 @@ def test_clean_repository(git_repo: Path) -> None:
     report = run_audit(git_repo)
     assert report.findings == []
     assert report.scanned["commits"] == 1
-    assert format_report(report)[-1].startswith("result   PASS (non-strict): 0 blocking")
+    assert format_report(report)[-1].startswith("result   PASS (strict): 0 blocking")
 
 
 def test_legacy_problems_are_known_until_strict(git_repo: Path) -> None:
@@ -93,6 +93,16 @@ def test_png_metadata_in_history(git_repo: Path) -> None:
 def test_cli_on_this_repository_is_masked() -> None:
     result = CliRunner().invoke(app, ["privacy-audit"])
     assert result.exit_code == 0, result.stdout
-    assert "result   PASS (non-strict)" in result.stdout
+    assert "result   PASS (strict)" in result.stdout
     for value in load_denylist(REPO_ROOT):  # present only on the maintainer's machine
         assert value.lower() not in result.stdout.lower()
+
+
+def test_cli_no_strict_lists_known_findings(git_repo: Path) -> None:
+    """--no-strict turns legacy findings into 'known'; the default (strict) fails on them."""
+    git_commit("docs: legacy", tz="ABC-1", date=OLD)
+    git_commit("docs: new", date=NEW)
+    report = run_audit(git_repo)
+    assert format_report(report)[-1].startswith("result   FAIL (strict): 2 blocking")
+    lenient = format_report(report, strict=False)
+    assert lenient[-1].startswith("result   PASS (non-strict): 0 blocking, 2 known")
