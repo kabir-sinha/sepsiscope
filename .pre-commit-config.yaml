@@ -52,6 +52,13 @@ repos:
         entry: uv run --frozen nbstripout
         language: unsupported
         types: [jupyter]
+      - id: gitleaks
+        # System binary (Homebrew `gitleaks`), scans only what is staged; secrets redacted.
+        name: gitleaks (staged changes)
+        entry: gitleaks git --pre-commit --staged --redact --no-banner --verbose
+        language: unsupported
+        pass_filenames: false
+        always_run: true
       - id: commit-msg-check
         name: commit message (no AI trailers, nothing personal)
         entry: uv run --frozen python -m sepsiscope.audit.hooks commit-msg

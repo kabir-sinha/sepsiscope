@@ -24,7 +24,10 @@ Batch S is pushed and CI is green.
   figures regenerated: byte-identical. Dependabot PRs applied locally: #3, #5, #6, #7, #9
   (`dc43e63`); #4, #10 (`83b474b`). Those PRs can be closed. Still to add: any extra items
   from the Dependabot alert list, when it arrives.
-- [ ] **S5** gitleaks hook, CI job (pinned, checksum-verified), full-history scan.
+- [x] **S5** gitleaks: pre-commit hook (system binary, staged changes, redacted; proven to
+  block a token-shaped string); CI job downloads the official 8.30.1 release and checks it
+  against pinned SHA-256 values for both the tarball and the checksums file; full-history
+  scan: 0 findings.
 - [ ] **S6** CI prints and enforces uv >= 0.13.4, Python >= 3.13.18, Node >= 26.13.1.
 - [ ] **S7** Batch gate; history rewrite into a new private repository; push after approval.
 
