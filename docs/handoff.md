@@ -17,8 +17,18 @@ in ADR 0024 before any result. Order: C0 → C4 → C1 → C2 → C3 → C5 → 
   label placed clear of the onset and selected-hour lines (right end, else left end, else
   below the line); LightGBM headline cards share the others' style, marked "(headline)" in
   text. Lint, build, contrast 56/56. Not checked visually in a browser (no local server).
-- [ ] **C1** bands ·
-  [ ] **C2** deferral · [ ] **C3** budgets · [ ] **C5** docs · [ ] **C6** gate.
+- [x] **C1** `sepsiscope analyses bands` (199 s, 4.77 GiB): thresholds and overall numbers
+  reproduce the committed headline (checked in the run). **Pre-registered result (ADR 0024
+  item 1): LightGBM collapses within bands in both directions**: 96 h+ AUROC 0.565 (A→B,
+  overall 0.800) and 0.587 (B→A, overall 0.765). Stronger signal: A→B LightGBM alerts 0.0 %
+  of hours in 0-48 h, 31 % in 48-96 h and 92 % after 96 h; utility in 0-48 h is about
+  0.002, so A→B utility comes almost entirely from long stays (consistent with cumulative
+  counts proxying ICU time). B→A is milder (4.1-4.3 % alerts and utility 0.04-0.08 in
+  0-48 h). LightGBM − LR utility: clearly positive in every B→A band; in A→B only after 48 h
+  (0-24 h −0.005 [−0.013, 0.003], 24-48 h −0.033 [−0.069, 0.004]). All models drop in the
+  96 h+ band (about 350 patients). `reports/results/bands_{A2B,B2A}.json`.
+- [ ] **C2** deferral ·
+  [ ] **C3** budgets · [ ] **C5** docs · [ ] **C6** gate.
 
 **Batch B gate PASSED (2026-11-14); M4 evidence report delivered as text** and pushed.
 
