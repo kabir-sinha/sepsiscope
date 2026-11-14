@@ -12,8 +12,8 @@ estimated by hand. **Research prototype, not for clinical use; not a medical dev
   onset is at most 6 hours away (or has happened) for the current ICU hour.
 - **Inputs:** 130 causal features per hour, using only hours ≤ t (protocol section 3):
   vitals 9, labs 27, demographics 2 (Age, Gender), measurement process 68 (cumulative
-  counts `__n` and hours since last measured `__hsl`), trends 24 (6-hour means and
-  standard deviations). `ICULOS`, `HospAdmTime`, `Unit1` and `Unit2` are never features
+  counts `__n` and hours since last measured `__hsl`), trends 24 (for 8 vitals: mean and
+  standard deviation over hours t-5..t, and the change since hour t-6). `ICULOS`, `HospAdmTime`, `Unit1` and `Unit2` are never features
   (ablation only). Schema: `reports/features/feature_schema.json`.
 - **Training:** source hospital's training split only (A: 12,202 patients, 474,382 hours;
   B: 12,000 patients, 457,002 hours); hyperparameters by Optuna TPE, 50 trials, mean AUPRC
