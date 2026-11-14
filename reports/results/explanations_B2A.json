@@ -1,0 +1,659 @@
+{
+ "direction": "B2A",
+ "model": "lgbm",
+ "space": "raw log-odds (LightGBM pred_contrib); Platt keeps the ordering",
+ "alerting_hours": 65440,
+ "max_additivity_error_first_20000_rows": 2.3092638912203256e-14,
+ "features": [
+  {
+   "name": "O2Sat__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.5361194594586696
+  },
+  {
+   "name": "PaCO2__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.3614188349133244
+  },
+  {
+   "name": "WBC",
+   "group": "labs",
+   "mean_abs_contribution": 0.24620200836105208
+  },
+  {
+   "name": "Temp__mean6",
+   "group": "trends",
+   "mean_abs_contribution": 0.2268969493959512
+  },
+  {
+   "name": "Temp",
+   "group": "vitals",
+   "mean_abs_contribution": 0.16505362005427682
+  },
+  {
+   "name": "pH__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.12624334417504834
+  },
+  {
+   "name": "FiO2__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.11432772211275426
+  },
+  {
+   "name": "FiO2",
+   "group": "labs",
+   "mean_abs_contribution": 0.10818646492113561
+  },
+  {
+   "name": "HR__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.10130741544150654
+  },
+  {
+   "name": "BUN",
+   "group": "labs",
+   "mean_abs_contribution": 0.09346764045857356
+  },
+  {
+   "name": "Resp__mean6",
+   "group": "trends",
+   "mean_abs_contribution": 0.08989438406881502
+  },
+  {
+   "name": "shock_index",
+   "group": "vitals",
+   "mean_abs_contribution": 0.0844458588612731
+  },
+  {
+   "name": "DBP__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.07975225546706083
+  },
+  {
+   "name": "Alkalinephos",
+   "group": "labs",
+   "mean_abs_contribution": 0.07962311623448358
+  },
+  {
+   "name": "Bilirubin_total",
+   "group": "labs",
+   "mean_abs_contribution": 0.07781953174492742
+  },
+  {
+   "name": "Temp__d6",
+   "group": "trends",
+   "mean_abs_contribution": 0.07135484195863773
+  },
+  {
+   "name": "MAP__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.0692424893808943
+  },
+  {
+   "name": "Creatinine",
+   "group": "labs",
+   "mean_abs_contribution": 0.06067413390793589
+  },
+  {
+   "name": "SaO2__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.05246454569543298
+  },
+  {
+   "name": "HR__mean6",
+   "group": "trends",
+   "mean_abs_contribution": 0.051659401643439254
+  },
+  {
+   "name": "MAP__mean6",
+   "group": "trends",
+   "mean_abs_contribution": 0.05064260054958533
+  },
+  {
+   "name": "Magnesium__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.048421188252030734
+  },
+  {
+   "name": "BaseExcess",
+   "group": "labs",
+   "mean_abs_contribution": 0.04772529696585703
+  },
+  {
+   "name": "PTT",
+   "group": "labs",
+   "mean_abs_contribution": 0.042126669411624504
+  },
+  {
+   "name": "DBP__mean6",
+   "group": "trends",
+   "mean_abs_contribution": 0.041864468031886544
+  },
+  {
+   "name": "MAP",
+   "group": "vitals",
+   "mean_abs_contribution": 0.03910007464289883
+  },
+  {
+   "name": "pH",
+   "group": "labs",
+   "mean_abs_contribution": 0.03601966159829549
+  },
+  {
+   "name": "Platelets",
+   "group": "labs",
+   "mean_abs_contribution": 0.035991725727815914
+  },
+  {
+   "name": "AST__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.0356800134078413
+  },
+  {
+   "name": "Resp__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.034899338761412026
+  },
+  {
+   "name": "SBP__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.033159943337229145
+  },
+  {
+   "name": "Potassium__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.032493953831102124
+  },
+  {
+   "name": "Calcium",
+   "group": "labs",
+   "mean_abs_contribution": 0.03128033814815623
+  },
+  {
+   "name": "WBC__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.031045259984097025
+  },
+  {
+   "name": "EtCO2__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.029776635564262237
+  },
+  {
+   "name": "O2Sat__std6",
+   "group": "trends",
+   "mean_abs_contribution": 0.026849637282289736
+  },
+  {
+   "name": "HR",
+   "group": "vitals",
+   "mean_abs_contribution": 0.026708294632880433
+  },
+  {
+   "name": "SaO2",
+   "group": "labs",
+   "mean_abs_contribution": 0.0258137500630736
+  },
+  {
+   "name": "Glucose",
+   "group": "labs",
+   "mean_abs_contribution": 0.025031754120280494
+  },
+  {
+   "name": "Alkalinephos__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.024492442071864032
+  },
+  {
+   "name": "O2Sat__mean6",
+   "group": "trends",
+   "mean_abs_contribution": 0.023496898193778464
+  },
+  {
+   "name": "bun_creatinine",
+   "group": "labs",
+   "mean_abs_contribution": 0.023178949262721908
+  },
+  {
+   "name": "Fibrinogen",
+   "group": "labs",
+   "mean_abs_contribution": 0.022257897690242005
+  },
+  {
+   "name": "Phosphate",
+   "group": "labs",
+   "mean_abs_contribution": 0.022068034574546085
+  },
+  {
+   "name": "HR__std6",
+   "group": "trends",
+   "mean_abs_contribution": 0.022020728843825436
+  },
+  {
+   "name": "pH__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.021726460076130456
+  },
+  {
+   "name": "WBC__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.0202101483996644
+  },
+  {
+   "name": "DBP",
+   "group": "vitals",
+   "mean_abs_contribution": 0.019230643041204174
+  },
+  {
+   "name": "PaCO2",
+   "group": "labs",
+   "mean_abs_contribution": 0.0190780559019888
+  },
+  {
+   "name": "MAP__std6",
+   "group": "trends",
+   "mean_abs_contribution": 0.019016474883837203
+  },
+  {
+   "name": "Temp__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.018339473927510078
+  },
+  {
+   "name": "Platelets__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.018005024517283797
+  },
+  {
+   "name": "Phosphate__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.017720093076217292
+  },
+  {
+   "name": "SBP__mean6",
+   "group": "trends",
+   "mean_abs_contribution": 0.01764826140451297
+  },
+  {
+   "name": "Potassium",
+   "group": "labs",
+   "mean_abs_contribution": 0.01754992175380971
+  },
+  {
+   "name": "EtCO2__mean6",
+   "group": "trends",
+   "mean_abs_contribution": 0.01709778410424138
+  },
+  {
+   "name": "Platelets__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.016885013749371278
+  },
+  {
+   "name": "AST",
+   "group": "labs",
+   "mean_abs_contribution": 0.016724224173980843
+  },
+  {
+   "name": "HCO3__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.016276629729214988
+  },
+  {
+   "name": "Glucose__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.015668451731203303
+  },
+  {
+   "name": "Age",
+   "group": "demographics",
+   "mean_abs_contribution": 0.014133902551887248
+  },
+  {
+   "name": "Temp__std6",
+   "group": "trends",
+   "mean_abs_contribution": 0.014012380282483982
+  },
+  {
+   "name": "EtCO2",
+   "group": "vitals",
+   "mean_abs_contribution": 0.013929947108179406
+  },
+  {
+   "name": "SBP__std6",
+   "group": "trends",
+   "mean_abs_contribution": 0.013185174745699555
+  },
+  {
+   "name": "Resp__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.011903986825756512
+  },
+  {
+   "name": "Calcium__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.011861946334807964
+  },
+  {
+   "name": "Magnesium",
+   "group": "labs",
+   "mean_abs_contribution": 0.011190592536271709
+  },
+  {
+   "name": "Temp__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.011161150250604568
+  },
+  {
+   "name": "Resp__std6",
+   "group": "trends",
+   "mean_abs_contribution": 0.011154736992855392
+  },
+  {
+   "name": "BaseExcess__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.010296527463432138
+  },
+  {
+   "name": "Fibrinogen__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.009889513201350364
+  },
+  {
+   "name": "Hct__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.009784616808824897
+  },
+  {
+   "name": "Resp",
+   "group": "vitals",
+   "mean_abs_contribution": 0.009175344782343482
+  },
+  {
+   "name": "BUN__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.008873017286327983
+  },
+  {
+   "name": "Hct",
+   "group": "labs",
+   "mean_abs_contribution": 0.008763458206245195
+  },
+  {
+   "name": "Magnesium__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.008247166764423114
+  },
+  {
+   "name": "Bilirubin_total__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.00823545525937329
+  },
+  {
+   "name": "DBP__std6",
+   "group": "trends",
+   "mean_abs_contribution": 0.00802085381260314
+  },
+  {
+   "name": "SaO2__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.007707550759534851
+  },
+  {
+   "name": "BUN__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.007364375811260491
+  },
+  {
+   "name": "Lactate",
+   "group": "labs",
+   "mean_abs_contribution": 0.007069103840481271
+  },
+  {
+   "name": "Hgb",
+   "group": "labs",
+   "mean_abs_contribution": 0.006781553597844643
+  },
+  {
+   "name": "PTT__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.00676177881084444
+  },
+  {
+   "name": "O2Sat__d6",
+   "group": "trends",
+   "mean_abs_contribution": 0.006609524880705041
+  },
+  {
+   "name": "Chloride",
+   "group": "labs",
+   "mean_abs_contribution": 0.00643935596855225
+  },
+  {
+   "name": "TroponinI__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.006285902199011756
+  },
+  {
+   "name": "HR__d6",
+   "group": "trends",
+   "mean_abs_contribution": 0.006020696847577432
+  },
+  {
+   "name": "SBP",
+   "group": "vitals",
+   "mean_abs_contribution": 0.005929055193510159
+  },
+  {
+   "name": "Hct__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.005928416186848371
+  },
+  {
+   "name": "EtCO2__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.00566759734258735
+  },
+  {
+   "name": "HR__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.005601568959297858
+  },
+  {
+   "name": "Lactate__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.005436068451770781
+  },
+  {
+   "name": "HCO3",
+   "group": "labs",
+   "mean_abs_contribution": 0.005121985515616639
+  },
+  {
+   "name": "PTT__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.005039275421491534
+  },
+  {
+   "name": "Hgb__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.004855260718078247
+  },
+  {
+   "name": "O2Sat",
+   "group": "vitals",
+   "mean_abs_contribution": 0.004749150293047769
+  },
+  {
+   "name": "PaCO2__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.004728776887751675
+  },
+  {
+   "name": "Chloride__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.004493583446078861
+  },
+  {
+   "name": "Gender",
+   "group": "demographics",
+   "mean_abs_contribution": 0.004357967315155
+  },
+  {
+   "name": "TroponinI",
+   "group": "labs",
+   "mean_abs_contribution": 0.003980133160494199
+  },
+  {
+   "name": "FiO2__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.003565575169655631
+  },
+  {
+   "name": "Resp__d6",
+   "group": "trends",
+   "mean_abs_contribution": 0.002914953436653676
+  },
+  {
+   "name": "Potassium__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.0027046749359262274
+  },
+  {
+   "name": "SBP__d6",
+   "group": "trends",
+   "mean_abs_contribution": 0.0025746557818865463
+  },
+  {
+   "name": "Alkalinephos__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.0025600737315885163
+  },
+  {
+   "name": "Lactate__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.002399219008074756
+  },
+  {
+   "name": "Glucose__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.002385665722511119
+  },
+  {
+   "name": "AST__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.0020981088890750757
+  },
+  {
+   "name": "Creatinine__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.0020377251138732097
+  },
+  {
+   "name": "Creatinine__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.0020238232998723376
+  },
+  {
+   "name": "SBP__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.0019695089950883308
+  },
+  {
+   "name": "MAP__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.001944156246275154
+  },
+  {
+   "name": "Hgb__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.0019390663081192297
+  },
+  {
+   "name": "Bilirubin_direct__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.001801103239938958
+  },
+  {
+   "name": "O2Sat__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.0017572865818618923
+  },
+  {
+   "name": "Phosphate__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.00166363999006481
+  },
+  {
+   "name": "Calcium__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.0015213341743304163
+  },
+  {
+   "name": "EtCO2__d6",
+   "group": "trends",
+   "mean_abs_contribution": 0.0009372272654449639
+  },
+  {
+   "name": "Bilirubin_direct",
+   "group": "labs",
+   "mean_abs_contribution": 0.000930416451789567
+  },
+  {
+   "name": "Chloride__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.0008644467683939867
+  },
+  {
+   "name": "EtCO2__std6",
+   "group": "trends",
+   "mean_abs_contribution": 0.0007066439357883201
+  },
+  {
+   "name": "DBP__hsl",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.0005908739660344772
+  },
+  {
+   "name": "TroponinI__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.0003996215498093223
+  },
+  {
+   "name": "Bilirubin_total__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.00039338516377014334
+  },
+  {
+   "name": "MAP__d6",
+   "group": "trends",
+   "mean_abs_contribution": 8.555738892888841e-05
+  },
+  {
+   "name": "BaseExcess__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.0
+  },
+  {
+   "name": "HCO3__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.0
+  },
+  {
+   "name": "Bilirubin_direct__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.0
+  },
+  {
+   "name": "Fibrinogen__n",
+   "group": "measurement_process",
+   "mean_abs_contribution": 0.0
+  },
+  {
+   "name": "DBP__d6",
+   "group": "trends",
+   "mean_abs_contribution": 0.0
+  }
+ ]
+}

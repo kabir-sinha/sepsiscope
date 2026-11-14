@@ -46,7 +46,10 @@ maintainer's own terminal.
   (sensitivity) on raw log-odds, JSON only; fitted on the source calibration split in B4.
 - [x] **B3b** Per-alert explanations (`trust/explain.py`): LightGBM `pred_contrib` on raw
   log-odds, chunked; contributions + base = raw score (tested to 1e-9).
-- [ ] **B4** Evaluate LightGBM vs the 4 baselines with paired difference CIs.
+- [x] **B4** `sepsiscope evaluate --all-models`: LightGBM (Platt headline, isotonic, raw) vs the
+  4 baselines, both directions; paired difference CIs (`paired_*.json`), aggregate
+  explanations (`explanations_*.json`); Batch A baseline files byte-identical; source
+  hospital released before the target is loaded. `train` uses the committed tuned params.
 - [ ] **B5** Ablations and drift analysis.
 - [ ] **B7** Local demo: API on 127.0.0.1 and dashboard.
 - [ ] Gate and M4 evidence report (text).

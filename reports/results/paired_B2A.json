@@ -1,0 +1,121 @@
+{
+ "direction": "B2A",
+ "reference": "lgbm",
+ "reference_label": "LightGBM, Platt-calibrated (headline)",
+ "difference": "lgbm minus baseline, strict external validation",
+ "bootstrap_resamples": 1000,
+ "comparisons": {
+  "news2": {
+   "utility": {
+    "point": 0.21195987080915762,
+    "ci95": [
+     0.195418516507097,
+     0.22916654940816855
+    ],
+    "share_of_resamples_above_0": 1.0
+   },
+   "auroc": {
+    "point": 0.1343877850827253,
+    "ci95": [
+     0.12344628328313013,
+     0.14428247813317496
+    ],
+    "share_of_resamples_above_0": 1.0
+   },
+   "auprc": {
+    "point": 0.05926028075924147,
+    "ci95": [
+     0.05215285971268699,
+     0.06750629174282687
+    ],
+    "share_of_resamples_above_0": 1.0
+   }
+  },
+  "sirs": {
+   "utility": {
+    "point": 0.25275654767008693,
+    "ci95": [
+     0.23505012390641902,
+     0.2697980627167671
+    ],
+    "share_of_resamples_above_0": 1.0
+   },
+   "auroc": {
+    "point": 0.14156804328863537,
+    "ci95": [
+     0.13132023585888808,
+     0.15277321350925965
+    ],
+    "share_of_resamples_above_0": 1.0
+   },
+   "auprc": {
+    "point": 0.062106296319833214,
+    "ci95": [
+     0.05499616365695218,
+     0.0707374899057836
+    ],
+    "share_of_resamples_above_0": 1.0
+   }
+  },
+  "qsofa": {
+   "utility": {
+    "point": 0.25791560674917335,
+    "ci95": [
+     0.24103800877307147,
+     0.27420472678610974
+    ],
+    "share_of_resamples_above_0": 1.0
+   },
+   "auroc": {
+    "point": 0.19228692001434322,
+    "ci95": [
+     0.18081834928442378,
+     0.20307119199386056
+    ],
+    "share_of_resamples_above_0": 1.0
+   },
+   "auprc": {
+    "point": 0.06817023287929577,
+    "ci95": [
+     0.06085736990032624,
+     0.07672335533719074
+    ],
+    "share_of_resamples_above_0": 1.0
+   }
+  },
+  "lr": {
+   "utility": {
+    "point": 0.16683339526109695,
+    "ci95": [
+     0.14707827588267594,
+     0.188378337474149
+    ],
+    "share_of_resamples_above_0": 1.0
+   },
+   "auroc": {
+    "point": 0.12435926086451521,
+    "ci95": [
+     0.11511079940513165,
+     0.13407220911503018
+    ],
+    "share_of_resamples_above_0": 1.0
+   },
+   "auprc": {
+    "point": 0.04591081417696986,
+    "ci95": [
+     0.03833715235891188,
+     0.05391493900231828
+    ],
+    "share_of_resamples_above_0": 1.0
+   }
+  }
+ },
+ "criterion_adr_0022": {
+  "rule": "LightGBM beats the logistic regression only if the paired 95 % CI for the utility difference excludes 0, in each direction",
+  "ci95_utility_difference": [
+   0.14707827588267594,
+   0.188378337474149
+  ],
+  "met_in_this_direction": true
+ }
+}

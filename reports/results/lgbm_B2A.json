@@ -1,0 +1,209 @@
+{
+ "model": "lgbm",
+ "model_label": "LightGBM, Platt-calibrated (headline)",
+ "direction": "B2A",
+ "source": "B",
+ "target": "A",
+ "alarm_budget": 0.05,
+ "seed": 42,
+ "bootstrap_resamples": 1000,
+ "strict_external": {
+  "patients": 20336,
+  "septic_patients": 1790,
+  "septic_from_row_zero": 203,
+  "rows": 790215,
+  "threshold": 0.04964129593075571,
+  "point": {
+   "auroc": 0.7648894311999589,
+   "auprc": 0.09432743182378857,
+   "utility": 0.27290079172263987,
+   "alert_rate": 0.08281290534854438,
+   "timely_sensitivity": 0.5450535601764335,
+   "median_lead_hours": 12.0,
+   "false_alerts_per_100_patient_days": 102.17803403424439,
+   "row0_timely_sensitivity": 0.28078817733990147
+  },
+  "ci95": {
+   "auroc": [
+    0.7556087683523491,
+    0.7739746208265302
+   ],
+   "auprc": [
+    0.08682282959841116,
+    0.1029879267285162
+   ],
+   "utility": [
+    0.25684327601635787,
+    0.2897711895888966
+   ],
+   "alert_rate": [
+    0.07826946321784622,
+    0.0875386318286316
+   ],
+   "timely_sensitivity": [
+    0.5193863450704973,
+    0.5676901313312515
+   ],
+   "median_lead_hours": [
+    12.0,
+    12.0
+   ],
+   "false_alerts_per_100_patient_days": [
+    96.78729784077655,
+    108.53544994187111
+   ],
+   "row0_timely_sensitivity": [
+    0.22032789067352915,
+    0.33804100645539903
+   ]
+  },
+  "source_validation_alert_rate": 0.049998368199471295,
+  "subgroups": {
+   "gender_0": {
+    "patients": 8502,
+    "auroc": 0.7790177546505803,
+    "auprc": 0.09620250363447211,
+    "utility": 0.27535360437307826,
+    "alert_rate": 0.07405354055098878,
+    "timely_sensitivity": 0.5467741935483871,
+    "median_lead_hours": 12.0,
+    "false_alerts_per_100_patient_days": 91.24801836768162,
+    "row0_timely_sensitivity": 0.3076923076923077
+   },
+   "gender_1": {
+    "patients": 11834,
+    "auroc": 0.7546660761215189,
+    "auprc": 0.09360302590225526,
+    "utility": 0.2713298845005705,
+    "alert_rate": 0.08921546293294548,
+    "timely_sensitivity": 0.5439503619441571,
+    "median_lead_hours": 12.0,
+    "false_alerts_per_100_patient_days": 110.32725957362258,
+    "row0_timely_sensitivity": 0.264
+   },
+   "age_lt_65": {
+    "patients": 10316,
+    "auroc": 0.7796622983600882,
+    "auprc": 0.09891105043496282,
+    "utility": 0.28090428274110707,
+    "alert_rate": 0.0772241211062234,
+    "timely_sensitivity": 0.5449936628643853,
+    "median_lead_hours": 12.0,
+    "false_alerts_per_100_patient_days": 89.49352911166753,
+    "row0_timely_sensitivity": 0.28431372549019607
+   },
+   "age_ge_65": {
+    "patients": 10020,
+    "auroc": 0.7501206191154524,
+    "auprc": 0.09053761203780307,
+    "utility": 0.2649300220582643,
+    "alert_rate": 0.0882993903555298,
+    "timely_sensitivity": 0.5451127819548872,
+    "median_lead_hours": 12.0,
+    "false_alerts_per_100_patient_days": 114.74759213794907,
+    "row0_timely_sensitivity": 0.27722772277227725
+   }
+  },
+  "ece": 0.004116550269475905,
+  "reliability": {
+   "rows": [
+    79022,
+    79022,
+    79022,
+    79022,
+    79022,
+    79021,
+    79021,
+    79021,
+    79021,
+    79021
+   ],
+   "mean_predicted": [
+    0.00241276131728622,
+    0.003484437154092714,
+    0.00462143259136533,
+    0.006100446131739988,
+    0.008141110242933767,
+    0.010598800274114115,
+    0.014283427232874313,
+    0.020289103358774162,
+    0.032075629735469735,
+    0.10066145615614007
+   ],
+   "observed_rate": [
+    0.002303156083116094,
+    0.005390903798942067,
+    0.007845916327098783,
+    0.009478373111285465,
+    0.011705600971881249,
+    0.013439465458548993,
+    0.01829893319497349,
+    0.024626365143442883,
+    0.03648397261487453,
+    0.08728059629718682
+   ]
+  }
+ },
+ "deployment_adaptation": {
+  "patients": 16269,
+  "septic_patients": 1432,
+  "septic_from_row_zero": 160,
+  "rows": 633123,
+  "threshold": 0.0713938811389819,
+  "point": {
+   "auroc": 0.7667043830024589,
+   "auprc": 0.09319172645255747,
+   "utility": 0.22511977460921304,
+   "alert_rate": 0.051759294797377446,
+   "timely_sensitivity": 0.43474842767295596,
+   "median_lead_hours": 11.0,
+   "false_alerts_per_100_patient_days": 46.23160289977683,
+   "row0_timely_sensitivity": 0.18125
+  },
+  "ci95": {
+   "auroc": [
+    0.756556028209172,
+    0.7766821239382182
+   ],
+   "auprc": [
+    0.08515614271429159,
+    0.10258113375546772
+   ],
+   "utility": [
+    0.20682074758273764,
+    0.24295537850952392
+   ],
+   "alert_rate": [
+    0.0477385650678522,
+    0.05613873664301062
+   ],
+   "timely_sensitivity": [
+    0.40746040458385163,
+    0.46336261990609523
+   ],
+   "median_lead_hours": [
+    10.0,
+    12.0
+   ],
+   "false_alerts_per_100_patient_days": [
+    42.12245146234815,
+    50.683651261590434
+   ],
+   "row0_timely_sensitivity": [
+    0.12254643206256112,
+    0.24360119047619047
+   ]
+  },
+  "target_calibration_alert_rate": 0.04999618058207929
+ },
+ "fitted": {
+  "num_trees": 234,
+  "data_sha256": "92fed6e15db5405e13e178866f8d420f8d1caf92bf47d849966b201f3e933bb2",
+  "platt": {
+   "coef": 1.0547546510925028,
+   "intercept": 0.16631853910328145
+  },
+  "isotonic_points": 106,
+  "stored_in": "models/lgbm_B2A"
+ }
+}
