@@ -6,9 +6,15 @@ State of the work, so anyone can pick it up from the repository alone.
 
 ## Resume here
 
-**Batch B gate PASSED (2026-11-14); M4 evidence report delivered as text.** 33 commits
-unpushed (GitHub `main` at `31bb0c5`), latest = this handoff commit; working tree clean.
-**Next: the maintainer pushes from their own terminal** after reviewing the report.
+**Batch C (Milestone 5) started 2026-11-14.** Batch B pushed by the maintainer (`1fa15f0`).
+Plan `docs/plan/batch-c.md` approved with the recommended defaults (D1–D12); criteria fixed
+in ADR 0024 before any result. Order: C0 → C4 → C1 → C2 → C3 → C5 → C6.
+- [x] **C0** Plan and ADR 0024. The two method references in ADR 0024 are cited from
+  memory; they are checked against the sources in C5 (download needs approval).
+- [ ] **C4** byte check, threshold label, headline cards · [ ] **C1** bands ·
+  [ ] **C2** deferral · [ ] **C3** budgets · [ ] **C5** docs · [ ] **C6** gate.
+
+**Batch B gate PASSED (2026-11-14); M4 evidence report delivered as text** and pushed.
 
 **Done in the gate:**
 - Part 1 exhaustive privacy scan: 4 FAILs fixed (scan script blind under zsh, account handle
