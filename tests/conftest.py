@@ -149,14 +149,15 @@ def git_commit(
     committer: str | None = None,
     date: str | None = None,
     add_all: bool = False,
+    name: str = "Maintainer",
 ) -> str:
     """Commit in the current directory with a chosen timezone, identity and date."""
     env = {
         **os.environ,
         "TZ": tz,
-        "GIT_AUTHOR_NAME": "Maintainer",
+        "GIT_AUTHOR_NAME": name,
         "GIT_AUTHOR_EMAIL": email,
-        "GIT_COMMITTER_NAME": "Maintainer",
+        "GIT_COMMITTER_NAME": name,
         "GIT_COMMITTER_EMAIL": committer or email,
     }
     if date:

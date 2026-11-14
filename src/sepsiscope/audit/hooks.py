@@ -13,7 +13,7 @@ import os
 import sys
 from pathlib import Path
 
-from sepsiscope.audit.denylist import load_denylist
+from sepsiscope.audit.denylist import load_allowed_author_names, load_denylist
 from sepsiscope.audit.gitchecks import (
     ZERO_SHA,
     check_commit,
@@ -36,10 +36,12 @@ def check_range(root: Path, from_ref: str, to_ref: str, label: str) -> int:
     if not to_ref or to_ref == ZERO_SHA:  # deleting a remote branch pushes no commits
         return 0
     denylist = load_denylist(root)
+    allowed_names = load_allowed_author_names(root)
     commits = read_commits(root, outgoing_rev_args(from_ref, to_ref))
     failed = False
     for commit in commits:
-        for problem in check_commit(commit) + check_message(commit.message, denylist):
+        found = check_commit(commit, denylist, allowed_names)
+        for problem in found + check_message(commit.message, denylist):
             print(f"{label}: {commit.sha[:7]}: {problem}")
             failed = True
     if failed:

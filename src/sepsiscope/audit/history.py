@@ -16,7 +16,7 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 
-from sepsiscope.audit.denylist import load_denylist
+from sepsiscope.audit.denylist import load_allowed_author_names, load_denylist
 from sepsiscope.audit.gitchecks import check_commit, check_message, git, read_commits
 from sepsiscope.audit.mask import mask_values
 from sepsiscope.audit.rules import check_content, check_line, check_path
@@ -26,6 +26,9 @@ UTC_REQUIRED_FROM = datetime(2026, 10, 22, tzinfo=UTC)
 # ADR 0023: the name left the tracked files on 2026-11-14. Blobs only in older commits keep
 # the old copyright/author-line allowance, because history is not rewritten.
 NAME_LINES_ALLOWED_BEFORE = datetime(2026, 11, 15, tzinfo=UTC)
+# Commits already on GitHub before ADR 0023 (up to and including this one) keep their old
+# author name: they are not rewritten. The name rule applies to every later commit.
+OLD_NAMES_UNTIL = "31bb0c5b3191084bf4535f74bf343f4021bb14cc"
 LINE_PREFIX_RE = re.compile(r"^line \d+: ")
 
 
@@ -115,11 +118,17 @@ def run_audit(root: Path) -> AuditReport:
         report.findings += [Finding("history", name, p, known=known) for p in problems]
 
     # 3. and 4. Commit messages, identities and offsets.
+    allowed_names = load_allowed_author_names(root)
+    try:  # a repository without that commit (a test repo, a fork) has no old names
+        old_names = set(git(root, "rev-list", OLD_NAMES_UNTIL).split())
+    except subprocess.CalledProcessError:
+        old_names = set()
     for c in commits:
         known = c.committed_at < cutoff
         for p in check_message(c.message, denylist):
             report.findings.append(Finding("message", c.sha[:7], p, known=known))
-        for p in check_commit(c):
+        names_denylist = () if c.sha in old_names else denylist
+        for p in check_commit(c, names_denylist, allowed_names):
             report.findings.append(Finding("commit", c.sha[:7], p, known=known))
 
     # 5. Branch and tag names.

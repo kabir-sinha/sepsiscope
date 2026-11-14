@@ -11,7 +11,7 @@ from pathlib import Path
 import pytest
 from conftest import git_commit as commit
 
-from sepsiscope.audit.denylist import DENYLIST_FILE
+from sepsiscope.audit.denylist import DENYLIST_FILE, load_allowed_author_names, load_denylist
 from sepsiscope.audit.gitchecks import (
     ZERO_SHA,
     check_commit,
@@ -103,6 +103,34 @@ def test_bot_commits_are_exempt_from_the_offset_rule(repo: Path) -> None:
     commit("build(deps): bump", tz="ABC-1", email=BOT, committer="noreply" + "@github.com")
     (c,) = read_commits(repo, ["HEAD"])
     assert check_commit(c) == []
+
+
+def test_author_names_with_personal_values(repo: Path) -> None:
+    commit("feat: a", name="Zq Fakename")
+    commit("feat: b", name="Zq")
+    commit("feat: c", name="Maintainer")
+    c_plain, c_short, c_full = read_commits(repo, ["HEAD"])  # newest first
+    deny = ("Zq", "Fakename")
+    # Without a local denylist (CI) names are not checked.
+    assert check_commit(c_full) == []
+    # The full name fails even when the short name is allowed; masked in the message.
+    assert check_commit(c_full, deny, ("Zq",)) == [
+        "author name contains a personal value (Z****)",
+        "author name contains a personal value (F****)",
+        "committer name contains a personal value (Z****)",
+        "committer name contains a personal value (F****)",
+    ]
+    # Exactly the allowed name passes; it is not allowed unless declared.
+    assert check_commit(c_short, deny, ("Zq",)) == []
+    assert check_commit(c_short, deny) != []
+    assert check_commit(c_plain, deny) == []
+
+
+def test_allowed_author_name_line_is_not_a_denied_value(tmp_path: Path) -> None:
+    (tmp_path / DENYLIST_FILE).write_text("# local\nZq\nallow-author-name: Zq  # metadata\n")
+    assert load_denylist(tmp_path) == ("Zq",)
+    assert load_allowed_author_names(tmp_path) == ("Zq",)
+    assert load_allowed_author_names(tmp_path / "missing") == ()
 
 
 def test_outgoing_rev_args() -> None:

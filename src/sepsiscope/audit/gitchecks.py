@@ -13,8 +13,8 @@ import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
-from sepsiscope.audit.denylist import ALLOWED_EMAIL
-from sepsiscope.audit.mask import mask_email, mask_offset
+from sepsiscope.audit.denylist import ALLOWED_EMAIL, denied_values
+from sepsiscope.audit.mask import mask, mask_email, mask_offset
 from sepsiscope.audit.rules import check_line
 
 ZERO_SHA = "0" * 40
@@ -65,6 +65,8 @@ class Commit:
     committer_offset: str
     committed_at: int  # Unix time
     message: str
+    author_name: str = ""
+    committer_name: str = ""
 
 
 def git(root: Path, *args: str) -> str:
@@ -78,21 +80,38 @@ def git(root: Path, *args: str) -> str:
 
 def read_commits(root: Path, rev_args: list[str]) -> list[Commit]:
     """Commits selected by ``git log <rev_args>``, with their original timezone offsets."""
-    fmt = "%H%x1f%ae%x1f%ad%x1f%ce%x1f%cd%x1f%ct%x1f%B%x1e"
+    fmt = "%H%x1f%ae%x1f%ad%x1f%ce%x1f%cd%x1f%ct%x1f%an%x1f%cn%x1f%B%x1e"
     out = git(root, "log", f"--format={fmt}", "--date=format:%z", *rev_args, "--")
     commits = []
     for record in out.split("\x1e"):
         record = record.strip("\n")
         if not record:
             continue
-        sha, a_email, a_off, c_email, c_off, c_time, message = record.split("\x1f", 6)
-        commits.append(Commit(sha, a_email, a_off, c_email, c_off, int(c_time), message))
+        sha, a_email, a_off, c_email, c_off, c_time, a_name, c_name, message = record.split(
+            "\x1f", 8
+        )
+        commits.append(
+            Commit(sha, a_email, a_off, c_email, c_off, int(c_time), message, a_name, c_name)
+        )
     return commits
 
 
-def check_commit(commit: Commit) -> list[str]:
-    """Identity and offset problems of one commit (messages are checked separately)."""
+def check_commit(
+    commit: Commit, denylist: tuple[str, ...] = (), allowed_names: tuple[str, ...] = ()
+) -> list[str]:
+    """Identity and offset problems of one commit (messages are checked separately).
+
+    A name containing a local denylist value fails unless it is exactly an allowed author
+    name (``allow-author-name:`` in the local file). Without a local file (CI) names are
+    not checked, because CI knows no personal values.
+    """
     problems: list[str] = []
+    for role, name in (("author", commit.author_name), ("committer", commit.committer_name)):
+        if name not in allowed_names:
+            problems += [
+                f"{role} name contains a personal value ({mask(v)})"
+                for v in denied_values(name, denylist)
+            ]
     author_is_bot = bool(BOT_EMAIL_RE.match(commit.author_email))
     if commit.author_email != ALLOWED_EMAIL and not author_is_bot:
         problems.append(f"author email not allowed: {mask_email(commit.author_email)}")

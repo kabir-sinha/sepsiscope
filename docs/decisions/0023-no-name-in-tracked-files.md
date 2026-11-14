@@ -18,7 +18,13 @@ no personal name anywhere in the tracked files.
 - History is **not** rewritten. Blobs that exist only in commits before 2026-11-15 keep the
   old allowance (only the exact copyright and author line shapes), so `privacy-audit`
   stays strict without a rewrite.
-- The git author name is commit metadata, not file content, and is unchanged by this ADR.
+- **Commit names.** The 28 commits not yet on GitHub were rewritten locally (dates kept,
+  `+0000`) so that their author and committer name is the maintainer's first name and no
+  old README/pyproject version in them carries the full name; commits already on GitHub
+  (up to `31bb0c5`) are untouched. The audit rejects any commit name that contains a
+  denylist value unless it is exactly the one name declared in the gitignored local file
+  (`allow-author-name:`), so that name is never written into a tracked file. CI has no
+  local file and checks emails and offsets only.
 
 ## Consequences
 - Anyone reading the files at HEAD sees no personal name.
