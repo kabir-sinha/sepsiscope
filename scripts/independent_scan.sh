@@ -6,6 +6,9 @@ set -eu
 set -o pipefail
 cd "$1" || { echo "ERROR: cannot enter $1" >&2; exit 2; }
 git rev-parse --git-dir >/dev/null 2>&1 || { echo "ERROR: not a git repository" >&2; exit 2; }
+# Only the repository's top folder: a subfolder would silently scan the enclosing repository.
+[[ "$(git rev-parse --show-toplevel)" == "$(pwd -P)" ]] || {
+  echo "ERROR: not the top folder of a git repository" >&2; exit 2; }
 user=$(id -un); host=$(hostname -s); home="$HOME"
 # One array element per commit. zsh does not split "$(...)" on newlines by itself, so
 # ${(f)...} splits it explicitly (without it, git grep got one 114-line argument and failed).

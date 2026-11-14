@@ -99,3 +99,13 @@ def test_not_a_repository_fails_loudly(tmp_path: Path) -> None:
     r = _scan(tmp_path)
     assert r.returncode == 2
     assert "ERROR" in r.stderr
+
+
+def test_subfolder_of_a_repository_fails_loudly(tmp_path: Path) -> None:
+    _git(tmp_path, "init", "-q")
+    (tmp_path / "sub").mkdir()
+    (tmp_path / "sub" / "f.txt").write_text("x\n")
+    _commit(tmp_path, "c")
+    r = _scan(tmp_path / "sub")
+    assert r.returncode == 2
+    assert "top folder" in r.stderr
