@@ -4,7 +4,7 @@
 
 | Item | State |
 |---|---|
-| Repository | `kabir-sinha/sepsiscope`, **Private**, default branch `main` |
+| Repository | The maintainer's `sepsiscope`, **Private**, default branch `main` |
 | Created with | `gh repo create --private --source=. --remote=origin --push --disable-wiki` |
 | Features | Issues on; Wiki, Projects and Discussions off; delete head branch on merge on |
 | Auth method | GitHub CLI `gh` OAuth token in gh's credential store (details below); no PAT created |
@@ -17,7 +17,7 @@
 | CI runner | Both jobs pinned to `ubuntu-24.04` (see the CI runner note) |
 | Latest green CI run | `38004754410` on `a39e37a` (jobs `python` and `web`); newer runs are in the Actions tab |
 | Watching | All Activity (`subscribed: true`, `ignored: false`) |
-| Collaborators | Only `kabir-sinha` (admin) |
+| Collaborators | Only the maintainer (admin) |
 | Branch protection | **Pending**; rules below, to apply when enabled |
 
 Commit history: every commit is authored by the project's GitHub noreply address, except
@@ -30,20 +30,13 @@ path, hostname, non-noreply emails, IP/MAC addresses, UUIDs, tokens and keys. Cl
 
 ## Authentication to GitHub
 
-- **Method:** the GitHub CLI `gh`, already installed and signed in as `kabir-sinha`, with
-  its token kept in **gh's credential store** (`gh auth status` shows where). Git uses it
-  over HTTPS. No new tool or token was created for this project.
+- **Method:** the GitHub CLI `gh`, with its token kept in **gh's credential store**.
+  Git uses it over HTTPS. No new tool or token was created for this project.
 - **Token expiry:** `gh auth login` OAuth tokens do not have a fixed expiry date; they stay
   valid until revoked at <https://github.com/settings/applications>. Expiry date to record:
   **none (OAuth app token)**. GitHub automatically revokes OAuth tokens that go unused for a year
   ([token expiration and revocation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/token-expiration-and-revocation)). Check with `gh auth status` before each push session.
-- **Fallback, only if `gh` stops working:** a fine-grained personal access token
-  limited to *only* `kabir-sinha/sepsiscope`, with Contents R/W, Pull requests R/W,
-  Workflows R/W and Metadata R, and a 90-day expiry, stored by git's credential
-  helper. Record **only** the expiry date here, never the token:
-  - Fine-grained PAT expiry: _n/a (not created)_
-- Docs: [fine-grained PATs](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens),
-  [gh auth login](https://cli.github.com/manual/gh_auth_login).
+- Docs: [gh auth login](https://cli.github.com/manual/gh_auth_login).
 
 ## gh telemetry
 
@@ -63,8 +56,6 @@ Reference: [About protected branches](https://docs.github.com/en/repositories/co
 - Do not allow force pushes
 - Do not allow deletions
 - Leave "Do not allow bypassing the above settings" **unchecked**, so the admin (the maintainer) can still bypass when needed
-
-`.github/CODEOWNERS` already assigns every file to `@kabir-sinha`.
 
 ## Dependabot
 
