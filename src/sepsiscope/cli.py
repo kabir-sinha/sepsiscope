@@ -36,6 +36,8 @@ features_app = typer.Typer(help="Feature commands.", no_args_is_help=True)
 app.add_typer(features_app, name="features")
 demo_app = typer.Typer(help="Local demo commands.", no_args_is_help=True)
 app.add_typer(demo_app, name="demo")
+analyses_app = typer.Typer(help="Batch C analyses (ADR 0024).", no_args_is_help=True)
+app.add_typer(analyses_app, name="analyses")
 
 KEY_PACKAGES = (
     "numpy",
@@ -368,6 +370,24 @@ def exploratory() -> None:
         REPO_ROOT / cfg.paths.splits_dir,
         reports / "results",
         reports / "tuning",
+    ):
+        typer.echo(f"wrote {path.relative_to(REPO_ROOT)}")
+
+
+@analyses_app.command("bands")
+def analyses_bands() -> None:
+    """C1 shortcut check: metrics within ICU-stay bands, both directions (ADR 0024)."""
+    from sepsiscope.config import load_config
+    from sepsiscope.evaluation import bands
+
+    cfg = load_config()
+    reports = REPO_ROOT / cfg.paths.reports_dir
+    for path in bands.run(
+        cfg,
+        REPO_ROOT / cfg.paths.data_dir,
+        REPO_ROOT / cfg.paths.splits_dir,
+        reports / "results",
+        REPO_ROOT / cfg.paths.models_dir,
     ):
         typer.echo(f"wrote {path.relative_to(REPO_ROOT)}")
 
