@@ -50,7 +50,10 @@ maintainer's own terminal.
   4 baselines, both directions; paired difference CIs (`paired_*.json`), aggregate
   explanations (`explanations_*.json`); Batch A baseline files byte-identical; source
   hospital released before the target is loaded. `train` uses the committed tuned params.
-- [ ] **B5** Ablations and drift analysis.
+- [x] **B5** `sepsiscope ablations`: 4 ablations both ways (main tuned params, not re-tuned),
+  `ablation_*.json` and `drift.json`; 280 s, peak 4.32 GiB. Ablation features live in the
+  ignored `features_{A,B}_ablation.parquet` (134 columns); main files untouched.
+  **Next: B7 demo (waits for the maintainer), then gate.**
 - [ ] **B7** Local demo: API on 127.0.0.1 and dashboard.
 - [ ] Gate and M4 evidence report (text).
 

@@ -1,0 +1,987 @@
+{
+ "measure": "Jensen-Shannon divergence (base 2, 50 equal-count pooled bins), A vs B, all rows, non-missing values",
+ "by_group": {
+  "vitals": {
+   "features": 9,
+   "mean_js": 0.06622126678672553,
+   "median_js": 0.018364905819851583,
+   "max_js": 0.38922462880341857
+  },
+  "labs": {
+   "features": 27,
+   "mean_js": 0.09103271921400768,
+   "median_js": 0.026255259274545154,
+   "max_js": 0.5391908645321246
+  },
+  "demographics": {
+   "features": 2,
+   "mean_js": 0.026433545567956587,
+   "median_js": 0.026433545567956587,
+   "max_js": 0.052867091135913175
+  },
+  "measurement_process": {
+   "features": 68,
+   "mean_js": 0.05646852526192293,
+   "median_js": 0.01533362117784632,
+   "max_js": 0.5899323345470096
+  },
+  "trends": {
+   "features": 24,
+   "mean_js": 0.03916270697580634,
+   "median_js": 0.007609349001056599,
+   "max_js": 0.23910135835896779
+  },
+  "icu_time": {
+   "features": 2,
+   "mean_js": 0.08873012467235224,
+   "median_js": 0.08873012467235224,
+   "max_js": 0.17619399628845298
+  },
+  "unit_columns": {
+   "features": 2,
+   "mean_js": 0.0,
+   "median_js": 0.0,
+   "max_js": 0.0
+  }
+ },
+ "features": [
+  {
+   "name": "HCO3__n",
+   "group": "measurement_process",
+   "js_divergence": 0.5899323345470096,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "SaO2",
+   "group": "labs",
+   "js_divergence": 0.5391908645321246,
+   "missing_A": 0.6507558069639275,
+   "missing_B": 0.7471492595095768
+  },
+  {
+   "name": "TroponinI",
+   "group": "labs",
+   "js_divergence": 0.48032907133820824,
+   "missing_A": 0.979237296178888,
+   "missing_B": 0.7148931423434537
+  },
+  {
+   "name": "Chloride__n",
+   "group": "measurement_process",
+   "js_divergence": 0.47142607643018164,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "Temp",
+   "group": "vitals",
+   "js_divergence": 0.38922462880341857,
+   "missing_A": 0.07246382313674127,
+   "missing_B": 0.07600706041378225
+  },
+  {
+   "name": "BaseExcess__n",
+   "group": "measurement_process",
+   "js_divergence": 0.3223023970379791,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "Creatinine",
+   "group": "labs",
+   "js_divergence": 0.26755738177152494,
+   "missing_A": 0.17775668647140336,
+   "missing_B": 0.25150427496243416
+  },
+  {
+   "name": "Bilirubin_direct",
+   "group": "labs",
+   "js_divergence": 0.24376985038647753,
+   "missing_A": 0.9750991818682258,
+   "missing_B": 0.9309483658029252
+  },
+  {
+   "name": "Temp__std6",
+   "group": "trends",
+   "js_divergence": 0.23910135835896779,
+   "missing_A": 0.49639781578431186,
+   "missing_B": 0.5170611355717557
+  },
+  {
+   "name": "BaseExcess",
+   "group": "labs",
+   "js_divergence": 0.2190538376616801,
+   "missing_A": 0.40078712755389356,
+   "missing_B": 0.9716809165414472
+  },
+  {
+   "name": "Temp__d6",
+   "group": "trends",
+   "js_divergence": 0.21565064694939112,
+   "missing_A": 0.2244844757439431,
+   "missing_B": 0.23240966148071837
+  },
+  {
+   "name": "HCO3__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.21096625057740537,
+   "missing_A": 0.16588270280872927,
+   "missing_B": 0.979377817439747
+  },
+  {
+   "name": "HospAdmTime",
+   "group": "icu_time",
+   "js_divergence": 0.17619399628845298,
+   "missing_A": 1.0123827059724253e-05,
+   "missing_B": 0.0
+  },
+  {
+   "name": "PTT__n",
+   "group": "measurement_process",
+   "js_divergence": 0.1698558124055223,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "BaseExcess__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.1577751622044472,
+   "missing_A": 0.40078712755389356,
+   "missing_B": 0.9716809165414472
+  },
+  {
+   "name": "DBP__n",
+   "group": "measurement_process",
+   "js_divergence": 0.1527546717197594,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "Lactate",
+   "group": "labs",
+   "js_divergence": 0.14993604003298708,
+   "missing_A": 0.6432920154641458,
+   "missing_B": 0.7625220637930695
+  },
+  {
+   "name": "Chloride__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.13821422324303778,
+   "missing_A": 0.16607379004448156,
+   "missing_B": 0.9190283400809717
+  },
+  {
+   "name": "FiO2__n",
+   "group": "measurement_process",
+   "js_divergence": 0.13642757315417287,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "FiO2__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.1330581468306676,
+   "missing_A": 0.42336579285384357,
+   "missing_B": 0.7109849802164057
+  },
+  {
+   "name": "Temp__mean6",
+   "group": "trends",
+   "js_divergence": 0.12780733228280122,
+   "missing_A": 0.1065406250197731,
+   "missing_B": 0.125575627136661
+  },
+  {
+   "name": "pH__n",
+   "group": "measurement_process",
+   "js_divergence": 0.12085078519266461,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "TroponinI__n",
+   "group": "measurement_process",
+   "js_divergence": 0.11315018375635201,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "FiO2",
+   "group": "labs",
+   "js_divergence": 0.10759612649780238,
+   "missing_A": 0.42336579285384357,
+   "missing_B": 0.7109849802164057
+  },
+  {
+   "name": "HCO3",
+   "group": "labs",
+   "js_divergence": 0.09512197888651489,
+   "missing_A": 0.16588270280872927,
+   "missing_B": 0.979377817439747
+  },
+  {
+   "name": "PaCO2__n",
+   "group": "measurement_process",
+   "js_divergence": 0.09462632573787925,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "EtCO2__n",
+   "group": "measurement_process",
+   "js_divergence": 0.09147834977448556,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "pH__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.07977091481207302,
+   "missing_A": 0.3814075916048164,
+   "missing_B": 0.7150322508677879
+  },
+  {
+   "name": "Hct__n",
+   "group": "measurement_process",
+   "js_divergence": 0.07435159025065517,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "Calcium",
+   "group": "labs",
+   "js_divergence": 0.06518312572101106,
+   "missing_A": 0.3399568471871579,
+   "missing_B": 0.2272324621552635
+  },
+  {
+   "name": "Glucose__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.05795344582084255,
+   "missing_A": 0.13944306296387693,
+   "missing_B": 0.15314798653534473
+  },
+  {
+   "name": "PTT__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.05678103021646987,
+   "missing_A": 0.328608037053207,
+   "missing_B": 0.7838096050499019
+  },
+  {
+   "name": "PaCO2__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.0560444622057653,
+   "missing_A": 0.4068019463057522,
+   "missing_B": 0.7138721382686238
+  },
+  {
+   "name": "MAP__mean6",
+   "group": "trends",
+   "js_divergence": 0.05457927803531469,
+   "missing_A": 0.025560132369038806,
+   "missing_B": 0.047294273584472336
+  },
+  {
+   "name": "Age",
+   "group": "demographics",
+   "js_divergence": 0.052867091135913175,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "DBP__mean6",
+   "group": "trends",
+   "js_divergence": 0.051277010140234655,
+   "missing_A": 0.43489936283163444,
+   "missing_B": 0.034470042454346816
+  },
+  {
+   "name": "MAP",
+   "group": "vitals",
+   "js_divergence": 0.04763902138737286,
+   "missing_A": 0.01811658852337655,
+   "missing_B": 0.03778502483612097
+  },
+  {
+   "name": "DBP__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.04516712954141552,
+   "missing_A": 0.3759356630790355,
+   "missing_B": 0.030878155368473548
+  },
+  {
+   "name": "bun_creatinine",
+   "group": "labs",
+   "js_divergence": 0.04008140711168011,
+   "missing_A": 0.1787273083907544,
+   "missing_B": 0.2517194994717813
+  },
+  {
+   "name": "Glucose__n",
+   "group": "measurement_process",
+   "js_divergence": 0.038704804272299415,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "DBP",
+   "group": "vitals",
+   "js_divergence": 0.038145647852809675,
+   "missing_A": 0.3759356630790355,
+   "missing_B": 0.030878155368473548
+  },
+  {
+   "name": "Hct",
+   "group": "labs",
+   "js_divergence": 0.036481693851934574,
+   "missing_A": 0.13153382307346734,
+   "missing_B": 0.2605148327744933
+  },
+  {
+   "name": "Bilirubin_total",
+   "group": "labs",
+   "js_divergence": 0.03579116779079684,
+   "missing_A": 0.7604373493289801,
+   "missing_B": 0.6330500856304832
+  },
+  {
+   "name": "Hgb",
+   "group": "labs",
+   "js_divergence": 0.035026087310804206,
+   "missing_A": 0.16233936333782578,
+   "missing_B": 0.25969461741874944
+  },
+  {
+   "name": "Phosphate__n",
+   "group": "measurement_process",
+   "js_divergence": 0.03307747719483915,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "SaO2__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.03110543137914515,
+   "missing_A": 0.6507558069639275,
+   "missing_B": 0.7471492595095768
+  },
+  {
+   "name": "Magnesium__n",
+   "group": "measurement_process",
+   "js_divergence": 0.031016422169566543,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "Hgb__n",
+   "group": "measurement_process",
+   "js_divergence": 0.028256009350827463,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "BUN__n",
+   "group": "measurement_process",
+   "js_divergence": 0.026554020086254154,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "DBP__d6",
+   "group": "trends",
+   "js_divergence": 0.026479226706547017,
+   "missing_A": 0.4737330979543542,
+   "missing_B": 0.18811540758141457
+  },
+  {
+   "name": "AST",
+   "group": "labs",
+   "js_divergence": 0.026255259274545154,
+   "missing_A": 0.7523408186379656,
+   "missing_B": 0.6335159679525456
+  },
+  {
+   "name": "Resp",
+   "group": "vitals",
+   "js_divergence": 0.024416039230943144,
+   "missing_A": 0.020460254487702712,
+   "missing_B": 0.041328355172934206
+  },
+  {
+   "name": "Hct__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.02304359062829532,
+   "missing_A": 0.13153382307346734,
+   "missing_B": 0.2605148327744933
+  },
+  {
+   "name": "WBC__n",
+   "group": "measurement_process",
+   "js_divergence": 0.020761513837971243,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "SaO2__n",
+   "group": "measurement_process",
+   "js_divergence": 0.020548158453003937,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "Resp__std6",
+   "group": "trends",
+   "js_divergence": 0.019325692593450787,
+   "missing_A": 0.06510000442917434,
+   "missing_B": 0.12559924933890643
+  },
+  {
+   "name": "Potassium__n",
+   "group": "measurement_process",
+   "js_divergence": 0.019145302921714003,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "Fibrinogen",
+   "group": "labs",
+   "js_divergence": 0.01870821437149455,
+   "missing_A": 0.8845858405623785,
+   "missing_B": 0.9014153636178716
+  },
+  {
+   "name": "Alkalinephos__n",
+   "group": "measurement_process",
+   "js_divergence": 0.018594882818029436,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "Resp__mean6",
+   "group": "trends",
+   "js_divergence": 0.01727721549210568,
+   "missing_A": 0.030539789804040672,
+   "missing_B": 0.059226110407548604
+  },
+  {
+   "name": "AST__n",
+   "group": "measurement_process",
+   "js_divergence": 0.017142206774599864,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "Resp__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.016716829248201386,
+   "missing_A": 0.020460254487702712,
+   "missing_B": 0.041328355172934206
+  },
+  {
+   "name": "SBP__mean6",
+   "group": "trends",
+   "js_divergence": 0.016365076449196565,
+   "missing_A": 0.07417474990983466,
+   "missing_B": 0.03439786350304136
+  },
+  {
+   "name": "PTT",
+   "group": "labs",
+   "js_divergence": 0.016173546399359078,
+   "missing_A": 0.328608037053207,
+   "missing_B": 0.7838096050499019
+  },
+  {
+   "name": "WBC",
+   "group": "labs",
+   "js_divergence": 0.015986188636938792,
+   "missing_A": 0.18275659156052468,
+   "missing_B": 0.2695083301071529
+  },
+  {
+   "name": "PaCO2",
+   "group": "labs",
+   "js_divergence": 0.01598131645543003,
+   "missing_A": 0.4068019463057522,
+   "missing_B": 0.7138721382686238
+  },
+  {
+   "name": "Alkalinephos",
+   "group": "labs",
+   "js_divergence": 0.015557490013841066,
+   "missing_A": 0.7582328859867251,
+   "missing_B": 0.6333151792334596
+  },
+  {
+   "name": "Calcium__n",
+   "group": "measurement_process",
+   "js_divergence": 0.01533362117784632,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "Phosphate__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.015185940473545132,
+   "missing_A": 0.33424321229032605,
+   "missing_B": 0.5254601408145723
+  },
+  {
+   "name": "Lactate__n",
+   "group": "measurement_process",
+   "js_divergence": 0.014312044506847872,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "Bilirubin_total__n",
+   "group": "measurement_process",
+   "js_divergence": 0.014271842613288097,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "Bilirubin_direct__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.013440061659906584,
+   "missing_A": 0.9750991818682258,
+   "missing_B": 0.9309483658029252
+  },
+  {
+   "name": "SBP",
+   "group": "vitals",
+   "js_divergence": 0.012313772408760026,
+   "missing_A": 0.04664553317767949,
+   "missing_B": 0.030695739473356125
+  },
+  {
+   "name": "DBP__std6",
+   "group": "trends",
+   "js_divergence": 0.011814051345547825,
+   "missing_A": 0.4589371247065672,
+   "missing_B": 0.08726828916200237
+  },
+  {
+   "name": "Platelets__n",
+   "group": "measurement_process",
+   "js_divergence": 0.01081528442702787,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "shock_index",
+   "group": "vitals",
+   "js_divergence": 0.00972610935881111,
+   "missing_A": 0.04671260353195016,
+   "missing_B": 0.03094377259693305
+  },
+  {
+   "name": "Creatinine__n",
+   "group": "measurement_process",
+   "js_divergence": 0.00905868759415023,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "Magnesium__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.008701542708849475,
+   "missing_A": 0.22573856482096644,
+   "missing_B": 0.3342961567989291
+  },
+  {
+   "name": "Chloride",
+   "group": "labs",
+   "js_divergence": 0.008399181571747558,
+   "missing_A": 0.16607379004448156,
+   "missing_B": 0.9190283400809717
+  },
+  {
+   "name": "Bilirubin_direct__n",
+   "group": "measurement_process",
+   "js_divergence": 0.00815512277042489,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "pH",
+   "group": "labs",
+   "js_divergence": 0.007807267975188228,
+   "missing_A": 0.3814075916048164,
+   "missing_B": 0.7150322508677879
+  },
+  {
+   "name": "Resp__n",
+   "group": "measurement_process",
+   "js_divergence": 0.00772757402517935,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "SBP__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.007720010279311279,
+   "missing_A": 0.04664553317767949,
+   "missing_B": 0.030695739473356125
+  },
+  {
+   "name": "Resp__d6",
+   "group": "trends",
+   "js_divergence": 0.007609349001056599,
+   "missing_A": 0.17461323816935898,
+   "missing_B": 0.19834775818738967
+  },
+  {
+   "name": "SBP__d6",
+   "group": "trends",
+   "js_divergence": 0.006771131633447744,
+   "missing_A": 0.19883069797460184,
+   "missing_B": 0.1879539891994042
+  },
+  {
+   "name": "Potassium__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.006475920531319155,
+   "missing_A": 0.14890631030795418,
+   "missing_B": 0.21749355310730387
+  },
+  {
+   "name": "HR",
+   "group": "vitals",
+   "js_divergence": 0.005714034351137456,
+   "missing_A": 0.01721050600153123,
+   "missing_B": 0.02868391524878772
+  },
+  {
+   "name": "MAP__d6",
+   "group": "trends",
+   "js_divergence": 0.004869855401272919,
+   "missing_A": 0.17250242022740647,
+   "missing_B": 0.19416794073451926
+  },
+  {
+   "name": "Hgb__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.0047774838555285715,
+   "missing_A": 0.16233936333782578,
+   "missing_B": 0.25969461741874944
+  },
+  {
+   "name": "Potassium",
+   "group": "labs",
+   "js_divergence": 0.004756659099871378,
+   "missing_A": 0.14890631030795418,
+   "missing_B": 0.21749355310730387
+  },
+  {
+   "name": "HR__d6",
+   "group": "trends",
+   "js_divergence": 0.004736712167273546,
+   "missing_A": 0.17160646153262088,
+   "missing_B": 0.18610358335684618
+  },
+  {
+   "name": "Platelets",
+   "group": "labs",
+   "js_divergence": 0.004640491381718108,
+   "missing_A": 0.18107223983346304,
+   "missing_B": 0.26748075774775426
+  },
+  {
+   "name": "BUN__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.004506325821951671,
+   "missing_A": 0.1608587536303411,
+   "missing_B": 0.2517194994717813
+  },
+  {
+   "name": "SBP__std6",
+   "group": "trends",
+   "js_divergence": 0.004462852727948285,
+   "missing_A": 0.107701068696494,
+   "missing_B": 0.08719217317698935
+  },
+  {
+   "name": "WBC__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.0043259280441127045,
+   "missing_A": 0.18275659156052468,
+   "missing_B": 0.2695083301071529
+  },
+  {
+   "name": "Lactate__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.00414734630063937,
+   "missing_A": 0.6432920154641458,
+   "missing_B": 0.7625220637930695
+  },
+  {
+   "name": "O2Sat__std6",
+   "group": "trends",
+   "js_divergence": 0.0038586721653454245,
+   "missing_A": 0.07175262428579564,
+   "missing_B": 0.09291530784322732
+  },
+  {
+   "name": "MAP__n",
+   "group": "measurement_process",
+   "js_divergence": 0.0037391354193617595,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "TroponinI__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.003516075608911928,
+   "missing_A": 0.979237296178888,
+   "missing_B": 0.7148931423434537
+  },
+  {
+   "name": "Calcium__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.003502091098071083,
+   "missing_A": 0.3399568471871579,
+   "missing_B": 0.2272324621552635
+  },
+  {
+   "name": "Platelets__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.0031864609853729676,
+   "missing_A": 0.18107223983346304,
+   "missing_B": 0.26748075774775426
+  },
+  {
+   "name": "HR__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.002996691872910619,
+   "missing_A": 0.01721050600153123,
+   "missing_B": 0.02868391524878772
+  },
+  {
+   "name": "Glucose",
+   "group": "labs",
+   "js_divergence": 0.002979670571206535,
+   "missing_A": 0.13944306296387693,
+   "missing_B": 0.15314798653534473
+  },
+  {
+   "name": "HR__mean6",
+   "group": "trends",
+   "js_divergence": 0.002861914676226898,
+   "missing_A": 0.02260524034598179,
+   "missing_B": 0.03155794985531401
+  },
+  {
+   "name": "Creatinine__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.0027710867779018903,
+   "missing_A": 0.17775668647140336,
+   "missing_B": 0.25150427496243416
+  },
+  {
+   "name": "O2Sat__mean6",
+   "group": "trends",
+   "js_divergence": 0.002687661938512158,
+   "missing_A": 0.031587605904722135,
+   "missing_B": 0.03599498684374569
+  },
+  {
+   "name": "BUN",
+   "group": "labs",
+   "js_divergence": 0.0026526295103259513,
+   "missing_A": 0.1608587536303411,
+   "missing_B": 0.2517194994717813
+  },
+  {
+   "name": "O2Sat",
+   "group": "vitals",
+   "js_divergence": 0.00259088090055139,
+   "missing_A": 0.019432686041140703,
+   "missing_B": 0.02987027473933556
+  },
+  {
+   "name": "Fibrinogen__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.0024516579591272692,
+   "missing_A": 0.8845858405623785,
+   "missing_B": 0.9014153636178716
+  },
+  {
+   "name": "Temp__n",
+   "group": "measurement_process",
+   "js_divergence": 0.0023584842408666653,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "HR__n",
+   "group": "measurement_process",
+   "js_divergence": 0.0022575185234443877,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "SBP__n",
+   "group": "measurement_process",
+   "js_divergence": 0.002094321524711784,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "O2Sat__d6",
+   "group": "trends",
+   "js_divergence": 0.002011400122726591,
+   "missing_A": 0.1737311997367805,
+   "missing_B": 0.18725319719945668
+  },
+  {
+   "name": "Magnesium",
+   "group": "labs",
+   "js_divergence": 0.0018921179947941824,
+   "missing_A": 0.22573856482096644,
+   "missing_B": 0.3342961567989291
+  },
+  {
+   "name": "MAP__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.001689879089677302,
+   "missing_A": 0.01811658852337655,
+   "missing_B": 0.03778502483612097
+  },
+  {
+   "name": "O2Sat__n",
+   "group": "measurement_process",
+   "js_divergence": 0.001663812639780626,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "HR__std6",
+   "group": "trends",
+   "js_divergence": 0.00155424920972235,
+   "missing_A": 0.05268059958365761,
+   "missing_B": 0.08107795982913274
+  },
+  {
+   "name": "Temp__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.00139306118769183,
+   "missing_A": 0.07246382313674127,
+   "missing_B": 0.07600706041378225
+  },
+  {
+   "name": "MAP__std6",
+   "group": "trends",
+   "js_divergence": 0.001316159094843152,
+   "missing_A": 0.05948381136779231,
+   "missing_B": 0.09811875406006601
+  },
+  {
+   "name": "ICULOS",
+   "group": "icu_time",
+   "js_divergence": 0.001266253056251485,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "Phosphate",
+   "group": "labs",
+   "js_divergence": 0.0009747526281998727,
+   "missing_A": 0.33424321229032605,
+   "missing_B": 0.5254601408145723
+  },
+  {
+   "name": "Alkalinephos__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.0009265861696458894,
+   "missing_A": 0.7582328859867251,
+   "missing_B": 0.6333151792334596
+  },
+  {
+   "name": "AST__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.0008464553397088888,
+   "missing_A": 0.7523408186379656,
+   "missing_B": 0.6335159679525456
+  },
+  {
+   "name": "Fibrinogen__n",
+   "group": "measurement_process",
+   "js_divergence": 0.0005753796122988889,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "O2Sat__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.000512651969753503,
+   "missing_A": 0.019432686041140703,
+   "missing_B": 0.02987027473933556
+  },
+  {
+   "name": "Bilirubin_total__hsl",
+   "group": "measurement_process",
+   "js_divergence": 0.00040159114613808495,
+   "missing_A": 0.7604373493289801,
+   "missing_B": 0.6330500856304832
+  },
+  {
+   "name": "Gender",
+   "group": "demographics",
+   "js_divergence": 0.0,
+   "missing_A": 0.0,
+   "missing_B": 0.0
+  },
+  {
+   "name": "Unit1",
+   "group": "unit_columns",
+   "js_divergence": 0.0,
+   "missing_A": 0.48868345956480197,
+   "missing_B": 0.2963208420002756
+  },
+  {
+   "name": "Unit2",
+   "group": "unit_columns",
+   "js_divergence": 0.0,
+   "missing_A": 0.48868345956480197,
+   "missing_B": 0.2963208420002756
+  },
+  {
+   "name": "EtCO2",
+   "group": "vitals",
+   "js_divergence": null,
+   "missing_A": 1.0,
+   "missing_B": 0.8286432325671428
+  },
+  {
+   "name": "EtCO2__hsl",
+   "group": "measurement_process",
+   "js_divergence": null,
+   "missing_A": 1.0,
+   "missing_B": 0.8286432325671428
+  },
+  {
+   "name": "EtCO2__mean6",
+   "group": "trends",
+   "js_divergence": null,
+   "missing_A": 1.0,
+   "missing_B": 0.9032368978799074
+  },
+  {
+   "name": "EtCO2__std6",
+   "group": "trends",
+   "js_divergence": null,
+   "missing_A": 1.0,
+   "missing_B": 0.9133800090551776
+  },
+  {
+   "name": "EtCO2__d6",
+   "group": "trends",
+   "js_divergence": null,
+   "missing_A": 1.0,
+   "missing_B": 0.853512162153295
+  }
+ ]
+}
