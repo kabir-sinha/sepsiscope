@@ -6,6 +6,24 @@ State of the work, so anyone can pick it up from the repository alone.
 
 ## Resume here
 
+**Paused 2026-11-14 (save point).** Latest commit `c9da218` + this handoff commit; 20 commits
+unpushed before this one (GitHub `main` at `31bb0c5`). 301 tests (all pass except the
+sandbox-blocked Unix-socket test, covered by CI). Self-hosted fonts and dashboard v3.1 done
+and checked in the browser by the maintainer.
+
+**Next on resume, in order:**
+1. (a) The patient-card badge still showed "NEWS2: Too early only"; it must read "Alerted only
+   before the window" (the banner is already fixed). Note: the current
+   `data/demo/demo_B2A.json` has 0 occurrences of the old text, so first check whether the
+   server was started before the last `sepsiscope demo build`; restart it, then fix any
+   remaining source.
+2. (b) Exhaustive privacy scan + Batch B gate + M4 evidence report (prompt from the maintainer).
+3. (c) The maintainer pushes from their own terminal.
+
+**Rules:** no push; no sandbox changes; ask before any download; double privacy check
+(`sepsiscope privacy-audit` + `scripts/independent_scan.sh`); long runs in the background
+under `caffeinate -i`, no polling.
+
 **Batch S and Batch A (Milestone 3) closed 2026-11-13** and pushed by the maintainer from
 their own terminal (latest `3e0da73`; CI #11 green on `ce231b2`, 0 open Dependabot alerts).
 The Milestone 3 evidence document is done.
