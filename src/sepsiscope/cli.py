@@ -392,6 +392,24 @@ def analyses_bands() -> None:
         typer.echo(f"wrote {path.relative_to(REPO_ROOT)}")
 
 
+@analyses_app.command("deferral")
+def analyses_deferral() -> None:
+    """C2 conformal deferral of the headline model, both directions (ADR 0020, 0024)."""
+    from sepsiscope.config import load_config
+    from sepsiscope.evaluation import deferral
+
+    cfg = load_config()
+    reports = REPO_ROOT / cfg.paths.reports_dir
+    for path in deferral.run(
+        cfg,
+        REPO_ROOT / cfg.paths.data_dir,
+        REPO_ROOT / cfg.paths.splits_dir,
+        reports / "results",
+        REPO_ROOT / cfg.paths.models_dir,
+    ):
+        typer.echo(f"wrote {path.relative_to(REPO_ROOT)}")
+
+
 @app.command("privacy-audit")
 def privacy_audit(
     strict: bool = typer.Option(
