@@ -60,6 +60,15 @@ maintainer's own terminal.
   tagged; patient 6 renamed "Septic on admission (onset at hour 6)" with a labelling note;
   `/api/results` from committed aggregate JSONs. The dashed LightGBM line is the committed
   B2A strict threshold 0.049641 (4.96 %), not the 5 % budget.
+- [x] **B7d** Dashboard redesign (`web/src`, plain React + SVG, no new packages): tabs "How it
+  works" (4 steps, glossary, why an unseen hospital), "Patient replay" (cards with verdict
+  badges, verdict banner, play/pause + hour slider, risk / NEWS2 / 5 vital charts on one
+  hour axis with synced crosshair, threshold, onset, early-warning window, normal ranges,
+  legends and helper text; "Why did it alert?" bar chart of the top 5 reasons with
+  sentences, units and process tags) and "Results" (table, utility chart with CIs, alert
+  drift chart, limitations) from committed aggregates. One light theme, Okabe-Ito palette,
+  all text colours >= 4.5:1 contrast, keyboard tabs/slider/alert dots. Not visually checked
+  in a browser inside the sandbox (no local server); the maintainer runs it.
 - [x] **Post-hoc, exploratory** (`sepsiscope exploratory`; not pre-registered, headline model
   unchanged): cumulative "measurements so far" counts replaced by measurements per hour of
   stay, same tuned params. A→B utility 0.129 [0.111, 0.147] (headline 0.226), AUROC 0.790,
