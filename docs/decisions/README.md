@@ -29,3 +29,4 @@ A decision is changed by a new ADR that supersedes it, never by editing history.
 | [0021](0021-tuning-protocol.md) | Tuning: Optuna TPE, 50 trials, mean AUPRC over GroupKFold(5) | Accepted |
 | [0022](0022-batch-b-model-decisions.md) | Batch B: calibration split, Platt headline, ablations, tracking, no class weights, success criterion | Accepted |
 | [0023](0023-no-name-in-tracked-files.md) | No personal name in tracked files (copyright: "SepsiScope contributors") | Accepted |
+| [0024](0024-batch-c-criteria.md) | Batch C: pre-registered shortcut-check, deferral and budget criteria | Accepted |
