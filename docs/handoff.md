@@ -38,7 +38,15 @@ in ADR 0024 before any result. Order: C0 → C4 → C1 → C2 → C3 → C5 → 
   removes unsure low-risk hours. α 0.05 / 0.20: deferral 47.4 % / 9.4 % (A→B), 72.5 % /
   5.1 % (B→A). Per-hour decisions in the ignored `data/processed/deferral/`.
   `reports/results/deferral_{A2B,B2A}.json`.
-- [ ] **C3** budgets · [ ] **C5** docs · [ ] **C6** gate.
+- [x] **C3** `sepsiscope analyses budgets` (397 s, 5.61 GiB): the 5 % budget reproduces the
+  headline thresholds exactly (checked in the run). LightGBM − LR utility at 2 / 5 / 10 %:
+  A→B −0.009 [−0.028, 0.009] / +0.040 / +0.077; B→A +0.061 / +0.167 / +0.246 (the A→B
+  advantage disappears at the tightest budget). Lead times at 5 %: median at the 12 h
+  ceiling; 285 of 369 detected A→B patients and 467 of 865 B→A were already alerting when
+  the window opened (fits the long-stay alerts of C1); 10th percentile 3-6 h (A→B), 1-3 h
+  (B→A). Subgroups (sex, age): LightGBM − LR utility CI above 0 in every group, both
+  directions (narrowest A→B age ≥ 65: +0.030 [+0.003, +0.059]).
+  `reports/results/budgets_{A2B,B2A}.json`. · [ ] **C5** docs · [ ] **C6** gate.
 
 **Batch B gate PASSED (2026-11-14); M4 evidence report delivered as text** and pushed.
 
