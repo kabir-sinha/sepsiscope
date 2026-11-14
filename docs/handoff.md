@@ -217,7 +217,7 @@ maintainer's own terminal.
 Older notes. Commit hashes below were remapped to the rewritten history on 2026-11-13; CI
 run numbers from before that date belong to the legacy repository.
 
-- Repository `kabir-sinha/sepsiscope` is **private**; default branch `main`.
+- The maintainer's repository `sepsiscope` is **private**; default branch `main`.
 - First CI run is green: run `38003153138` (jobs `python` and `web`). After the four
   follow-up tasks, CI is green on `e78124d`: run `38004614423`, on `ubuntu-24.04`.
 - Commit `ce32d9f` (`docs(ops): record repository state after first push`) is
