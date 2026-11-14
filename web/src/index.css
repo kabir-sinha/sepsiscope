@@ -1,46 +1,111 @@
-/* One light theme for the whole page (no automatic dark mode, so cards never sit on a dark
-   page). Chart colours are the Okabe-Ito colour-blind-safe palette; text colours meet
-   WCAG AA contrast on the page background. */
+/* SepsiScope design tokens. Light theme by default; "ICU monitor" dark theme on
+   [data-theme='dark']. Data colours are Okabe-Ito (colour-blind safe). Contrast of every
+   text and chart colour is checked by scripts/contrast_check.py (run in tests/test_contrast.py).
+   Fonts: IBM Plex Sans / Plex Mono when self-hosted files are present, else system fonts. */
 :root {
-  --bg: #f4f3ef;
+  --bg: #f3f5f7;
   --surface: #ffffff;
-  --surface-2: #ebe9e3;
-  --border: #c9c6bd;
-  --text: #1d1d1b;
-  --muted: #4a4944;
-  --focus: #005a8c;
+  --surface-2: #e8ecf0;
+  --border: #7a8594;
+  --heading: #12284b; /* navy */
+  --text: #1b2430;
+  --muted: #4a5563;
+  --accent: #00695c; /* clinical teal */
+  --accent-text: #ffffff;
+  --focus: #00695c;
 
   --risk: #0072b2; /* blue: SepsiScope risk, "lowers risk" */
-  --news2: #e69f00; /* orange: modified NEWS2 */
-  --alert: #d55e00; /* vermillion: alerts, "raises risk" */
-  --alert-text: #9c4300; /* darker vermillion for text (AA) */
-  --ok: #009e73; /* bluish green: normal range */
-  --window: #56b4e9; /* sky blue: early-warning window */
-  --onset: #1d1d1b;
-  --threshold: #4a4944;
+  --compare: #6a3d9a; /* purple: comparison overlay */
+  --news2: #b35c00; /* darker orange for lines/text on light */
+  --raise: #c74a00; /* orange-red: "raises risk", alerts */
+  --raise-text: #a33c00;
+  --lower: #0072b2;
+  --ok: #009e73;
+  --window: #56b4e9;
+  --window-text: #005a8c;
+  --onset: #1b2430;
+  --threshold: #4a5563;
+  --grid: #dde3e9;
+  --good-bg: #ddf2ea;
+  --good-text: #00553f;
+  --bad-bg: #fbe6da;
+  --tip-bg: #1b2430;
+  --tip-text: #ffffff;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  font: 17px/1.5 var(--sans);
+  --sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font: 17px/1.55 var(--sans);
   color-scheme: light;
   color: var(--text);
   background: var(--bg);
 }
 
-@media (min-width: 1600px) {
+:root[data-theme='dark'] {
+  --bg: #0a121c;
+  --surface: #111d2b;
+  --surface-2: #1a2a3c;
+  --border: #6b8099;
+  --heading: #e6eef7;
+  --text: #e6eef7;
+  --muted: #a8b6c6;
+  --accent: #3fd0b8;
+  --accent-text: #06231e;
+  --focus: #3fd0b8;
+
+  --risk: #56b4e9;
+  --compare: #cc79a7;
+  --news2: #e69f00;
+  --raise: #ff8f4d;
+  --raise-text: #ffa36b;
+  --lower: #56b4e9;
+  --ok: #2ccf9f;
+  --window: #56b4e9;
+  --window-text: #8fd0f5;
+  --onset: #e6eef7;
+  --threshold: #a8b6c6;
+  --grid: #24364a;
+  --good-bg: #0f3a2f;
+  --good-text: #7be3c0;
+  --bad-bg: #3d2111;
+  --tip-bg: #e6eef7;
+  --tip-text: #0a121c;
+  color-scheme: dark;
+}
+
+@media (min-width: 1700px) {
   :root {
-    font-size: 19px; /* projector / large screens */
+    font-size: 19px; /* 1920 px projector */
   }
 }
 
 body {
   margin: 0;
+  background: var(--bg);
 }
 
 h1,
 h2,
 h3 {
+  color: var(--heading);
   line-height: 1.2;
-  margin: 0 0 0.4rem;
+  margin: 0 0 0.45rem;
+}
+h1 {
+  font-size: 2rem;
+}
+h2 {
+  font-size: 1.4rem;
+}
+h3 {
+  font-size: 1.15rem;
+}
+
+.num,
+td,
+.tick,
+.tip {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
 }
 
 :focus-visible {
@@ -51,5 +116,7 @@ h3 {
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
   }
 }

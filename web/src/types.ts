@@ -9,6 +9,8 @@ export type Verdict = {
   false_alarm_hours: number
 }
 
+export type WhatIfRow = { alert_hours: number[]; verdict: Verdict }
+
 export type PatientRow = {
   key: string
   label: string
@@ -17,6 +19,7 @@ export type PatientRow = {
   hours: number
   septic: boolean
   verdict: { sepsiscope: Verdict; news2: Verdict }
+  what_if: { sepsiscope: WhatIfRow[]; news2: WhatIfRow[] }
 }
 
 export type VitalInfo = { label: string; unit: string; normal: [number, number] }
@@ -28,6 +31,7 @@ export type Summary = {
   news2_threshold: number
   alarm_budget: number
   rules: string[]
+  what_if: { budgets: number[]; lgbm_thresholds: number[]; news2_thresholds: number[]; source: string }
   vitals: Record<string, VitalInfo>
   patients: PatientRow[]
 }
@@ -53,6 +57,7 @@ export type Patient = PatientRow & {
   news2_alert_hours: number[]
   banner: string
   reasons: Reason[][]
+  compare: { lr: number[]; news2_prob: number[] }
 }
 
 export type ResultRow = {
@@ -62,10 +67,13 @@ export type ResultRow = {
   utility: number
   utility_ci: [number, number]
   auroc: number
+  auroc_ci: [number, number]
   auprc: number
+  auprc_ci: [number, number]
   alert_rate: number
   false_alerts_per_100_days: number
   timely_sensitivity: number
+  timely_sensitivity_ci: [number, number]
   rethresholded_alert_rate: number
   rethresholded_utility: number
 }

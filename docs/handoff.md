@@ -82,6 +82,14 @@ maintainer's own terminal.
   thresholds from hospital B's validation split only (5 % reproduces the committed
   threshold, checked in the build). Comparison curves: logistic regression and NEWS2 as a
   probability.
+- [x] **Dashboard v3** (`web/src`, plain React + SVG, no new packages): one selected hour (Play,
+  slider, ←/→, clicks) with hover as a labelled preview; charts drawn at true pixel width
+  (axis text >= 12 px); inline no-wrap legends, one shared vitals legend; pointer-following
+  tooltip that closes on leave/scroll; "Why" list with full sentences, inline bars, values
+  and units; threshold labelled with its true value (4.96 %); Results with AUPRC and timely
+  sensitivity CIs; headline strip; what-if budget slider; compare overlay; speed control;
+  "Show as table" under every chart; light theme + "ICU monitor" dark mode; PhysioNet data
+  credit and citations. Fonts: system stack until the self-hosted IBM Plex files are approved.
 - [x] **Post-hoc, exploratory** (`sepsiscope exploratory`; not pre-registered, headline model
   unchanged): cumulative "measurements so far" counts replaced by measurements per hour of
   stay, same tuned params. A→B utility 0.129 [0.111, 0.147] (headline 0.226), AUROC 0.790,

@@ -1,4 +1,6 @@
-// "How it works": the pipeline in four steps, a glossary, and why an unseen hospital matters.
+// "How it works": headline numbers, the pipeline in four steps, why an unseen hospital
+// matters, and a glossary.
+import { DIRS, NAMES, rowsFor, useResults } from './resultsData'
 const STEPS = [
   {
     title: 'Hourly vitals and labs',
@@ -31,9 +33,40 @@ const GLOSSARY: [string, string][] = [
   ['Unseen hospital', 'A hospital whose patients were never used to train, tune or set the threshold of the model. All demo patients come from one.'],
 ]
 
+function Headline() {
+  const [doc] = useResults()
+  if (!doc) return null
+  return (
+    <section className="panel headline" aria-labelledby="headline-title">
+      <h2 id="headline-title">Headline results on the unseen hospital</h2>
+      <p className="help">From the committed result files; utility 1 = perfect, 0 = never alerting. AUROC 0.5 = chance.</p>
+      <div className="strip">
+        {Object.entries(DIRS).map(([d, title]) => (
+          <div key={d} className="strip-group">
+            <h3>{title}</h3>
+            <dl>
+              {rowsFor(doc, d)
+                .filter((r) => ['lgbm', 'lr', 'news2'].includes(r.model))
+                .map((r) => (
+                  <div key={r.model} className={r.model === 'lgbm' ? 'stat main' : 'stat'}>
+                    <dt>{NAMES[r.model]}</dt>
+                    <dd className="num">
+                      utility <strong>{r.utility.toFixed(3)}</strong> · AUROC <strong>{r.auroc.toFixed(3)}</strong>
+                    </dd>
+                  </div>
+                ))}
+            </dl>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
 export function HowItWorks() {
   return (
     <div className="how">
+      <Headline />
       <ol className="steps">
         {STEPS.map((s, i) => (
           <li key={s.title} className="step">
