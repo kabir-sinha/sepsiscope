@@ -4,8 +4,9 @@
 - CORS allows only the local development page's origins.
 - No model, no training and no outside calls at request time: the JSON files are read once.
 - One process serves the built web app (``web/dist``) and the API, so one command runs the
-  demo. Every response carries security headers: a Content-Security-Policy that allows only
-  this origin, ``nosniff``, ``no-referrer`` and no framing.
+  demo. Every response, a 500 error included, carries security headers: a
+  Content-Security-Policy that allows only this origin, ``nosniff``, ``no-referrer`` and no
+  framing.
 """
 
 from __future__ import annotations
@@ -16,6 +17,7 @@ from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.base import RequestResponseEndpoint
 
@@ -86,6 +88,13 @@ def create_app(demo_file: Path, results_dir: Path, static_dir: Path | None = Non
         response = await call_next(request)
         response.headers.update(SECURITY_HEADERS)
         return response
+
+    # An unexpected error is answered by Starlette's outermost error layer, which runs outside
+    # the middleware above, so this handler sets the same headers itself. The body is fixed
+    # text: no exception message, path or traceback ever reaches the browser.
+    @app.exception_handler(Exception)
+    async def server_error(request: Request, exc: Exception) -> Response:
+        return PlainTextResponse("Internal Server Error", status_code=500, headers=SECURITY_HEADERS)
 
     @app.get("/api/summary")
     def summary() -> dict[str, Any]:

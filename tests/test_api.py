@@ -13,7 +13,7 @@ from fastapi.testclient import TestClient
 from pydantic import ValidationError
 from typer.testing import CliRunner
 
-from sepsiscope.api.app import LOCAL_ORIGINS, create_app
+from sepsiscope.api.app import LOCAL_ORIGINS, SECURITY_HEADERS, create_app
 from sepsiscope.api.demo import plain_name
 from sepsiscope.cli import app as cli_app
 from sepsiscope.config import REPO_ROOT, Config, load_config
@@ -140,6 +140,23 @@ def test_security_headers_on_every_response(web_client: TestClient, path: str) -
     assert headers["x-content-type-options"] == "nosniff"
     assert headers["referrer-policy"] == "no-referrer"
     assert headers["x-frame-options"] == "DENY"
+
+
+def test_server_error_is_plain_and_keeps_security_headers(tmp_path: Path) -> None:
+    path = tmp_path / "demo.json"
+    path.write_text(json.dumps(DOC))
+    app = create_app(path, RESULTS)
+    secret_path = str(tmp_path / "private" / "detail")
+
+    @app.get("/api/boom")
+    def boom() -> None:
+        raise RuntimeError(f"failure at {secret_path}")
+
+    response = TestClient(app, raise_server_exceptions=False).get("/api/boom")
+    assert response.status_code == 500
+    assert response.text == "Internal Server Error"  # no message, path or traceback
+    for name, value in SECURITY_HEADERS.items():
+        assert response.headers[name] == value
 
 
 def test_built_bundle_has_no_ids_paths_or_source_maps() -> None:
