@@ -6,7 +6,7 @@ State of the work, so anyone can pick it up from the repository alone.
 
 ## Resume here
 
-**Batch C (Milestone 5) started 2026-11-14.** Batch B pushed by the maintainer (`1fa15f0`).
+**Batch C (Milestone 5) gate PASSED 2026-11-14.** Batch B pushed by the maintainer (`1fa15f0`).
 Plan `docs/plan/batch-c.md` approved with the recommended defaults (D1–D12); criteria fixed
 in ADR 0024 before any result. Order: C0 → C4 → C1 → C2 → C3 → C5 → C6.
 - [x] **C0** Plan and ADR 0024. The two method references in ADR 0024 are cited from
@@ -52,7 +52,16 @@ in ADR 0024 before any result. Order: C0 → C4 → C1 → C2 → C3 → C5 → 
   version mapped (checklist PDF downloaded with the maintainer's approval into the session
   scratchpad, not committed; topics paraphrased); README one-command reproduction; tests
   for the checklist rows and the README commands.
-- [ ] **C6** gate.
+- [x] **C6** gate (2026-11-14, real exit codes): fast gate 12/12 rc=0 (`uv sync --locked`,
+  doctor, ruff, format, mypy, pre-commit on all files, `pip-audit` no known
+  vulnerabilities, `npm audit` 0, web lint and build, contrast 56/56, font SHA-256s). Full
+  tests 3 times: 339 passed, 1 failed each time = the sandbox-blocked Unix-socket test
+  (covered by CI). Byte-identical re-run from the committed tuned parameters (train,
+  `evaluate --all-models`, ablations, exploratory, the 3 analyses, demo build; 6-394 s per
+  step, peak 5.67 GiB): `scripts/byte_check.py` 89 files, 0 differences; 0 tracked files
+  changed. Exhaustive privacy scan (11 items, two passes + positive control) after this
+  commit. **Next: M5 evidence report (text); release tag `v1.0.0-m5` only on the
+  maintainer's word; the maintainer pushes.**
 
 **Batch B gate PASSED (2026-11-14); M4 evidence report delivered as text** and pushed.
 
