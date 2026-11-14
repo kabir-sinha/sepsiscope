@@ -25,14 +25,17 @@ from pathlib import Path
 import numpy as np
 
 from sepsiscope.api.verdict import RULES, WINDOW_HOURS, Verdict, banner, onset_hour, verdict
+from sepsiscope.api.whatif import BUDGETS, budget_thresholds, patient_what_if
 from sepsiscope.config import Config
 from sepsiscope.data.io import LABEL
+from sepsiscope.evaluation.run import _split_pids
 from sepsiscope.features.pipeline import read_features
 from sepsiscope.models import baselines as b
 from sepsiscope.models import calibration, lgbm
+from sepsiscope.models.baselines import LogisticJSON
 from sepsiscope.trust.explain import Explanation, explain_rows
 
-DIRECTION, TARGET = "B2A", "A"
+DIRECTION, SOURCE, TARGET = "B2A", "B", "A"
 DEMO_FILE = Path("demo") / "demo_B2A.json"
 MIN_HOURS, MAX_HOURS = 24, 120
 
@@ -154,7 +157,10 @@ def unit_of(feature: str) -> str:
 def reason_sentence(label: str, value: float | None, unit: str, contribution: float) -> str:
     effect = "raised" if contribution > 0 else "lowered"
     if value is None:
-        return f"{label[:1].upper()}{label[1:]} (not measured yet) {effect} the risk."
+        return (
+            f"{label[:1].upper()}{label[1:]}: not measured yet (a missing value is itself "
+            f"information to the model) {effect} the risk."
+        )
     shown = f"{value:g} {unit}".strip()
     return f"{label[:1].upper()}{label[1:]} = {shown} {effect} the risk."
 
@@ -192,7 +198,9 @@ def _reasons_for(
     return out
 
 
-def build(cfg: Config, data_dir: Path, models_dir: Path, results_dir: Path) -> Path:
+def build(
+    cfg: Config, data_dir: Path, models_dir: Path, results_dir: Path, splits_dir: Path
+) -> Path:
     model = lgbm.load(models_dir / f"lgbm_{DIRECTION}")
     features = model.booster.feature_name()
     cal = json.loads((models_dir / f"lgbm_{DIRECTION}" / "calibration.json").read_text())
@@ -202,9 +210,29 @@ def build(cfg: Config, data_dir: Path, models_dir: Path, results_dir: Path) -> P
     news2_doc = json.loads((results_dir / f"news2_{DIRECTION}.json").read_text())
     threshold, news2_threshold = strict["threshold"], news2_doc["strict_external"]["threshold"]
 
+    # What-if thresholds: from the training hospital's (B) validation split only.
+    source = read_features(data_dir, SOURCE)
+    val = source[source["pid"].isin(_split_pids(splits_dir, SOURCE)["val"])]
+    val_raw = np.asarray(model.booster.predict(lgbm.matrix(val, features), raw_score=True))
+    lgbm_thresholds = budget_thresholds(platt.predict(val_raw))
+    news2_thresholds = budget_thresholds(b.news2(val).astype(np.float64))
+    k5 = BUDGETS.index(cfg.alarm_budget)
+    if lgbm_thresholds[k5] != threshold or news2_thresholds[k5] != news2_threshold:
+        raise RuntimeError("what-if threshold at the headline budget differs from the results")
+    del source, val
+
+    # Comparison curves on the same probability scale.
+    lr = LogisticJSON(
+        **json.loads((models_dir / "baselines" / f"lr_{DIRECTION}" / "model.json").read_text())[
+            "logistic"
+        ]
+    )
+    n2p = news2_doc["fitted"]["news2_probability"]
+
     frame = read_features(data_dir, TARGET)
     raw = np.asarray(model.booster.predict(lgbm.matrix(frame, features), raw_score=True))
     frame["risk"] = platt.predict(raw)
+    frame["lr_risk"] = lr.predict_proba(frame)
     frame["alert"] = frame["risk"] >= threshold
     frame["news2"] = b.news2(frame)
 
@@ -266,6 +294,21 @@ def build(cfg: Config, data_dir: Path, models_dir: Path, results_dir: Path) -> P
                 "verdict": {"sepsiscope": stay.model.as_dict(), "news2": news2_v.as_dict()},
                 "banner": banner(stay.model, news2_v, stay.first is not None),
                 "reasons": [_reasons_for(e, x[h], col) for h, e in enumerate(explanations)],
+                "compare": {
+                    "lr": [round(float(v), 5) for v in g["lr_risk"]],
+                    "news2_prob": [
+                        round(float(v), 5)
+                        for v in b.news2_probability(
+                            g["news2"].to_numpy(), n2p["coef"], n2p["intercept"]
+                        )
+                    ],
+                },
+                "what_if": {
+                    "sepsiscope": patient_what_if(g["risk"].to_numpy(), lgbm_thresholds, onset),
+                    "news2": patient_what_if(
+                        g["news2"].to_numpy(dtype=np.float64), news2_thresholds, onset
+                    ),
+                },
             }
         )
     doc = {
@@ -277,6 +320,12 @@ def build(cfg: Config, data_dir: Path, models_dir: Path, results_dir: Path) -> P
         "news2_threshold": news2_threshold,
         "alarm_budget": cfg.alarm_budget,
         "rules": list(RULES),
+        "what_if": {
+            "budgets": list(BUDGETS),
+            "lgbm_thresholds": lgbm_thresholds,
+            "news2_thresholds": news2_thresholds,
+            "source": "chosen on hospital B's validation split only (tie-safe budget rule)",
+        },
         "vitals": VITALS_SHOWN,
         "patients": patients,
     }

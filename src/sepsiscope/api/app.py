@@ -1,8 +1,11 @@
-"""Local demo API (plan B7, P4): serves the precomputed demo file, nothing else.
+"""Local demo server (plan B7, P4; demo hardening v3): API plus the built web app.
 
 - Bound to 127.0.0.1 only (the host is typed ``Literal["127.0.0.1"]`` in the config).
-- CORS allows only the local web page's origins.
-- No model, no training and no outside calls at request time: the JSON file is read once.
+- CORS allows only the local development page's origins.
+- No model, no training and no outside calls at request time: the JSON files are read once.
+- One process serves the built web app (``web/dist``) and the API, so one command runs the
+  demo. Every response carries security headers: a Content-Security-Policy that allows only
+  this origin, ``nosniff``, ``no-referrer`` and no framing.
 """
 
 from __future__ import annotations
@@ -11,11 +14,26 @@ import json
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from starlette.middleware.base import RequestResponseEndpoint
 
 LOCAL_ORIGINS = ["http://127.0.0.1:5173", "http://localhost:5173"]
 RESULT_MODELS = ("lgbm", "lr", "news2", "sirs", "qsofa")
+CSP = (
+    "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; "
+    "font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; "
+    "form-action 'none'; frame-ancestors 'none'"
+)
+SECURITY_HEADERS = {
+    "Content-Security-Policy": CSP,
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "no-referrer",
+    "X-Frame-Options": "DENY",
+    "Cross-Origin-Opener-Policy": "same-origin",
+    "Cross-Origin-Resource-Policy": "same-origin",
+}
 DIRECTIONS = ("A2B", "B2A")
 
 
@@ -36,6 +54,9 @@ def results_summary(results_dir: Path) -> dict[str, Any]:
                     "utility_ci": ci["utility"],
                     "auroc": point["auroc"],
                     "auprc": point["auprc"],
+                    "auroc_ci": ci["auroc"],
+                    "auprc_ci": ci["auprc"],
+                    "timely_sensitivity_ci": ci["timely_sensitivity"],
                     "alert_rate": point["alert_rate"],
                     "false_alerts_per_100_days": point["false_alerts_per_100_patient_days"],
                     "timely_sensitivity": point["timely_sensitivity"],
@@ -51,7 +72,7 @@ def results_summary(results_dir: Path) -> dict[str, Any]:
     return {"alarm_budget": budget, "rows": rows, "criterion": paired}
 
 
-def create_app(demo_file: Path, results_dir: Path) -> FastAPI:
+def create_app(demo_file: Path, results_dir: Path, static_dir: Path | None = None) -> FastAPI:
     doc: dict[str, Any] = json.loads(demo_file.read_text(encoding="utf-8"))
     results = results_summary(results_dir)
     by_key = {p["key"]: p for p in doc["patients"]}
@@ -59,6 +80,12 @@ def create_app(demo_file: Path, results_dir: Path) -> FastAPI:
     app.add_middleware(
         CORSMiddleware, allow_origins=LOCAL_ORIGINS, allow_methods=["GET"], allow_headers=[]
     )
+
+    @app.middleware("http")
+    async def security_headers(request: Request, call_next: RequestResponseEndpoint) -> Response:
+        response = await call_next(request)
+        response.headers.update(SECURITY_HEADERS)
+        return response
 
     @app.get("/api/summary")
     def summary() -> dict[str, Any]:
@@ -69,11 +96,21 @@ def create_app(demo_file: Path, results_dir: Path) -> FastAPI:
             "news2_threshold": doc["news2_threshold"],
             "alarm_budget": doc["alarm_budget"],
             "rules": doc["rules"],
+            "what_if": doc["what_if"],
             "vitals": doc["vitals"],
             "patients": [
                 {
                     k: p[k]
-                    for k in ("key", "label", "story", "story_note", "hours", "septic", "verdict")
+                    for k in (
+                        "key",
+                        "label",
+                        "story",
+                        "story_note",
+                        "hours",
+                        "septic",
+                        "verdict",
+                        "what_if",
+                    )
                 }
                 for p in doc["patients"]
             ],
@@ -90,4 +127,7 @@ def create_app(demo_file: Path, results_dir: Path) -> FastAPI:
         result: dict[str, Any] = by_key[key]
         return result
 
+    if static_dir is not None:
+        # Mounted last, so /api/* routes win; html=True serves index.html at "/".
+        app.mount("/", StaticFiles(directory=static_dir, html=True), name="web")
     return app

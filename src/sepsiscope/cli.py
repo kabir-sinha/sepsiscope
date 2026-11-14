@@ -324,13 +324,14 @@ def demo_build() -> None:
         REPO_ROOT / cfg.paths.data_dir,
         REPO_ROOT / cfg.paths.models_dir,
         REPO_ROOT / cfg.paths.reports_dir / "results",
+        REPO_ROOT / cfg.paths.splits_dir,
     )
     typer.echo(f"wrote {out.relative_to(REPO_ROOT)}")
 
 
 @demo_app.command("serve")
 def demo_serve() -> None:
-    """Serve the demo API on 127.0.0.1 only (start it from your own terminal)."""
+    """Serve the demo (web app + API) on 127.0.0.1 only, from one process."""
     import uvicorn
 
     from sepsiscope.api.app import create_app
@@ -338,11 +339,19 @@ def demo_serve() -> None:
     from sepsiscope.config import load_config
 
     cfg = load_config()
+    web = REPO_ROOT / "web" / "dist"
+    if not (web / "index.html").is_file():
+        typer.echo("web/dist not built: run `cd web && npm ci && npm run build` first")
+        raise typer.Exit(code=2)
     app_ = create_app(
         REPO_ROOT / cfg.paths.data_dir / DEMO_FILE,
         REPO_ROOT / cfg.paths.reports_dir / "results",
+        web,
     )
-    uvicorn.run(app_, host=cfg.api.host, port=cfg.api.port, log_level="warning")
+    typer.echo(f"SepsiScope demo on http://{cfg.api.host}:{cfg.api.port} (Ctrl+C to stop)")
+    uvicorn.run(
+        app_, host=cfg.api.host, port=cfg.api.port, log_level="warning", server_header=False
+    )
 
 
 @app.command()

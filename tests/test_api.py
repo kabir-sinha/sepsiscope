@@ -26,6 +26,7 @@ DOC = {
     "news2_threshold": 7.0,
     "alarm_budget": 0.05,
     "rules": ["rule"],
+    "what_if": {"budgets": [0.05], "lgbm_thresholds": [0.05], "news2_thresholds": [7.0]},
     "vitals": {"HR": {"label": "Heart rate", "unit": "beats/min", "normal": [51, 90]}},
     "patients": [
         {
@@ -39,6 +40,11 @@ DOC = {
             "window": [0, 2],
             "vitals": {"HR": [80, 95, 120]},
             "news2_alert_hours": [2],
+            "compare": {"lr": [0.01, 0.02, 0.03], "news2_prob": [0.01, 0.02, 0.04]},
+            "what_if": {
+                "sepsiscope": [{"alert_hours": [1, 2], "verdict": {"outcome": "warned"}}],
+                "news2": [{"alert_hours": [2], "verdict": {"outcome": "warned"}}],
+            },
             "verdict": {"sepsiscope": {"outcome": "warned"}, "news2": {"outcome": "warned"}},
             "banner": "SepsiScope warned 1 h before onset · NEWS2 warned at the onset hour",
             "age_group": "under 65",
@@ -75,7 +81,16 @@ def client(tmp_path: Path) -> TestClient:
 def test_summary_and_patient(client: TestClient) -> None:
     summary = client.get("/api/summary").json()
     row = summary["patients"][0]
-    assert set(row) == {"key", "label", "story", "story_note", "hours", "septic", "verdict"}
+    assert set(row) == {
+        "key",
+        "label",
+        "story",
+        "story_note",
+        "hours",
+        "septic",
+        "verdict",
+        "what_if",
+    }
     assert summary["rules"] == ["rule"] and summary["vitals"]["HR"]["normal"] == [51, 90]
     patient = client.get("/api/patients/demo-1").json()
     assert patient["alert_hours"] == [1, 2] and patient["news2_alert_hours"] == [2]
@@ -97,6 +112,50 @@ def test_results_come_from_committed_aggregates(client: TestClient) -> None:
     committed = json.loads((RESULTS / "lgbm_B2A.json").read_text())["strict_external"]
     assert lgbm["alert_rate"] == committed["point"]["alert_rate"]
     assert set(res["criterion"]) == {"A2B", "B2A"}
+
+
+@pytest.fixture
+def web_client(tmp_path: Path) -> TestClient:
+    path = tmp_path / "demo.json"
+    path.write_text(json.dumps(DOC))
+    web = tmp_path / "dist"
+    (web / "assets").mkdir(parents=True)
+    (web / "index.html").write_text("<!doctype html><title>demo</title>")
+    (web / "assets" / "app.js").write_text("console.log(1)")
+    return TestClient(create_app(path, RESULTS, web))
+
+
+def test_one_process_serves_web_and_api(web_client: TestClient) -> None:
+    assert "<title>demo</title>" in web_client.get("/").text
+    assert web_client.get("/assets/app.js").status_code == 200
+    assert web_client.get("/api/summary").json()["what_if"]["budgets"] == [0.05]
+
+
+@pytest.mark.parametrize("path", ["/", "/assets/app.js", "/api/summary", "/api/patients/nope"])
+def test_security_headers_on_every_response(web_client: TestClient, path: str) -> None:
+    headers = web_client.get(path).headers
+    csp = headers["content-security-policy"]
+    assert "default-src 'self'" in csp and "frame-ancestors 'none'" in csp
+    assert "http" not in csp  # no external origins at all
+    assert headers["x-content-type-options"] == "nosniff"
+    assert headers["referrer-policy"] == "no-referrer"
+    assert headers["x-frame-options"] == "DENY"
+
+
+def test_built_bundle_has_no_ids_paths_or_source_maps() -> None:
+    dist = REPO_ROOT / "web" / "dist"
+    if not (dist / "index.html").is_file():
+        pytest.skip("web/dist not built (run npm run build)")
+    files = [p for p in dist.rglob("*") if p.is_file()]
+    assert not [p for p in files if p.suffix == ".map"]
+    home = str(Path.home())
+    for p in files:
+        if p.suffix in {".js", ".css", ".html", ".svg"}:
+            text = p.read_text(errors="ignore")
+            assert "sourceMappingURL" not in text, p.name
+            assert home not in text and "/" + "Users/" not in text, p.name
+            assert not re.search(r"\bp\d{6}\b", text), p.name
+            assert "fonts.googleapis" not in text and "cdn." not in text, p.name
 
 
 def test_cors_allows_only_local_origins(client: TestClient) -> None:
@@ -126,6 +185,8 @@ def test_serve_binds_loopback_only(monkeypatch: pytest.MonkeyPatch, tmp_path: Pa
     path.parent.mkdir(parents=True)
     path.write_text(json.dumps(DOC))
     shutil.copytree(RESULTS, tmp_path / "reports" / "results")
+    (tmp_path / "web" / "dist").mkdir(parents=True)
+    (tmp_path / "web" / "dist" / "index.html").write_text("<!doctype html>")
     monkeypatch.setattr("sepsiscope.cli.REPO_ROOT", tmp_path)
     result = CliRunner().invoke(cli_app, ["demo", "serve"])
     assert result.exit_code == 0, result.stdout
@@ -143,7 +204,7 @@ def test_no_patient_ids_in_tracked_web_or_api_files() -> None:
         *(REPO_ROOT / "web" / "src").rglob("*.*"),
         *(REPO_ROOT / "src" / "sepsiscope" / "api").rglob("*.py"),
     ]
-    for path in files:
+    for path in (f for f in files if f.is_file()):
         assert not re.search(r"\bp\d{6}\b", path.read_text(errors="ignore")), path.name
 
 

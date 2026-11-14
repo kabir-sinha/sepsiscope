@@ -69,6 +69,19 @@ maintainer's own terminal.
   drift chart, limitations) from committed aggregates. One light theme, Okabe-Ito palette,
   all text colours >= 4.5:1 contrast, keyboard tabs/slider/alert dots. Not visually checked
   in a browser inside the sandbox (no local server); the maintainer runs it.
+- [x] **Integrity check v3 (2026-11-14):** after an accidental restart stopped the first
+  re-run, no tracked output had changed; models rebuilt from the tuned params are
+  byte-identical (A2B 113 trees, B2A 234 trees); full re-run of train, `evaluate
+  --all-models`, `ablations` and `exploratory` under `caffeinate -i`: all 46 tracked files
+  in `reports/` byte-identical to HEAD. Gate helpers moved out of the scratchpad into
+  `scripts/measure.py` and `scripts/independent_scan.sh`.
+- [x] **Demo hardening:** `sepsiscope demo serve` serves the built web app (`web/dist`,
+  ignored) and the API from one process on 127.0.0.1; every response carries a CSP
+  (`default-src 'self'`, no external origins, `frame-ancestors 'none'`), `nosniff`,
+  `no-referrer`, `X-Frame-Options: DENY`; no source maps. What-if budgets 1-10 %:
+  thresholds from hospital B's validation split only (5 % reproduces the committed
+  threshold, checked in the build). Comparison curves: logistic regression and NEWS2 as a
+  probability.
 - [x] **Post-hoc, exploratory** (`sepsiscope exploratory`; not pre-registered, headline model
   unchanged): cumulative "measurements so far" counts replaced by measurements per hour of
   stay, same tuned params. A→B utility 0.129 [0.111, 0.147] (headline 0.226), AUROC 0.790,
