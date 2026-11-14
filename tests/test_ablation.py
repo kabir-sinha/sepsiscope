@@ -63,3 +63,15 @@ def test_ablation_run_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     assert {"measurement_process", "icu_time", "unit_columns"} <= set(drift["by_group"])
     for path in written:
         assert '"p1' not in path.read_text() and '"p2' not in path.read_text()
+
+
+def test_rates_replace_counts_causally() -> None:
+    import pandas as pd
+
+    from sepsiscope.evaluation.exploratory import with_rates
+
+    frame = pd.DataFrame({"pid": ["a"] * 4, "t": [0, 1, 2, 3], "HR__n": [1.0, 2.0, 2.0, 4.0]})
+    out = with_rates(frame)
+    assert "HR__n" not in out.columns
+    assert out["HR__rate"].tolist() == pytest.approx([1.0, 1.0, 2.0 / 3.0, 1.0], rel=1e-6)
+    assert list(out.columns) == ["pid", "t", "HR__rate"]

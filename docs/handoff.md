@@ -53,7 +53,14 @@ maintainer's own terminal.
 - [x] **B5** `sepsiscope ablations`: 4 ablations both ways (main tuned params, not re-tuned),
   `ablation_*.json` and `drift.json`; 280 s, peak 4.32 GiB. Ablation features live in the
   ignored `features_{A,B}_ablation.parquet` (134 columns); main files untouched.
-  **Next: B7 demo (waits for the maintainer), then gate.**
+- [x] **Post-hoc, exploratory** (`sepsiscope exploratory`; not pre-registered, headline model
+  unchanged): cumulative "measurements so far" counts replaced by measurements per hour of
+  stay, same tuned params. A→B utility 0.129 [0.111, 0.147] (headline 0.226), AUROC 0.790,
+  alert rate 2.7 %; B→A utility 0.192 [0.176, 0.207] (headline 0.273), AUROC 0.728, alert
+  rate 8.5 %. Note: **cumulative counts partly proxy ICU time** (they grow with every hour
+  of stay); without them, "hours since last measured" features rise to the top, which may
+  carry a similar time signal. Recorded in `docs/model_card.md`.
+  **Next: gate, then M4 evidence report.**
 - [x] **B7a** Demo data and API: `sepsiscope demo build` writes 6 held-out hospital-A patients
   (B2A; caught early, caught late, missed, false alarms, quiet, septic from the first hour)
   to the ignored `data/demo/`, relabelled "Demo patient 1-6". `sepsiscope demo serve`:

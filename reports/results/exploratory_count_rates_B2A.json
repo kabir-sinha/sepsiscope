@@ -1,0 +1,247 @@
+{
+ "model": "exploratory_count_rates",
+ "model_label": "POST-HOC, EXPLORATORY: LightGBM with measurements per hour instead of cumulative counts",
+ "direction": "B2A",
+ "source": "B",
+ "target": "A",
+ "alarm_budget": 0.05,
+ "seed": 42,
+ "bootstrap_resamples": 1000,
+ "strict_external": {
+  "patients": 20336,
+  "septic_patients": 1790,
+  "septic_from_row_zero": 203,
+  "rows": 790215,
+  "threshold": 0.04932116938023621,
+  "point": {
+   "auroc": 0.7284683220168097,
+   "auprc": 0.06575197160310589,
+   "utility": 0.19174912586579781,
+   "alert_rate": 0.08504014730168372,
+   "timely_sensitivity": 0.5148078134845621,
+   "median_lead_hours": 9.0,
+   "false_alerts_per_100_patient_days": 149.02218311246537,
+   "row0_timely_sensitivity": 0.3645320197044335
+  },
+  "ci95": {
+   "auroc": [
+    0.7195263645094802,
+    0.7378021385030499
+   ],
+   "auprc": [
+    0.06050459678878837,
+    0.07145276799122487
+   ],
+   "utility": [
+    0.17613674634293697,
+    0.206955481947468
+   ],
+   "alert_rate": [
+    0.081697723257621,
+    0.08846030880947962
+   ],
+   "timely_sensitivity": [
+    0.4907357783382374,
+    0.5391851015935545
+   ],
+   "median_lead_hours": [
+    9.0,
+    10.0
+   ],
+   "false_alerts_per_100_patient_days": [
+    143.46270491073295,
+    154.90051029818733
+   ],
+   "row0_timely_sensitivity": [
+    0.30134735352755804,
+    0.43269751082251084
+   ]
+  },
+  "source_validation_alert_rate": 0.049998368199471295,
+  "subgroups": {
+   "gender_0": {
+    "patients": 8502,
+    "auroc": 0.7360684922828297,
+    "auprc": 0.06309811447872071,
+    "utility": 0.18108399629069258,
+    "alert_rate": 0.07440116754722183,
+    "timely_sensitivity": 0.5,
+    "median_lead_hours": 9.0,
+    "false_alerts_per_100_patient_days": 133.02629421090035,
+    "row0_timely_sensitivity": 0.3717948717948718
+   },
+   "gender_1": {
+    "patients": 11834,
+    "auroc": 0.7227124079235592,
+    "auprc": 0.06772701364296158,
+    "utility": 0.19857962271228297,
+    "alert_rate": 0.09281658795594536,
+    "timely_sensitivity": 0.5243019648397105,
+    "median_lead_hours": 9.0,
+    "false_alerts_per_100_patient_days": 160.94843375458208,
+    "row0_timely_sensitivity": 0.36
+   },
+   "age_lt_65": {
+    "patients": 10316,
+    "auroc": 0.7456283190738369,
+    "auprc": 0.07141128697692345,
+    "utility": 0.20932427013919389,
+    "alert_rate": 0.0822284893909436,
+    "timely_sensitivity": 0.5183776932826363,
+    "median_lead_hours": 9.0,
+    "false_alerts_per_100_patient_days": 140.39745972920196,
+    "row0_timely_sensitivity": 0.3627450980392157
+   },
+   "age_ge_65": {
+    "patients": 10020,
+    "auroc": 0.7110129901582881,
+    "auprc": 0.060766879122509575,
+    "utility": 0.17424583555183695,
+    "alert_rate": 0.08780033955516768,
+    "timely_sensitivity": 0.5112781954887218,
+    "median_lead_hours": 9.0,
+    "false_alerts_per_100_patient_days": 157.56874936444063,
+    "row0_timely_sensitivity": 0.36633663366336633
+   }
+  },
+  "ece": 0.005100691389018202,
+  "reliability": {
+   "rows": [
+    79022,
+    79022,
+    79022,
+    79022,
+    79022,
+    79021,
+    79021,
+    79021,
+    79021,
+    79021
+   ],
+   "mean_predicted": [
+    0.0026724768022143314,
+    0.0038368842107055663,
+    0.005060997267871724,
+    0.006589673479502635,
+    0.008732665164844972,
+    0.011215242200504365,
+    0.015229153811493942,
+    0.02156742075167749,
+    0.03383836018789947,
+    0.08412498418498628
+   ],
+   "observed_rate": [
+    0.0033914606059072157,
+    0.007200526435676141,
+    0.00949102781503885,
+    0.01143985219306016,
+    0.012629394345878363,
+    0.015008668581769403,
+    0.020323711418483693,
+    0.027018134419964313,
+    0.03973627263638779,
+    0.07061414054491844
+   ]
+  }
+ },
+ "deployment_adaptation": {
+  "patients": 16269,
+  "septic_patients": 1432,
+  "septic_from_row_zero": 160,
+  "rows": 633123,
+  "threshold": 0.06511822288801036,
+  "point": {
+   "auroc": 0.7312276607227232,
+   "auprc": 0.06571780727997108,
+   "utility": 0.14773965647927015,
+   "alert_rate": 0.05355515436968804,
+   "timely_sensitivity": 0.3970125786163522,
+   "median_lead_hours": 8.0,
+   "false_alerts_per_100_patient_days": 86.40255553772774,
+   "row0_timely_sensitivity": 0.2125
+  },
+  "ci95": {
+   "auroc": [
+    0.7206202684056123,
+    0.741807801443333
+   ],
+   "auprc": [
+    0.0602321635678019,
+    0.07197504582693029
+   ],
+   "utility": [
+    0.13263884664640033,
+    0.16270144583247467
+   ],
+   "alert_rate": [
+    0.050456770067691926,
+    0.05657241372933163
+   ],
+   "timely_sensitivity": [
+    0.3698412111349459,
+    0.42380837055864146
+   ],
+   "median_lead_hours": [
+    8.0,
+    9.0
+   ],
+   "false_alerts_per_100_patient_days": [
+    81.81523287509067,
+    91.04664873731676
+   ],
+   "row0_timely_sensitivity": [
+    0.14772727272727273,
+    0.27907354273633345
+   ]
+  },
+  "target_calibration_alert_rate": 0.04999618058207929
+ },
+ "fitted": {
+  "features": 130,
+  "num_trees": 234,
+  "parameters": "main model's tuned parameters (not re-tuned)"
+ },
+ "status": "post-hoc, exploratory",
+ "top10_mean_abs_contribution": [
+  {
+   "name": "PaCO2__hsl",
+   "mean_abs_contribution": 0.34522137492621435
+  },
+  {
+   "name": "Temp__mean6",
+   "mean_abs_contribution": 0.30886304204682485
+  },
+  {
+   "name": "Temp",
+   "mean_abs_contribution": 0.247196039434943
+  },
+  {
+   "name": "WBC",
+   "mean_abs_contribution": 0.2418736888665157
+  },
+  {
+   "name": "pH__hsl",
+   "mean_abs_contribution": 0.1757273545767757
+  },
+  {
+   "name": "BUN",
+   "mean_abs_contribution": 0.1455223144306375
+  },
+  {
+   "name": "Alkalinephos",
+   "mean_abs_contribution": 0.12944616222487215
+  },
+  {
+   "name": "FiO2",
+   "mean_abs_contribution": 0.12157692683047078
+  },
+  {
+   "name": "PaCO2",
+   "mean_abs_contribution": 0.11357616017798414
+  },
+  {
+   "name": "Bilirubin_total",
+   "mean_abs_contribution": 0.10377693284613924
+  }
+ ]
+}

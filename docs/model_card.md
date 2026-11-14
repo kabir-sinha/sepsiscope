@@ -10,4 +10,12 @@ _Filled in after training (later phase). Structure follows
 - **Evaluation data:** the other hospital (external validation).
 - **Metrics:** as frozen in `docs/protocol.md`; official normalized utility is the reference.
 - **Subgroups:** sex, age < 65 / >= 65.
-- **Ethical considerations and caveats:** _TBD_
+- **Ethical considerations and caveats:** _TBD_; draft caveats so far:
+  - **Cumulative measurement counts partly proxy ICU time.** The "measurements so far"
+    features (`<var>__n`) grow with every hour in the ICU, so they carry part of the
+    length-of-stay signal that protocol section 3 keeps out by excluding `ICULOS`. They are
+    the top contributors to LightGBM's A→B alerts. A **post-hoc, exploratory** analysis
+    (`reports/results/exploratory_count_rates_*.json`) replaces them with measurements per
+    hour of stay; the headline model is unchanged.
+  - A vital or lab that has never been measured scores 0 in the rule-based baselines
+    (ADR 0018).

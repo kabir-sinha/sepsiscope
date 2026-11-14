@@ -342,6 +342,24 @@ def demo_serve() -> None:
     uvicorn.run(app_, host=cfg.api.host, port=cfg.api.port, log_level="warning")
 
 
+@app.command()
+def exploratory() -> None:
+    """POST-HOC, EXPLORATORY: LightGBM with measurements per hour instead of counts."""
+    from sepsiscope.config import load_config
+    from sepsiscope.evaluation import exploratory as ex
+
+    cfg = load_config()
+    reports = REPO_ROOT / cfg.paths.reports_dir
+    for path in ex.run(
+        cfg,
+        REPO_ROOT / cfg.paths.data_dir,
+        REPO_ROOT / cfg.paths.splits_dir,
+        reports / "results",
+        reports / "tuning",
+    ):
+        typer.echo(f"wrote {path.relative_to(REPO_ROOT)}")
+
+
 @app.command("privacy-audit")
 def privacy_audit(
     strict: bool = typer.Option(
