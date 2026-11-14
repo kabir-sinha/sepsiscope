@@ -12,11 +12,11 @@ sandbox-blocked Unix-socket test, covered by CI). Self-hosted fonts and dashboar
 and checked in the browser by the maintainer.
 
 **Next on resume, in order:**
-1. (a) The patient-card badge still showed "NEWS2: Too early only"; it must read "Alerted only
-   before the window" (the banner is already fixed). Note: the current
-   `data/demo/demo_B2A.json` has 0 occurrences of the old text, so first check whether the
-   server was started before the last `sepsiscope demo build`; restart it, then fix any
-   remaining source.
+1. (a) Done 2026-11-14, no source change needed: `verdict.py` already says "Alerted only
+   before the window", and the page shows the badge text it gets from the server. The server
+   reads the demo JSON once at startup, so the old badge came from a server started before
+   the last `demo build`. Rebuilt the demo data and web bundle: 0 old strings, 7 new; verdict,
+   API, what-if and contrast tests pass (31). Restart `sepsiscope demo serve` to see it.
 2. (b) Exhaustive privacy scan + Batch B gate + M4 evidence report (prompt from the maintainer).
 3. (c) The maintainer pushes from their own terminal.
 
