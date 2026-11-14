@@ -49,6 +49,7 @@ class FeatureSwitches(_Strict):
     measurement_process: bool
     trends: bool
     icu_time: bool
+    unit_columns: bool
 
 
 class Config(_Strict):

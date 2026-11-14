@@ -19,8 +19,11 @@ SCHEMA_FILE = Path("features") / "feature_schema.json"
 HOSPITALS: tuple[str, ...] = ("A", "B")
 
 
-def feature_path(data_dir: Path, hospital: str) -> Path:
-    return data_dir / FEATURE_DIR / f"features_{hospital}.parquet"
+def feature_path(data_dir: Path, hospital: str, suffix: str = "") -> Path:
+    return data_dir / FEATURE_DIR / f"features_{hospital}{suffix}.parquet"
+
+
+ABLATION_SUFFIX = "_ablation"
 
 
 @dataclass(frozen=True)
@@ -61,8 +64,30 @@ def build_features(
     return results
 
 
-def read_features(data_dir: Path, hospital: str) -> pd.DataFrame:
-    path = feature_path(data_dir, hospital)
+def build_ablation_features(data_dir: Path, switches: FeatureSwitches) -> list[FeatureResult]:
+    """Main features plus ICU-time and unit columns, in a separate ignored file (B5).
+
+    The main feature files and the tracked schema are not touched.
+    """
+    full = switches.model_copy(update={"icu_time": True, "unit_columns": True})
+    clean = read_parquet(data_dir / CLEAN_PARQUET).to_pandas()
+    results: list[FeatureResult] = []
+    for hospital in HOSPITALS:
+        part = clean[clean["hospital"] == hospital].reset_index(drop=True)
+        feats = causal_features(part, full)
+        path = feature_path(data_dir, hospital, ABLATION_SUFFIX)
+        write_features(feats, path)
+        results.append(
+            FeatureResult(
+                hospital, len(feats), int(feats["pid"].nunique()), feats.shape[1] - 4, path
+            )
+        )
+        del part, feats
+    return results
+
+
+def read_features(data_dir: Path, hospital: str, suffix: str = "") -> pd.DataFrame:
+    path = feature_path(data_dir, hospital, suffix)
     if not path.is_file():
         raise FileNotFoundError(f"{path.name} not found; run `sepsiscope features build` first")
     frame: pd.DataFrame = pq.read_table(path).to_pandas()

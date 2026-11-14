@@ -29,6 +29,7 @@ def test_default_config_loads() -> None:
     assert cfg.alarm_budget == 0.05
     assert cfg.label_horizon_hours == 6
     assert cfg.features.icu_time is False
+    assert cfg.features.unit_columns is False
 
 
 @pytest.mark.parametrize(

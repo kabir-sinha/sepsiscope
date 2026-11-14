@@ -12,7 +12,7 @@ import pytest
 from sepsiscope.config import load_config
 from sepsiscope.data.io import COLUMNS, MEASUREMENTS
 from sepsiscope.features.causal import (
-    ICU_TIME,
+    EXCLUDED,
     KEYS,
     FeatureInputError,
     causal_features,
@@ -63,10 +63,13 @@ def test_features_never_look_ahead() -> None:
 
 def test_excluded_columns_absent_unless_ablation() -> None:
     feats = causal_features(synthetic_frame(), SWITCHES)
-    assert not set(ICU_TIME) & set(feats.columns)
+    assert not set(EXCLUDED) & set(feats.columns)
     assert list(feats.columns[: len(KEYS)]) == list(KEYS)
-    ablation = SWITCHES.model_copy(update={"icu_time": True})
-    assert set(ICU_TIME) <= set(causal_features(synthetic_frame(), ablation).columns)
+    ablation = SWITCHES.model_copy(update={"icu_time": True, "unit_columns": True})
+    assert set(EXCLUDED) <= set(causal_features(synthetic_frame(), ablation).columns)
+    units = SWITCHES.model_copy(update={"unit_columns": True})
+    cols = set(causal_features(synthetic_frame(), units).columns)
+    assert {"Unit1", "Unit2"} <= cols and not {"ICULOS", "HospAdmTime"} & cols
 
 
 def test_features_are_float32_and_match_the_spec() -> None:

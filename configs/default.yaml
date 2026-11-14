@@ -21,4 +21,5 @@ features:
   demographics: true          # Age, Gender only
   measurement_process: true   # missingness indicators / time since last measurement
   trends: true                # rolling statistics over hours <= t
-  icu_time: false             # ICULOS / HospAdmTime / Unit1 / Unit2 - ablation only, never in the main model
+  icu_time: false             # ICULOS / HospAdmTime - ablation only, never in the main model
+  unit_columns: false         # Unit1 / Unit2 - ablation only (ADR 0015), never in the main model

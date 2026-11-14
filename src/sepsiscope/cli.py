@@ -286,6 +286,30 @@ def tune(
     )
 
 
+@app.command()
+def ablations() -> None:
+    """B5: build the ablation features, run the 4 ablations both ways, write drift."""
+    from sepsiscope.config import load_config
+    from sepsiscope.evaluation import ablation
+    from sepsiscope.features.pipeline import build_ablation_features
+
+    cfg = load_config()
+    data_dir = REPO_ROOT / cfg.paths.data_dir
+    for r in build_ablation_features(data_dir, cfg.features):
+        typer.echo(f"{r.hospital} ablation features {r.features}  {r.path.relative_to(REPO_ROOT)}")
+    reports = REPO_ROOT / cfg.paths.reports_dir
+    written = ablation.run(
+        cfg,
+        data_dir,
+        REPO_ROOT / cfg.paths.splits_dir,
+        reports / "results",
+        reports / "tuning",
+        REPO_ROOT / cfg.paths.models_dir,
+    )
+    for path in written:
+        typer.echo(f"wrote {path.relative_to(REPO_ROOT)}")
+
+
 @app.command("privacy-audit")
 def privacy_audit(
     strict: bool = typer.Option(

@@ -18,7 +18,8 @@ labs                 last value of the 26 laboratory columns; BUN / creatinine
 demographics         Age, Gender
 measurement_process  hours since last measured, number of measurements so far
 trends               6-hour mean, standard deviation and change of each vital
-icu_time             ICULOS, HospAdmTime, Unit1, Unit2 (ablation only)
+icu_time             ICULOS, HospAdmTime (ablation only)
+unit_columns         Unit1, Unit2 (ablation only, ADR 0015)
 ==================== ========================================================
 """
 
@@ -34,7 +35,10 @@ from sepsiscope.config import FeatureSwitches
 from sepsiscope.data.io import LABEL, LABS, VITALS
 
 KEYS: tuple[str, ...] = ("pid", "hospital", "t", LABEL)
-ICU_TIME: tuple[str, ...] = ("ICULOS", "HospAdmTime", "Unit1", "Unit2")
+ICU_TIME: tuple[str, ...] = ("ICULOS", "HospAdmTime")
+UNIT_COLUMNS: tuple[str, ...] = ("Unit1", "Unit2")
+# Never in the main model (protocol section 3); added back only in ablations.
+EXCLUDED: tuple[str, ...] = (*ICU_TIME, *UNIT_COLUMNS)
 DEMOGRAPHICS: tuple[str, ...] = ("Age", "Gender")
 WINDOW_HOURS = 6
 
@@ -88,6 +92,10 @@ def feature_specs(switches: FeatureSwitches) -> list[FeatureSpec]:
             ]
     if switches.icu_time:
         specs += [FeatureSpec(c, "icu_time", c, "as recorded (ablation only)") for c in ICU_TIME]
+    if switches.unit_columns:
+        specs += [
+            FeatureSpec(c, "unit_columns", c, "as recorded (ablation only)") for c in UNIT_COLUMNS
+        ]
     return specs
 
 
@@ -161,6 +169,9 @@ def causal_features(frame: pd.DataFrame, switches: FeatureSwitches) -> pd.DataFr
             cols[f"{c}__d6"] = last[c].to_numpy() - lagged[:, j]
     if switches.icu_time:
         for c in ICU_TIME:
+            cols[c] = frame[c]
+    if switches.unit_columns:
+        for c in UNIT_COLUMNS:
             cols[c] = frame[c]
 
     names = [spec.name for spec in feature_specs(switches)]

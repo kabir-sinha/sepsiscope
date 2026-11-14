@@ -14,7 +14,7 @@ import pytest
 from sepsiscope.config import REPO_ROOT, load_config
 from sepsiscope.data.io import COLUMNS, MEASUREMENTS
 from sepsiscope.data.splits import split_document, write_split
-from sepsiscope.features.causal import ICU_TIME, causal_features, schema_document
+from sepsiscope.features.causal import EXCLUDED, causal_features, schema_document
 from sepsiscope.features.pipeline import feature_path, write_features
 from sepsiscope.models import lgbm
 from sepsiscope.models.pipeline import train_direction
@@ -80,7 +80,7 @@ def test_saved_files_hold_no_paths_and_only_whitelisted_fields(tmp_path: Path) -
         for secret in (str(Path.home()), str(REPO_ROOT), getpass.getuser(), socket.gethostname()):
             assert secret not in text, path.name
     schema = json.loads((folder / "feature_schema.json").read_text())
-    assert not set(ICU_TIME) & {f["name"] for f in schema["features"]}
+    assert not set(EXCLUDED) & {f["name"] for f in schema["features"]}
 
 
 def test_data_fingerprint_depends_on_contents_only() -> None:
@@ -122,4 +122,4 @@ def test_train_direction_uses_training_split_only(tmp_path: Path) -> None:
     booster_names = lgbm.load(r.folder).booster.feature_name()
     assert len(booster_names) == info["features"]
     assert "HR" in booster_names and "shock_index" in booster_names
-    assert not set(ICU_TIME) & set(booster_names)
+    assert not set(EXCLUDED) & set(booster_names)
