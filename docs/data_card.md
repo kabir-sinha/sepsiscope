@@ -1,5 +1,7 @@
 # Data card: PhysioNet/CinC Challenge 2019 (training sets A and B)
 
+Datasheet (Gebru et al. 2021 questions): [`datasheet.md`](datasheet.md).
+
 Every number here was recomputed from the downloaded files on 2026-10-10 with
 `uv run sepsiscope data verify`, `data build` and the EDA functions. The dataset is not in
 this repository.
