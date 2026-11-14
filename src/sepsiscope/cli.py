@@ -428,6 +428,22 @@ def analyses_budgets() -> None:
         typer.echo(f"wrote {path.relative_to(REPO_ROOT)}")
 
 
+@app.command()
+def reproduce(
+    retune: bool = typer.Option(False, "--retune", help="Repeat the tuning first (~30 min)."),
+    dry_run: bool = typer.Option(False, "--dry-run", help="List the steps only."),
+) -> None:
+    """Every result from the downloaded dataset, step by step (stops at the first failure)."""
+    from sepsiscope import reproduce as rp
+
+    commands = rp.steps(retune)
+    if dry_run:
+        for args in commands:
+            typer.echo("sepsiscope " + " ".join(args))
+        return
+    raise typer.Exit(rp.run(commands, echo=typer.echo))
+
+
 @app.command("privacy-audit")
 def privacy_audit(
     strict: bool = typer.Option(
