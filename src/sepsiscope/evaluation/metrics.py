@@ -98,6 +98,28 @@ def reference_utilities(labels: np.ndarray, patient: np.ndarray) -> tuple[np.nda
     return best, inaction
 
 
+def subset_reference(
+    labels: np.ndarray, patient: np.ndarray, keep: np.ndarray
+) -> tuple[np.ndarray, np.ndarray]:
+    """Best and inaction utility per patient when only the ``keep`` rows may alert.
+
+    ADR 0024 item 2: the official utility is a sum over rows, and a row's prediction only
+    changes that row's term. Setting predictions outside the subset to "no alert" (for
+    best, inaction and, via ``utility_parts(labels, alerts & keep, ...)``, the observed
+    predictions) therefore gives exactly the subset's share of each sum, with the
+    unmodified scorer. With ``keep`` all true this equals ``reference_utilities``.
+    """
+    score = official_scorer().compute_prediction_utility
+    bounds = np.r_[_starts(patient), len(labels)]
+    best, inaction = np.zeros(len(bounds) - 1), np.zeros(len(bounds) - 1)
+    for k in range(len(bounds) - 1):
+        y = labels[bounds[k] : bounds[k + 1]]
+        mask = keep[bounds[k] : bounds[k + 1]]
+        best[k] = score(y, _best_predictions(y) * mask)
+        inaction[k] = score(y, np.zeros(len(y)))
+    return best, inaction
+
+
 def utility_parts(
     labels: np.ndarray,
     alerts: np.ndarray,
