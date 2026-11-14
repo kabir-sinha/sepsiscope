@@ -410,6 +410,24 @@ def analyses_deferral() -> None:
         typer.echo(f"wrote {path.relative_to(REPO_ROOT)}")
 
 
+@analyses_app.command("budgets")
+def analyses_budgets() -> None:
+    """C3 alarm budgets 2/5/10 %, lead times, subgroup CIs, both directions (ADR 0024)."""
+    from sepsiscope.config import load_config
+    from sepsiscope.evaluation import budgets
+
+    cfg = load_config()
+    reports = REPO_ROOT / cfg.paths.reports_dir
+    for path in budgets.run(
+        cfg,
+        REPO_ROOT / cfg.paths.data_dir,
+        REPO_ROOT / cfg.paths.splits_dir,
+        reports / "results",
+        REPO_ROOT / cfg.paths.models_dir,
+    ):
+        typer.echo(f"wrote {path.relative_to(REPO_ROOT)}")
+
+
 @app.command("privacy-audit")
 def privacy_audit(
     strict: bool = typer.Option(
