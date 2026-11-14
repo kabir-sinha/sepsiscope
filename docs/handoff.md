@@ -46,7 +46,13 @@ in ADR 0024 before any result. Order: C0 → C4 → C1 → C2 → C3 → C5 → 
   the window opened (fits the long-stay alerts of C1); 10th percentile 3-6 h (A→B), 1-3 h
   (B→A). Subgroups (sex, age): LightGBM − LR utility CI above 0 in every group, both
   directions (narrowest A→B age ≥ 65: +0.030 [+0.003, +0.059]).
-  `reports/results/budgets_{A2B,B2A}.json`. · [ ] **C5** docs · [ ] **C6** gate.
+  `reports/results/budgets_{A2B,B2A}.json`. · - [x] **C5** `sepsiscope reproduce` (13 steps, stops at the first failure; `--dry-run`,
+  `--retune`); model card filled from committed results; `docs/datasheet.md` (Gebru et al.
+  2021) linked from the data card; TRIPOD+AI checklist: all 52 items of the 11-January-2024
+  version mapped (checklist PDF downloaded with the maintainer's approval into the session
+  scratchpad, not committed; topics paraphrased); README one-command reproduction; tests
+  for the checklist rows and the README commands.
+- [ ] **C6** gate.
 
 **Batch B gate PASSED (2026-11-14); M4 evidence report delivered as text** and pushed.
 

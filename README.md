@@ -33,8 +33,33 @@ cd web && npm ci && npm run build
 
 Run the checks: `uv run pytest`, `uv run ruff check .`, `uv run mypy src`.
 
-Get the data (about 320 MB, into the git-ignored `data/` folder) and build the tables:
-`uv run sepsiscope data download`, then `data verify`, `data build` and `data splits`.
+## Reproduce every result
+
+Download the data once (about 320 MB, into the git-ignored `data/` folder; the only step
+that uses the network):
+
+```bash
+uv run sepsiscope data download
+```
+
+Then one command runs everything else in order (data verify, build and splits, features,
+training from the committed tuned parameters, evaluation, ablations, the exploratory
+model, the Batch C analyses and the demo data) and stops at the first failure:
+
+```bash
+uv run sepsiscope reproduce
+```
+
+About 30 minutes and up to about 6 GiB of memory on a laptop. `--dry-run` lists the steps;
+`--retune` repeats the hyperparameter tuning first (about 30 minutes more; a resumed tuning
+run is not byte-identical). To check that a re-run gives the same files:
+
+```bash
+uv run python scripts/byte_check.py --write /tmp/before.json
+```
+
+and after the re-run `uv run python scripts/byte_check.py --compare /tmp/before.json`
+(only the commit hash inside each `model.json` is ignored).
 
 Dev servers bind to `http://127.0.0.1`. If a browser's HTTPS-only mode blocks plain-HTTP
 localhost, open the address in a normal window.
@@ -44,7 +69,7 @@ localhost, open the address in a normal window.
 - [Evaluation protocol (frozen)](docs/protocol.md)
 - [Data card](docs/data_card.md) · [EDA findings](docs/eda_findings.md) · [Data manifest](docs/data_manifest.md)
 - [Privacy](docs/privacy.md) · [Operations](docs/ops.md) · [Decisions](docs/decisions/README.md)
-- [Model card](docs/model_card.md) · [TRIPOD+AI](docs/tripod_ai.md) · [Changelog](CHANGELOG.md)
+- [Model card](docs/model_card.md) · [Datasheet](docs/datasheet.md) · [TRIPOD+AI](docs/tripod_ai.md) · [Changelog](CHANGELOG.md)
 
 ## AI assistance
 
