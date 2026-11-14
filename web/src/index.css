@@ -1,7 +1,38 @@
 /* SepsiScope design tokens. Light theme by default; "ICU monitor" dark theme on
    [data-theme='dark']. Data colours are Okabe-Ito (colour-blind safe). Contrast of every
    text and chart colour is checked by scripts/contrast_check.py (run in tests/test_contrast.py).
-   Fonts: IBM Plex Sans / Plex Mono when self-hosted files are present, else system fonts. */
+   Fonts: self-hosted IBM Plex Sans / Plex Mono with a system-font fallback stack. */
+/* Self-hosted IBM Plex (Latin-1 subsets, OFL 1.1; see public/fonts/FONTS.md). Same origin
+   only, so the CSP's font-src 'self' allows them; system fonts are the fallback. */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/IBMPlexSans-Regular-Latin1.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/IBMPlexSans-SemiBold-Latin1.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/IBMPlexSans-Bold-Latin1.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/IBMPlexMono-Regular-Latin1.woff2') format('woff2');
+}
+
 :root {
   --bg: #f3f5f7;
   --surface: #ffffff;

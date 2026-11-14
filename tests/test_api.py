@@ -158,6 +158,21 @@ def test_built_bundle_has_no_ids_paths_or_source_maps() -> None:
             assert "fonts.googleapis" not in text and "cdn." not in text, p.name
 
 
+def test_built_fonts_are_same_origin_and_served_with_csp(tmp_path: Path) -> None:
+    dist = REPO_ROOT / "web" / "dist"
+    if not (dist / "index.html").is_file():
+        pytest.skip("web/dist not built (run npm run build)")
+    css = "".join(p.read_text() for p in (dist / "assets").glob("*.css"))
+    urls = re.findall(r"url\(([^)]*)\)", css)
+    assert urls and all(u.strip("'\"").startswith(("/fonts/", "data:")) for u in urls)
+    path = tmp_path / "demo.json"
+    path.write_text(json.dumps(DOC))
+    client = TestClient(create_app(path, RESULTS, dist))
+    font = client.get("/fonts/IBMPlexSans-Regular-Latin1.woff2")
+    assert font.status_code == 200 and font.content[:4] == b"wOF2"
+    assert "font-src 'self'" in font.headers["content-security-policy"]
+
+
 def test_cors_allows_only_local_origins(client: TestClient) -> None:
     ok = client.get("/api/summary", headers={"Origin": LOCAL_ORIGINS[0]})
     assert ok.headers.get("access-control-allow-origin") == LOCAL_ORIGINS[0]
