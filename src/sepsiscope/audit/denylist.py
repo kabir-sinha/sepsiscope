@@ -15,7 +15,8 @@ ALLOWED_EMAIL = "222482936+kabir-sinha@users.noreply.github.com"
 # is removed from the text before matching; it is not a denylist hit by itself.
 HANDLE = ALLOWED_EMAIL.split("+", 1)[1].split("@", 1)[0]
 
-# The only places the maintainer's name may appear (decision recorded in ADR 0016).
+# Lines that carried the maintainer's name before ADR 0023. Since then the name is denied in
+# every tracked file; these shapes are accepted only in older history blobs (not rewritten).
 COPYRIGHT_RE = re.compile(r"^© \d{4} [^.]+\. All rights reserved\.$")
 AUTHOR_RE = re.compile(r'^\s*\{ name = "[^"]+", email = "' + re.escape(ALLOWED_EMAIL) + r'" \}$')
 
@@ -34,7 +35,7 @@ def load_denylist(root: Path) -> tuple[str, ...]:
 
 
 def name_allowed_on(path: str, line: str) -> bool:
-    """True for the README copyright line and the pyproject author line."""
+    """True for the old README copyright line and pyproject author line (history only)."""
     name = PurePosixPath(path).as_posix()
     if name == "README.md":
         return bool(COPYRIGHT_RE.match(line))

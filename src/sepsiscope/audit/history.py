@@ -23,6 +23,9 @@ from sepsiscope.audit.rules import check_content, check_line, check_path
 
 # Commits from this moment on must be fully clean (all are made with TZ=UTC).
 UTC_REQUIRED_FROM = datetime(2026, 10, 22, tzinfo=UTC)
+# ADR 0023: the name left the tracked files on 2026-11-14. Blobs only in older commits keep
+# the old copyright/author-line allowance, because history is not rewritten.
+NAME_LINES_ALLOWED_BEFORE = datetime(2026, 11, 15, tzinfo=UTC)
 LINE_PREFIX_RE = re.compile(r"^line \d+: ")
 
 
@@ -96,14 +99,18 @@ def run_audit(root: Path) -> AuditReport:
             paths.setdefault(sha, name)
     head = _tree_blobs(root, "HEAD") if commits else set()
     legacy_blobs: set[str] = set()
+    name_blobs: set[str] = set()
+    name_cutoff = int(NAME_LINES_ALLOWED_BEFORE.timestamp())
     for c in commits:
         if c.committed_at < cutoff:
             legacy_blobs |= _tree_blobs(root, c.sha)
+        if c.committed_at < name_cutoff:
+            name_blobs |= _tree_blobs(root, c.sha)
     candidates = [sha for sha in paths if sha not in head]
     blobs = _read_blobs(root, candidates) if candidates else {}
     for sha, raw in blobs.items():
         name = paths[sha]
-        problems = check_path(name) + check_content(name, raw, denylist)
+        problems = check_path(name) + check_content(name, raw, denylist, sha in name_blobs)
         known = sha in legacy_blobs
         report.findings += [Finding("history", name, p, known=known) for p in problems]
 

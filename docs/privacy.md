@@ -46,7 +46,7 @@ Checked on 2026-10-10 against each tool's own docs or source.
 
 - **Repository:** private on GitHub until the maintainer makes it public. Nothing is
   pushed without maintainer approval.
-- **Commit identity:** the maintainer's name with `222482936+kabir-sinha@users.noreply.github.com`,
+- **Commit identity (metadata, not files):** the maintainer's name with `222482936+kabir-sinha@users.noreply.github.com`,
   set at repo level. No personal email ever appears in history.
 - **Public later:** code, docs, figures and aggregate metrics only. Never the data,
   never patient-level outputs.
@@ -85,8 +85,9 @@ so `git commit --no-verify` or `git push --no-verify` still fails CI.
 `.privacy-denylist.local` (gitignored, mode 600) lists personal values, one per line;
 `#` starts a comment. It is read only when present, so CI uses generic patterns only.
 Matches are whole-word and case-insensitive; the GitHub handle inside the noreply address
-and the repository URL is not a hit. The maintainer's name is allowed only on the README
-copyright line and the pyproject author line. Output always masks the value.
+and the repository URL is not a hit. The maintainer's name is denied on every line of every
+tracked file (ADR 0023); only history blobs from before 2026-11-15 keep the old copyright
+and author-line allowance, because history is not rewritten. Output always masks the value.
 
 ### Full audit
 

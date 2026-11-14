@@ -17,8 +17,8 @@ Personal, machine-specific notes live in the gitignored `CLAUDE.local.md`.
 - Never pickle/joblib; `yaml.safe_load` only.
 - No personal data in the repository: no usernames, home paths, hostnames, device or
   account details, and no email except `222482936+kabir-sinha@users.noreply.github.com`.
-  The maintainer's name appears only in the README copyright line, the pyproject author
-  field and the git author.
+  No personal name in any tracked file (ADR 0023): the copyright and the pyproject author
+  are "SepsiScope contributors"; the name is only the git author (commit metadata).
 - Network services bind to 127.0.0.1 only. Telemetry off (see `_privacy.py`).
 - Anything privacy-related that is not covered here: stop and ask.
 

@@ -1,6 +1,6 @@
 # 0016 — Privacy hardening: UTC commits, local denylist, git hooks, privacy-audit
 
-**Date:** 2026-10-22 · **Status:** Accepted · **Does not change** `docs/protocol.md`
+**Date:** 2026-10-22 · **Status:** Accepted (name policy superseded by ADR 0023) · **Does not change** `docs/protocol.md`
 
 ## Context
 A full read-only audit before Phase 2 found no secrets, home paths, foreign emails or
@@ -12,8 +12,9 @@ emails, data files, file size and PNG metadata, and it never looked at commit me
 timestamps.
 
 ## Decision
-- **Name policy.** The maintainer's name appears only in the README copyright line, the
-  `pyproject.toml` author field and the git author. Elsewhere: "the maintainer".
+- **Name policy** (superseded by ADR 0023: no name in any tracked file). The maintainer's
+  name appears only in the README copyright line, the `pyproject.toml` author field and the
+  git author. Elsewhere: "the maintainer".
 - **Local notes.** Personal working notes live in `CLAUDE.local.md`, which Claude Code
   loads next to `CLAUDE.md` and which is gitignored
   ([Claude Code memory docs](https://code.claude.com/docs/en/memory)).

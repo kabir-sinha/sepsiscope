@@ -218,14 +218,19 @@ def test_handle_is_not_a_denylist_hit() -> None:
     assert denied_values(text, (first,)) == []
 
 
-def test_name_allowed_only_on_copyright_and_author_lines() -> None:
+def test_name_denied_in_tracked_files_even_on_copyright_lines() -> None:
     copyright_line = f"© 2026 {FAKE_NAME}. All rights reserved."
     author_line = f'    {{ name = "{FAKE_NAME}", email = "{ALLOWED_EMAIL}" }}'
     assert name_allowed_on("README.md", copyright_line)
     assert name_allowed_on("pyproject.toml", author_line)
     assert not name_allowed_on("docs/privacy.md", copyright_line)
     assert not name_allowed_on("README.md", f"Written by {FAKE_NAME}.")
-    assert _lines(copyright_line, "README.md", (FAKE_NAME,)) == []
+    # ADR 0023: tracked files and the commit guard deny the name everywhere ...
+    assert _lines(copyright_line, "README.md", (FAKE_NAME,)) != []
+    assert _lines(author_line, "pyproject.toml", (FAKE_NAME,)) != []
+    # ... and only old, unrewritten history blobs keep the copyright-line allowance.
+    assert check_content("README.md", copyright_line.encode(), (FAKE_NAME,), True) == []
+    assert check_content("docs/x.md", copyright_line.encode(), (FAKE_NAME,), True) != []
     assert _lines(copyright_line, "docs/x.md", (FAKE_NAME,)) != []
 
 

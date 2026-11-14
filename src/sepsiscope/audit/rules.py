@@ -91,8 +91,15 @@ def check_path(name: str) -> list[str]:
     return problems
 
 
-def check_line(name: str, lineno: int, line: str, denylist: tuple[str, ...]) -> list[str]:
-    """Text rules for one line. Messages are masked."""
+def check_line(
+    name: str,
+    lineno: int,
+    line: str,
+    denylist: tuple[str, ...],
+    allow_name_lines: bool = False,
+) -> list[str]:
+    """Text rules for one line. Messages are masked. ``allow_name_lines`` is only for history
+    blobs made before ADR 0023 (old copyright and author lines); never for tracked files."""
     problems: list[str] = []
     where = f"line {lineno}"
     if HOME_PREFIX in line:
@@ -107,13 +114,15 @@ def check_line(name: str, lineno: int, line: str, denylist: tuple[str, ...]) -> 
         for label, pattern in WORDING_RES:
             if pattern.search(line):
                 problems.append(f"{where}: {label}")
-    if denylist and not name_allowed_on(name, line):
+    if denylist and not (allow_name_lines and name_allowed_on(name, line)):
         for value in denied_values(line, denylist):
             problems.append(f"{where}: personal value from the local denylist ({mask(value)})")
     return problems
 
 
-def check_content(name: str, raw: bytes, denylist: tuple[str, ...] = ()) -> list[str]:
+def check_content(
+    name: str, raw: bytes, denylist: tuple[str, ...] = (), allow_name_lines: bool = False
+) -> list[str]:
     """Content rules for a file's bytes (used for the working tree and for history)."""
     problems: list[str] = []
     if len(raw) > MAX_BYTES:
@@ -139,7 +148,7 @@ def check_content(name: str, raw: bytes, denylist: tuple[str, ...] = ()) -> list
                 problems.append(f"personal value from the local denylist ({mask(value)})")
         return problems
     for lineno, line in enumerate(text.splitlines(), start=1):
-        problems.extend(check_line(name, lineno, line, denylist))
+        problems.extend(check_line(name, lineno, line, denylist, allow_name_lines))
     return problems
 
 
