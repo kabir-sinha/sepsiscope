@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path, PurePosixPath, PureWindowsPath
-from typing import Annotated
+from typing import Annotated, Literal
 
 import yaml
 from pydantic import AfterValidator, BaseModel, ConfigDict, Field
@@ -52,12 +52,20 @@ class FeatureSwitches(_Strict):
     unit_columns: bool
 
 
+class Api(_Strict):
+    # Only the loopback address is accepted (plan P4): the demo is never reachable from
+    # another machine.
+    host: Literal["127.0.0.1"]
+    port: int = Field(ge=1024, le=65535)
+
+
 class Config(_Strict):
     paths: Paths
     seed: int = Field(ge=0)
     alarm_budget: float = Field(gt=0.0, lt=1.0)
     label_horizon_hours: int = Field(ge=1, le=48)
     features: FeatureSwitches
+    api: Api
 
 
 def load_config(path: Path | str = DEFAULT_CONFIG) -> Config:

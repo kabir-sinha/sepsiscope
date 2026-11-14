@@ -54,7 +54,13 @@ maintainer's own terminal.
   `ablation_*.json` and `drift.json`; 280 s, peak 4.32 GiB. Ablation features live in the
   ignored `features_{A,B}_ablation.parquet` (134 columns); main files untouched.
   **Next: B7 demo (waits for the maintainer), then gate.**
-- [ ] **B7** Local demo: API on 127.0.0.1 and dashboard.
+- [x] **B7a** Demo data and API: `sepsiscope demo build` writes 6 held-out hospital-A patients
+  (B2A; caught early, caught late, missed, false alarms, quiet, septic from the first hour)
+  to the ignored `data/demo/`, relabelled "Demo patient 1-6". `sepsiscope demo serve`:
+  FastAPI on `Literal["127.0.0.1"]` (config `api`), CORS localhost only, GET only, no docs
+  pages, no model at request time. Septic-from-first-hour stays in A are 8-10 h, so that
+  story uses a minimum of 8 h (others 24-120 h).
+- [ ] **B7b** Dashboard (plain SVG).
 - [ ] Gate and M4 evidence report (text).
 
 **Sandbox decisions (maintainer, 2026-11-13), kept as they are:**

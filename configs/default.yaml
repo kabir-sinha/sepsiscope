@@ -23,3 +23,8 @@ features:
   trends: true                # rolling statistics over hours <= t
   icu_time: false             # ICULOS / HospAdmTime - ablation only, never in the main model
   unit_columns: false         # Unit1 / Unit2 - ablation only (ADR 0015), never in the main model
+
+# Local demo API: loopback only (validated as Literal["127.0.0.1"]).
+api:
+  host: 127.0.0.1
+  port: 8000

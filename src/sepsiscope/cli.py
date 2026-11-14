@@ -34,6 +34,8 @@ data_app = typer.Typer(help="Dataset commands.", no_args_is_help=True)
 app.add_typer(data_app, name="data")
 features_app = typer.Typer(help="Feature commands.", no_args_is_help=True)
 app.add_typer(features_app, name="features")
+demo_app = typer.Typer(help="Local demo commands.", no_args_is_help=True)
+app.add_typer(demo_app, name="demo")
 
 KEY_PACKAGES = (
     "numpy",
@@ -308,6 +310,36 @@ def ablations() -> None:
     )
     for path in written:
         typer.echo(f"wrote {path.relative_to(REPO_ROOT)}")
+
+
+@demo_app.command("build")
+def demo_build() -> None:
+    """Precompute the demo patients (B2A, 6 held-out hospital-A patients) into data/demo/."""
+    from sepsiscope.api.demo import build
+    from sepsiscope.config import load_config
+
+    cfg = load_config()
+    out = build(
+        cfg,
+        REPO_ROOT / cfg.paths.data_dir,
+        REPO_ROOT / cfg.paths.models_dir,
+        REPO_ROOT / cfg.paths.reports_dir / "results",
+    )
+    typer.echo(f"wrote {out.relative_to(REPO_ROOT)}")
+
+
+@demo_app.command("serve")
+def demo_serve() -> None:
+    """Serve the demo API on 127.0.0.1 only (start it from your own terminal)."""
+    import uvicorn
+
+    from sepsiscope.api.app import create_app
+    from sepsiscope.api.demo import DEMO_FILE
+    from sepsiscope.config import load_config
+
+    cfg = load_config()
+    app_ = create_app(REPO_ROOT / cfg.paths.data_dir / DEMO_FILE)
+    uvicorn.run(app_, host=cfg.api.host, port=cfg.api.port, log_level="warning")
 
 
 @app.command("privacy-audit")

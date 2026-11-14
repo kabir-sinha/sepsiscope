@@ -5,6 +5,13 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react()],
   // Bind dev/preview servers to loopback only (never the LAN).
-  server: { host: '127.0.0.1' },
+  // /api is forwarded to the local demo API (sepsiscope demo serve, 127.0.0.1:8000),
+  // so the page itself never calls another origin.
+  server: {
+    host: '127.0.0.1',
+    port: 5173,
+    strictPort: true,
+    proxy: { '/api': 'http://127.0.0.1:8000' },
+  },
   preview: { host: '127.0.0.1' },
 })
