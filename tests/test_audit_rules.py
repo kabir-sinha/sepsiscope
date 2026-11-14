@@ -119,6 +119,10 @@ def test_utf16_and_binary_home_paths() -> None:
         ("mlruns/mlflow.db", "tracking or tuning store"),
         ("mlruns/optuna/lgbm_A2B.journal", "tracking or tuning store"),
         ("notes/study.sqlite3", "tracking or tuning store"),
+        ("models/lgbm_B2A/model.txt", "under models/"),
+        ("models/lgbm_A2B/feature_schema.json", "under models/"),
+        ("models/baselines/lr_B2A/model.json", "under models/"),
+        ("data/demo/demo_B2A.json", "under data/demo/"),
     ],
 )
 def test_path_rules(name: str, expected: str) -> None:
@@ -128,6 +132,9 @@ def test_path_rules(name: str, expected: str) -> None:
 def test_ordinary_paths_are_not_stores() -> None:
     assert check_path("docs/plan/batch-b.md") == []
     assert check_path("src/sepsiscope/tracking.py") == []
+    assert check_path("src/sepsiscope/models/lgbm.py") == []  # the code package, not outputs
+    assert check_path("src/sepsiscope/api/demo.py") == []
+    assert check_path("docs/data_card.md") == []
 
 
 def test_large_file(tmp_path: Path) -> None:

@@ -82,6 +82,12 @@ def check_path(name: str) -> list[str]:
         problems.append(f"dataset file type {path.suffix}")
     if path.suffix.lower() in STORE_SUFFIXES or (path.parts and path.parts[0] == "mlruns"):
         problems.append("tracking or tuning store (mlflow.db, Optuna journal, mlruns/)")
+    # Trained models and the demo's per-patient replays stay local (git-ignored); this
+    # second layer also stops a forced `git add -f`.
+    if path.parts[:1] == ("models",):
+        problems.append("trained model output under models/ (local only)")
+    if path.parts[:2] == ("data", "demo"):
+        problems.append("demo data under data/demo/ (local only)")
     return problems
 
 
