@@ -37,3 +37,28 @@ export function display(v: number): string {
 export function stepDecimals(step: number): number {
   return Math.max(0, -Math.floor(Math.log10(step) + 1e-9))
 }
+
+// Where to put the threshold label so it does not sit on a vertical line (onset, selected
+// hour). Tries the right end, then the left end of the threshold line; if both are blocked,
+// keeps the right end but moves the label below the line. Text width is estimated
+// (13 px bold ≈ 7.8 px per character); `gap` keeps a margin around each vertical line.
+export function thresholdLabelPlacement(opts: {
+  label: string
+  left: number // x where the threshold line starts
+  right: number // x where it ends
+  lineY: number // y of the threshold line
+  top: number // top of the plot area
+  verticals: number[] // x of vertical lines to keep clear of
+  gap?: number
+}): { x: number; y: number; anchor: 'start' | 'end' } {
+  const gap = opts.gap ?? 8
+  const w = opts.label.length * 7.8
+  const clear = (x0: number, x1: number) => opts.verticals.every((v) => v < x0 - gap || v > x1 + gap)
+  const above = opts.lineY - 6 >= opts.top + 12 ? opts.lineY - 6 : opts.lineY + 16
+  const below = opts.lineY + 16
+  const rightX = opts.right - 4
+  const leftX = opts.left + 4
+  if (clear(rightX - w, rightX)) return { x: rightX, y: above, anchor: 'end' }
+  if (clear(leftX, leftX + w)) return { x: leftX, y: above, anchor: 'start' }
+  return { x: rightX, y: below, anchor: 'end' }
+}

@@ -2,7 +2,7 @@
 // is true pixels (12 px minimum). All charts share the x-axis "Hours since ICU admission",
 // one selected hour (solid line) and one hover hour (dashed preview).
 import type { MouseEvent } from 'react'
-import { display, hourTicks, niceAxis } from './chartMath'
+import { display, hourTicks, niceAxis, thresholdLabelPlacement } from './chartMath'
 import { useTooltip, useWidth } from './hooks'
 import { Legend, TableToggle } from './ui'
 import type { LegendItem } from './ui'
@@ -172,9 +172,26 @@ export function LineChart(p: Props) {
           {p.threshold && (
             <g>
               <line className="threshold" x1={PAD.left} x2={W - PAD.right} y1={y(p.threshold.value)} y2={y(p.threshold.value)} />
-              <text className="threshold-label" x={W - PAD.right - 4} y={y(p.threshold.value) - 6} textAnchor="end">
-                {p.threshold.label}
-              </text>
+              {(() => {
+                // Keep the label clear of the onset and selected-hour lines.
+                const verticals = [
+                  ...(p.onset !== undefined && p.onset !== null && p.onset <= n ? [x(p.onset)] : []),
+                  ...(p.hour !== null && p.hour <= p.revealed ? [x(p.hour)] : []),
+                ]
+                const at = thresholdLabelPlacement({
+                  label: p.threshold.label,
+                  left: PAD.left,
+                  right: W - PAD.right,
+                  lineY: y(p.threshold.value),
+                  top: PAD.top,
+                  verticals,
+                })
+                return (
+                  <text className="threshold-label" x={at.x} y={at.y} textAnchor={at.anchor}>
+                    {p.threshold.label}
+                  </text>
+                )
+              })()}
             </g>
           )}
           {p.onset !== undefined && p.onset !== null && p.onset <= n && (
