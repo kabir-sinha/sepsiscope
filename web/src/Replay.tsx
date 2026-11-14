@@ -2,6 +2,7 @@
 // One selected hour drives everything: Play, the slider, ←/→ and clicks all set it.
 // Hovering a chart only previews an hour ("Hovering hour N").
 import { useEffect, useMemo, useState } from 'react'
+import { display } from './chartMath'
 import { LineChart } from './LineChart'
 import type { Series } from './LineChart'
 import { Legend } from './ui'
@@ -49,8 +50,10 @@ export function Replay({ summary }: { summary: Summary }) {
       .then((p: Patient) => {
         setPatient(p)
         setReplay(false)
+        // Start at the first alert hour; with no alert, at the highest-risk hour.
         const alerts = p.what_if.sepsiscope[k].alert_hours
-        setHour(alerts.length ? alerts[0] : 0)
+        const peak = p.risk.reduce((best, v, h) => (v > p.risk[best] ? h : best), 0)
+        setHour(alerts.length ? alerts[0] : peak)
         setError(null)
       })
       .catch(() => setError('Could not load that patient.'))
@@ -249,6 +252,7 @@ export function Replay({ summary }: { summary: Summary }) {
                 yLabel="Predicted sepsis risk (%)"
                 unit=" %"
                 format={(v) => pct(v)}
+                tickFormat={(v) => `${display(v * 100)} %`}
                 yMin={0}
                 threshold={{ value: thr, label: `Alert threshold (${pct(thr)} %)` }}
                 window={patient.window}
@@ -308,7 +312,7 @@ export function Replay({ summary }: { summary: Summary }) {
                         onSelect={setHour}
                         yLabel={info.unit}
                         unit={` ${info.unit}`}
-                        format={(x) => (Math.abs(x) >= 20 ? x.toFixed(0) : x.toFixed(1))}
+                        format={(x) => String(Number(x.toFixed(1)))}
                         normal={info.normal}
                         window={patient.window}
                         onset={patient.onset_hour}
@@ -346,7 +350,7 @@ function Readout(props: { patient: Patient; hour: number | null; hovering: boole
   if (hour === null) return null
   const v = (k: string) => {
     const x = patient.vitals[k]?.[hour]
-    return x === null || x === undefined ? 'not measured yet' : `${x} ${summary.vitals[k].unit}`
+    return x === null || x === undefined ? 'not measured yet' : `${Number(x.toFixed(1))} ${summary.vitals[k].unit}`
   }
   return (
     <p className={hovering ? 'readout hovering' : 'readout'} aria-live="polite">

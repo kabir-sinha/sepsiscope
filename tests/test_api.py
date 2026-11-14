@@ -223,6 +223,17 @@ def test_no_patient_ids_in_tracked_web_or_api_files() -> None:
         assert not re.search(r"\bp\d{6}\b", path.read_text(errors="ignore")), path.name
 
 
+def test_display_values_and_sentences() -> None:
+    from sepsiscope.api.demo import display_value, reason_sentence
+
+    assert display_value(37.1667) == "37.2" and display_value(112.0) == "112"
+    assert display_value(1.234) == "1.23" and display_value(0.5) == "0.5"
+    assert reason_sentence("temperature", 37.1667, "°C", 0.2) == (
+        "Temperature = 37.2 °C raised the risk."
+    )
+    assert "information to the model" not in reason_sentence("lactate", None, "mmol/L", 0.1)
+
+
 def test_plain_names() -> None:
     assert plain_name("HR__n") == "number of heart rate measurements so far"
     assert plain_name("Temp__mean6") == "temperature, average over the last 6 hours"

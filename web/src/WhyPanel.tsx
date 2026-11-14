@@ -1,6 +1,7 @@
 // "Why did it alert?": the model's top 5 reasons at the selected hour, as one list.
 // Each row: the full plain-English sentence, an inline bar (orange-red raises the risk,
 // blue lowers it) and the value with its unit. Raw log-odds appear only in the tooltip.
+import { display } from './chartMath'
 import { useTooltip } from './hooks'
 import type { Reason } from './types'
 
@@ -60,7 +61,7 @@ export function WhyPanel({ hour, reasons, risk, alerted, threshold }: Props) {
                   <div className={up ? 'bar raise' : 'bar lower'} style={{ width: `${Math.max(pct, 3)}%` }} />
                 </div>
                 <span className="num reason-value">
-                  {r.value === null ? 'not measured yet' : `${r.value} ${r.unit}`.trim()}
+                  {r.value === null ? 'not measured yet' : `${display(r.value)} ${r.unit}`.trim()}
                 </span>
               </div>
               {r.process && <p className="help small">Reflects how often staff checked, not the value itself.</p>}
@@ -68,6 +69,9 @@ export function WhyPanel({ hour, reasons, risk, alerted, threshold }: Props) {
           )
         })}
       </ol>
+      {reasons.some((r) => r.value === null) && (
+        <p className="help small">"Not measured yet": a missing value is itself information to the model.</p>
+      )}
     </section>
   )
 }

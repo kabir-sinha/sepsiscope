@@ -106,13 +106,13 @@ function UtilityChart({ doc }: { doc: ResultsDoc }) {
   const H = 320
   const pad = { l: 60, r: 12, t: 14, b: 50 }
   const groups = Object.keys(DIRS).map((d) => ({ d, rows: rowsFor(doc, d) }))
-  const max = Math.max(...doc.rows.map((r) => r.utility_ci[1]), 0.05) * 1.1
+  const max = Math.max(...doc.rows.map((r) => r.utility_ci[1]), 0.05) * 1.18
   const y = (v: number) => pad.t + (1 - v / max) * (H - pad.t - pad.b)
   const gw = (W - pad.l - pad.r) / groups.length
   const bw = gw / (ORDER.length + 1.5)
   return (
     <>
-      <Legend items={ORDER.map((m) => ({ label: NAMES[m], kind: 'band' as const, color: COLORS[m] }))} />
+      <Legend items={ORDER.map((m) => ({ label: NAMES[m], kind: 'bar' as const, color: COLORS[m] }))} />
       <div ref={ref} className="plot">
         <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Utility by model and direction with 95 % intervals">
           {[0, max / 2, max].map((v) => (
@@ -138,6 +138,11 @@ function UtilityChart({ doc }: { doc: ResultsDoc }) {
                   >
                     <rect x={x} y={y(r.utility)} width={bw * 0.82} height={Math.max(0, y(0) - y(r.utility))} fill={COLORS[r.model]} />
                     <line className="ci" x1={x + bw * 0.41} x2={x + bw * 0.41} y1={y(r.utility_ci[0])} y2={y(r.utility_ci[1])} />
+                    {bw >= 34 && (
+                      <text className="bar-value" x={x + bw * 0.41} y={y(r.utility_ci[1]) - 6} textAnchor="middle">
+                        {r.utility.toFixed(3)}
+                      </text>
+                    )}
                   </g>
                 )
               })}
@@ -169,10 +174,10 @@ function DriftChart({ rows, budget }: { rows: ResultRow[]; budget: number }) {
   const lg = rows.find((r) => r.model === 'lgbm')
   if (!lr || !lg) return null
   const bars = [
-    { label: 'Logistic regression', v: lr.alert_rate, c: 'var(--compare)', light: false },
-    { label: 'Logistic regression, re-set', v: lr.rethresholded_alert_rate, c: 'var(--compare)', light: true },
-    { label: 'SepsiScope', v: lg.alert_rate, c: 'var(--risk)', light: false },
-    { label: 'SepsiScope, re-set', v: lg.rethresholded_alert_rate, c: 'var(--risk)', light: true },
+    { label: 'Logistic regression', v: lr.alert_rate, c: 'var(--compare)' },
+    { label: 'Logistic regression, re-set', v: lr.rethresholded_alert_rate, c: 'var(--compare)' },
+    { label: 'SepsiScope', v: lg.alert_rate, c: 'var(--risk)' },
+    { label: 'SepsiScope, re-set', v: lg.rethresholded_alert_rate, c: 'var(--risk)' },
   ]
   const narrow = W < 560
   const pad = { l: narrow ? 12 : 240, r: 80 }
@@ -185,7 +190,8 @@ function DriftChart({ rows, budget }: { rows: ResultRow[]; budget: number }) {
       <Legend
         items={[
           { label: `Alert budget (${(budget * 100).toFixed(0)} % of hours)`, kind: 'dash', color: 'var(--raise)' },
-          { label: 'Threshold from the training hospital', kind: 'band', color: 'var(--risk)' },
+          { label: 'Logistic regression', kind: 'bar', color: 'var(--compare)' },
+          { label: 'SepsiScope', kind: 'bar', color: 'var(--risk)' },
         ]}
       />
       <div ref={ref} className="plot">
@@ -195,7 +201,7 @@ function DriftChart({ rows, budget }: { rows: ResultRow[]; budget: number }) {
               <text className="bar-label" x={narrow ? pad.l : pad.l - 8} y={narrow ? 14 : rowH / 2} textAnchor={narrow ? 'start' : 'end'}>
                 {b.label}
               </text>
-              <rect x={pad.l} y={narrow ? 22 : 8} width={Math.max(2, x(b.v) - pad.l)} height={rowH - (narrow ? 30 : 18)} fill={b.c} opacity={b.light ? 0.55 : 1} />
+              <rect x={pad.l} y={narrow ? 22 : 8} width={Math.max(2, x(b.v) - pad.l)} height={rowH - (narrow ? 30 : 18)} fill={b.c} />
               <text className="bar-value" x={x(b.v) + 6} y={narrow ? 38 : rowH / 2 + 4}>
                 {(b.v * 100).toFixed(1)} %
               </text>

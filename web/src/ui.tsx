@@ -37,7 +37,8 @@ export function TooltipProvider({ children }: { children: ReactNode }) {
 }
 
 
-export type LegendItem = { label: string; kind: 'line' | 'dash' | 'dot' | 'band'; color: string }
+// 'bar' = solid swatch identical to a bar's fill; 'band' = the translucent fill of a shaded area.
+export type LegendItem = { label: string; kind: 'line' | 'dash' | 'dot' | 'band' | 'bar'; color: string }
 
 export function Legend({ items }: { items: LegendItem[] }) {
   return (
@@ -51,6 +52,7 @@ export function Legend({ items }: { items: LegendItem[] }) {
             )}
             {it.kind === 'dot' && <circle cx="12" cy="7" r="5" fill={it.color} />}
             {it.kind === 'band' && <rect x="1" y="1" width="22" height="12" fill={it.color} opacity="0.35" />}
+            {it.kind === 'bar' && <rect x="1" y="1" width="22" height="12" fill={it.color} />}
           </svg>
           <span>{it.label}</span>
         </li>

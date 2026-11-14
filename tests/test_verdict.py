@@ -32,6 +32,9 @@ def test_septic_window_edges(alerts: list[int], outcome: str, lead: int | None) 
 
 def test_lead_zero_sentence() -> None:
     assert verdict([20], 20).sentence == "warned at the onset hour"
+    assert verdict([20], 20).badge == "Warned at onset"
+    assert verdict([8], 20).badge == "Warned 12 h early"
+    assert verdict([7], 20).badge == "Alerted only before the window"
     assert verdict([8], 20).sentence == "warned 12 h before onset"
 
 

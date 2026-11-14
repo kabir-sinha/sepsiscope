@@ -157,12 +157,14 @@ def unit_of(feature: str) -> str:
 def reason_sentence(label: str, value: float | None, unit: str, contribution: float) -> str:
     effect = "raised" if contribution > 0 else "lowered"
     if value is None:
-        return (
-            f"{label[:1].upper()}{label[1:]}: not measured yet (a missing value is itself "
-            f"information to the model) {effect} the risk."
-        )
-    shown = f"{value:g} {unit}".strip()
+        return f"{label[:1].upper()}{label[1:]}: not measured yet; this {effect} the risk."
+    shown = f"{display_value(value)} {unit}".strip()
     return f"{label[:1].upper()}{label[1:]} = {shown} {effect} the risk."
+
+
+def display_value(value: float) -> str:
+    """Readable value: 1 decimal from 10 upwards (37.2 not 37.17), else up to 2 decimals."""
+    return f"{round(value, 1 if abs(value) >= 10 else 2):g}"
 
 
 def _number(x: float) -> float | None:

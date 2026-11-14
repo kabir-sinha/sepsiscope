@@ -65,7 +65,8 @@ def verdict(alert_hours: Sequence[int], onset: int | None) -> Verdict:
     if in_window:
         lead = onset - in_window[0]
         text = "warned at the onset hour" if lead == 0 else f"warned {lead} h before onset"
-        return Verdict("warned", f"Warned {lead} h early", text, lead, first, len(alerts), 0)
+        badge = "Warned at onset" if lead == 0 else f"Warned {lead} h early"
+        return Verdict("warned", badge, text, lead, first, len(alerts), 0)
     if any(h > onset for h in alerts):
         return Verdict(
             "too_late_only",
@@ -79,7 +80,7 @@ def verdict(alert_hours: Sequence[int], onset: int | None) -> Verdict:
     if alerts:
         return Verdict(
             "too_early_only",
-            "Too early only",
+            "Alerted only before the window",
             "alerted only before the warning window",
             None,
             first,

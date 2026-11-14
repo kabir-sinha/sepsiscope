@@ -112,7 +112,7 @@ function App() {
               Reyna MA, et al. Early Prediction of Sepsis From Clinical Data: The PhysioNet/Computing in Cardiology Challenge 2019.
               Critical Care Medicine 2020;48(2):210–217. doi:10.1097/CCM.0000000000004145
             </li>
-            <li>Pollard et al. Nature Health (2026). doi:10.1038/s44360-026-00096-z</li>
+            <li>Pollard T, et al. PhysioNet as a global platform for biomedical research. Nature Health (2026). doi:10.1038/s44360-026-00096-z</li>
           </ol>
         </footer>
       </main>

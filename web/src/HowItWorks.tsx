@@ -29,7 +29,7 @@ const GLOSSARY: [string, string][] = [
   ['Onset', 'The hour sepsis is recorded as starting. In this dataset it is 6 hours after the first hour labelled septic.'],
   ['Early-warning window', 'The 12 hours before onset, up to and including the onset hour. An alert here counts as a timely warning.'],
   ['NEWS2', "The UK's National Early Warning Score: points for abnormal vitals, added up. Here a modified version without the consciousness item (maximum 17)."],
-  ['False alarm', 'An alert for a patient who never develops sepsis. Too many alarms cause alarm fatigue, so the number of alerts is capped at about 5 % of hours.'],
+  ['False alarm', 'An alert for a patient who never develops sepsis. Too many alarms cause alarm fatigue, so alerts are targeted at about 5 % of hours at the training hospital.'],
   ['Unseen hospital', 'A hospital whose patients were never used to train, tune or set the threshold of the model. All demo patients come from one.'],
 ]
 

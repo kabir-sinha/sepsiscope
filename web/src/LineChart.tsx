@@ -2,6 +2,7 @@
 // is true pixels (12 px minimum). All charts share the x-axis "Hours since ICU admission",
 // one selected hour (solid line) and one hover hour (dashed preview).
 import type { MouseEvent } from 'react'
+import { display, hourTicks, niceAxis } from './chartMath'
 import { useTooltip, useWidth } from './hooks'
 import { Legend, TableToggle } from './ui'
 import type { LegendItem } from './ui'
@@ -21,6 +22,7 @@ type Props = {
   yLabel: string
   unit: string
   format: (v: number) => string
+  tickFormat?: (v: number) => string // axis labels (round steps); defaults to a readable number
   yMin?: number
   yMax?: number
   threshold?: { value: number; label: string }
@@ -43,10 +45,11 @@ export function LineChart(p: Props) {
   const extra = [p.threshold?.value, p.normal?.[0], p.normal?.[1]].filter((v): v is number => v !== undefined)
   const all = p.series.flatMap((s) => s.values.filter((v): v is number => v !== null)).concat(extra)
   const lo = p.yMin ?? (all.length ? Math.min(...all) : 0)
-  const hiRaw = p.yMax ?? (all.length ? Math.max(...all) : 1)
-  const span = hiRaw - lo || 1
-  const yLo = p.yMin ?? lo - span * 0.1
-  const yHi = p.yMax ?? hiRaw + span * 0.1
+  const hi = p.yMax ?? (all.length ? Math.max(...all) : 1)
+  // Round axis: whole nice steps (risk 0/2/4/6 %, vitals 60/80/100 ...).
+  const axis = niceAxis(lo, hi, H >= 230 ? 4 : 3)
+  const yLo = p.yMin ?? axis.min
+  const yHi = p.yMax ?? axis.max
   const plotW = Math.max(W - PAD.left - PAD.right, 50)
   const x = (h: number) => PAD.left + (h / n) * plotW
   const y = (v: number) => PAD.top + (1 - (v - yLo) / (yHi - yLo)) * (H - PAD.top - PAD.bottom)
@@ -65,9 +68,11 @@ export function LineChart(p: Props) {
     }
     return d
   }
-  const tickCount = Math.max(2, Math.min(8, Math.floor(plotW / 90)))
-  const xTicks = Array.from(new Set(Array.from({ length: tickCount + 1 }, (_, i) => Math.round((i * n) / tickCount))))
-  const yTicks = [0.15, 0.5, 0.85].map((f) => yLo + (yHi - yLo) * f)
+  const xTicks = hourTicks(n, Math.max(2, Math.floor(plotW / 140)))
+  const yTicks = (p.yMax !== undefined ? niceAxis(yLo, yHi, H >= 230 ? 4 : 3).ticks : axis.ticks).filter(
+    (v) => v >= yLo - 1e-12 && v <= yHi + 1e-12,
+  )
+  const tickLabel = p.tickFormat ?? ((v: number) => display(v))
   const alerts = (p.alerts ?? []).filter((h) => h <= p.revealed)
   const hv = p.hover !== null && p.hover <= p.revealed ? p.hover : null
 
@@ -149,7 +154,7 @@ export function LineChart(p: Props) {
             <g key={v}>
               <line className="grid" x1={PAD.left} x2={W - PAD.right} y1={y(v)} y2={y(v)} />
               <text className="tick" x={PAD.left - 6} y={y(v) + 4} textAnchor="end">
-                {p.format(v)}
+                {tickLabel(v)}
               </text>
             </g>
           ))}

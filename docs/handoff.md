@@ -90,6 +90,15 @@ maintainer's own terminal.
   sensitivity CIs; headline strip; what-if budget slider; compare overlay; speed control;
   "Show as table" under every chart; light theme + "ICU monitor" dark mode; PhysioNet data
   credit and citations. Fonts: system stack until the self-hosted IBM Plex files are approved.
+- [x] **Fonts:** self-hosted IBM Plex Sans 400/600/700 and Plex Mono 400 (Latin-1 subsets, OFL
+  1.1) from `npm pack @ibm/plex-sans@1.1.0 @ibm/plex-mono@2.5.0` (integrity checked, not
+  installed); SHA-256s in `web/public/fonts/FONTS.md`; the text-fixing pre-commit hooks skip
+  that folder so the licence stays byte-identical.
+- [x] **Dashboard v3.1:** page title; a patient opens at the first alert hour (else the
+  highest-risk hour); round axis ticks (risk 0/2/4/6 %, hours 0/12/24/36/48); vitals to 1
+  decimal; missing-value note shown once; verdict wording "Warned at onset" / "Alerted only
+  before the window"; full Pollard et al. citation; glossary "targeted at about 5 %"; value
+  labels on the utility bars and solid legend swatches matching the bars.
 - [x] **Post-hoc, exploratory** (`sepsiscope exploratory`; not pre-registered, headline model
   unchanged): cumulative "measurements so far" counts replaced by measurements per hour of
   stay, same tuned params. A→B utility 0.129 [0.111, 0.147] (headline 0.226), AUROC 0.790,
