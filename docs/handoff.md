@@ -60,7 +60,9 @@ maintainer's own terminal.
   FastAPI on `Literal["127.0.0.1"]` (config `api`), CORS localhost only, GET only, no docs
   pages, no model at request time. Septic-from-first-hour stays in A are 8-10 h, so that
   story uses a minimum of 8 h (others 24-120 h).
-- [ ] **B7b** Dashboard (plain SVG).
+- [x] **B7b** Dashboard (`web/src`): patient list, hourly LightGBM risk and modified NEWS2 (max 17)
+  timelines in plain SVG with threshold, alerts and onset, top-5 reasons in plain English;
+  no new npm package; lint, build and `npm audit` clean. The maintainer starts it locally.
 - [ ] Gate and M4 evidence report (text).
 
 **Sandbox decisions (maintainer, 2026-11-13), kept as they are:**
