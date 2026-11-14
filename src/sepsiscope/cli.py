@@ -338,7 +338,10 @@ def demo_serve() -> None:
     from sepsiscope.config import load_config
 
     cfg = load_config()
-    app_ = create_app(REPO_ROOT / cfg.paths.data_dir / DEMO_FILE)
+    app_ = create_app(
+        REPO_ROOT / cfg.paths.data_dir / DEMO_FILE,
+        REPO_ROOT / cfg.paths.reports_dir / "results",
+    )
     uvicorn.run(app_, host=cfg.api.host, port=cfg.api.port, log_level="warning")
 
 

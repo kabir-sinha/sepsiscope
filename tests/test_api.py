@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 from pathlib import Path
 from typing import Any
 
@@ -17,27 +18,48 @@ from sepsiscope.api.demo import plain_name
 from sepsiscope.cli import app as cli_app
 from sepsiscope.config import REPO_ROOT, Config, load_config
 
+RESULTS = REPO_ROOT / "reports" / "results"
 DOC = {
     "direction": "B2A",
     "note": "Research prototype, not for clinical use.",
     "lgbm_threshold": 0.05,
     "news2_threshold": 7.0,
     "alarm_budget": 0.05,
+    "rules": ["rule"],
+    "vitals": {"HR": {"label": "Heart rate", "unit": "beats/min", "normal": [51, 90]}},
     "patients": [
         {
             "key": "demo-1",
             "label": "Demo patient 1",
             "story": "Septic, caught early",
+            "story_note": None,
             "hours": 3,
             "septic": True,
             "onset_hour": 2,
+            "window": [0, 2],
+            "vitals": {"HR": [80, 95, 120]},
+            "news2_alert_hours": [2],
+            "verdict": {"sepsiscope": {"outcome": "warned"}, "news2": {"outcome": "warned"}},
+            "banner": "SepsiScope warned 1 h before onset · NEWS2 warned at the onset hour",
             "age_group": "under 65",
             "risk": [0.01, 0.06, 0.2],
             "news2": [2, 5, 8],
             "alert_hours": [1, 2],
-            "reasons": {
-                "1": [{"feature": "HR", "label": "heart rate", "value": 120, "contribution": 0.4}]
-            },
+            "reasons": [
+                [],
+                [
+                    {
+                        "feature": "HR",
+                        "label": "heart rate",
+                        "value": 120,
+                        "unit": "beats/min",
+                        "process": False,
+                        "contribution": 0.4,
+                        "sentence": "Heart rate = 120 beats/min raised the risk.",
+                    }
+                ],
+                [],
+            ],
         }
     ],
 }
@@ -47,23 +69,34 @@ DOC = {
 def client(tmp_path: Path) -> TestClient:
     path = tmp_path / "demo.json"
     path.write_text(json.dumps(DOC))
-    return TestClient(create_app(path))
+    return TestClient(create_app(path, RESULTS))
 
 
 def test_summary_and_patient(client: TestClient) -> None:
     summary = client.get("/api/summary").json()
-    assert summary["patients"][0] == {
-        "key": "demo-1",
-        "label": "Demo patient 1",
-        "story": "Septic, caught early",
-        "hours": 3,
-        "septic": True,
-    }
+    row = summary["patients"][0]
+    assert set(row) == {"key", "label", "story", "story_note", "hours", "septic", "verdict"}
+    assert summary["rules"] == ["rule"] and summary["vitals"]["HR"]["normal"] == [51, 90]
     patient = client.get("/api/patients/demo-1").json()
-    assert patient["alert_hours"] == [1, 2] and patient["reasons"]["1"][0]["label"] == "heart rate"
+    assert patient["alert_hours"] == [1, 2] and patient["news2_alert_hours"] == [2]
+    assert len(patient["reasons"]) == patient["hours"] == len(patient["vitals"]["HR"])
+    assert patient["reasons"][1][0]["sentence"].startswith("Heart rate")
+    assert patient["window"] == [0, 2] and patient["banner"].startswith("SepsiScope")
     assert client.get("/api/patients/nope").status_code == 404
     assert client.get("/docs").status_code == 404  # no docs pages
     assert client.post("/api/summary").status_code == 405  # read-only
+
+
+def test_results_come_from_committed_aggregates(client: TestClient) -> None:
+    res = client.get("/api/results").json()
+    assert res["alarm_budget"] == 0.05
+    assert {(r["model"], r["direction"]) for r in res["rows"]} == {
+        (m, d) for m in ("lgbm", "lr", "news2", "sirs", "qsofa") for d in ("A2B", "B2A")
+    }
+    lgbm = next(r for r in res["rows"] if r["model"] == "lgbm" and r["direction"] == "B2A")
+    committed = json.loads((RESULTS / "lgbm_B2A.json").read_text())["strict_external"]
+    assert lgbm["alert_rate"] == committed["point"]["alert_rate"]
+    assert set(res["criterion"]) == {"A2B", "B2A"}
 
 
 def test_cors_allows_only_local_origins(client: TestClient) -> None:
@@ -92,6 +125,7 @@ def test_serve_binds_loopback_only(monkeypatch: pytest.MonkeyPatch, tmp_path: Pa
     path = tmp_path / "data" / demo.DEMO_FILE
     path.parent.mkdir(parents=True)
     path.write_text(json.dumps(DOC))
+    shutil.copytree(RESULTS, tmp_path / "reports" / "results")
     monkeypatch.setattr("sepsiscope.cli.REPO_ROOT", tmp_path)
     result = CliRunner().invoke(cli_app, ["demo", "serve"])
     assert result.exit_code == 0, result.stdout

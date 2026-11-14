@@ -24,13 +24,13 @@ from pathlib import Path
 
 import numpy as np
 
+from sepsiscope.api.verdict import RULES, WINDOW_HOURS, Verdict, banner, onset_hour, verdict
 from sepsiscope.config import Config
 from sepsiscope.data.io import LABEL
-from sepsiscope.evaluation.metrics import ONSET_OFFSET_HOURS, TIMELY_WINDOW_HOURS
 from sepsiscope.features.pipeline import read_features
 from sepsiscope.models import baselines as b
 from sepsiscope.models import calibration, lgbm
-from sepsiscope.trust.explain import explain_rows
+from sepsiscope.trust.explain import Explanation, explain_rows
 
 DIRECTION, TARGET = "B2A", "A"
 DEMO_FILE = Path("demo") / "demo_B2A.json"
@@ -92,6 +92,73 @@ def plain_name(feature: str) -> str:
     return NAMES.get(feature, feature)
 
 
+UNITS: dict[str, str] = {
+    "HR": "beats/min",
+    "O2Sat": "%",
+    "Temp": "°C",
+    "SBP": "mm Hg",
+    "MAP": "mm Hg",
+    "DBP": "mm Hg",
+    "Resp": "breaths/min",
+    "EtCO2": "mm Hg",
+    "FiO2": "fraction",
+    "PaCO2": "mm Hg",
+    "SaO2": "%",
+    "BUN": "mg/dL",
+    "Creatinine": "mg/dL",
+    "Lactate": "mmol/L",
+    "WBC": "\u00d710\u00b3/\u00b5L",
+    "Platelets": "\u00d710\u00b3/\u00b5L",
+    "Glucose": "mg/dL",
+    "Age": "years",
+}
+# Vitals shown in the replay, with the NEWS2 0-point band as the shaded "normal range"
+# (RCP NEWS2 Chart 1; SpO2 Scale 1). Values are the last measured value at each hour.
+VITALS_SHOWN: dict[str, dict[str, object]] = {
+    "HR": {"label": "Heart rate", "unit": "beats/min", "normal": [51, 90]},
+    "Resp": {"label": "Breathing rate", "unit": "breaths/min", "normal": [12, 20]},
+    "Temp": {"label": "Temperature", "unit": "°C", "normal": [36.1, 38.0]},
+    "SBP": {"label": "Systolic blood pressure", "unit": "mm Hg", "normal": [111, 219]},
+    "O2Sat": {"label": "Oxygen saturation", "unit": "%", "normal": [96, 100]},
+}
+ON_ADMISSION_NOTE = (
+    "This patient was already labelled septic in their first ICU hour. The dataset starts "
+    "the sepsis label 6 hours before the clinical onset, so the onset is placed at hour 6 "
+    "by the same rule as every other patient; the true onset may have been earlier, even "
+    "before ICU admission, which the record cannot show."
+)
+
+
+def base_variable(feature: str) -> str:
+    for suffix in SUFFIXES:
+        if feature.endswith(suffix):
+            return feature[: -len(suffix)]
+    return feature
+
+
+def is_process(feature: str) -> bool:
+    """Measurement-process features describe how often staff measured, not the value."""
+    return feature.endswith(("__hsl", "__n"))
+
+
+def unit_of(feature: str) -> str:
+    if feature.endswith("__hsl"):
+        return "hours"
+    if feature.endswith("__n"):
+        return "measurements"
+    if feature.endswith("__std6"):
+        return UNITS.get(base_variable(feature), "")
+    return UNITS.get(base_variable(feature), "")
+
+
+def reason_sentence(label: str, value: float | None, unit: str, contribution: float) -> str:
+    effect = "raised" if contribution > 0 else "lowered"
+    if value is None:
+        return f"{label[:1].upper()}{label[1:]} (not measured yet) {effect} the risk."
+    shown = f"{value:g} {unit}".strip()
+    return f"{label[:1].upper()}{label[1:]} = {shown} {effect} the risk."
+
+
 def _number(x: float) -> float | None:
     return None if not np.isfinite(x) else round(float(x), 4)
 
@@ -100,15 +167,29 @@ def _number(x: float) -> float | None:
 class Stay:
     pid: str
     hours: int
-    septic: bool
-    first: int  # first positive row, -1 if never septic
-    onset: int | None
-    n_alerts: int
-    lead: int | None  # onset minus first timely alert; None if not caught
+    first: int | None  # first hour labelled septic, None if never
+    model: Verdict
 
-    @property
-    def caught(self) -> bool:
-        return self.lead is not None
+
+def _reasons_for(
+    row: Explanation, values: np.ndarray, col: dict[str, int]
+) -> list[dict[str, object]]:
+    out: list[dict[str, object]] = []
+    for r in row.reasons:
+        value = _number(float(values[col[r.feature]]))
+        label, unit = plain_name(r.feature), unit_of(r.feature)
+        out.append(
+            {
+                "feature": r.feature,
+                "label": label,
+                "value": value,
+                "unit": unit,
+                "process": is_process(r.feature),
+                "contribution": round(r.contribution, 4),
+                "sentence": reason_sentence(label, value, unit, r.contribution),
+            }
+        )
+    return out
 
 
 def build(cfg: Config, data_dir: Path, models_dir: Path, results_dir: Path) -> Path:
@@ -116,6 +197,7 @@ def build(cfg: Config, data_dir: Path, models_dir: Path, results_dir: Path) -> P
     features = model.booster.feature_name()
     cal = json.loads((models_dir / f"lgbm_{DIRECTION}" / "calibration.json").read_text())
     platt, _ = calibration.from_json(cal)
+    # The alert thresholds are read from the committed result files (never re-derived).
     strict = json.loads((results_dir / f"lgbm_{DIRECTION}.json").read_text())["strict_external"]
     news2_doc = json.loads((results_dir / f"news2_{DIRECTION}.json").read_text())
     threshold, news2_threshold = strict["threshold"], news2_doc["strict_external"]["threshold"]
@@ -129,62 +211,61 @@ def build(cfg: Config, data_dir: Path, models_dir: Path, results_dir: Path) -> P
     stays: list[Stay] = []
     for pid, g in frame.groupby("pid", sort=True):
         y = g[LABEL].to_numpy()
-        septic = bool(y.any())
-        first = int(np.argmax(y)) if septic else -1
-        onset = first + ONSET_OFFSET_HOURS if septic else None
-        alerts = np.flatnonzero(g["alert"].to_numpy())
-        lead = None
-        if onset is not None:
-            timely = [int(h) for h in alerts if onset - TIMELY_WINDOW_HOURS <= h <= onset]
-            lead = onset - timely[0] if timely else None
-        stays.append(Stay(str(pid), len(g), septic, first, onset, len(alerts), lead))
+        first = int(np.argmax(y)) if y.any() else None
+        alerts = [int(h) for h in np.flatnonzero(g["alert"].to_numpy())]
+        stays.append(Stay(str(pid), len(g), first, verdict(alerts, onset_hour(first))))
     fits = [s for s in stays if MIN_HOURS <= s.hours <= MAX_HOURS]
 
+    def later(s: Stay) -> bool:
+        return s.first is not None and s.first > 0
+
     choices: list[tuple[str, Callable[[Stay], bool]]] = [
-        ("Septic, caught early", lambda s: s.caught and s.first > 0 and (s.lead or 0) >= 6),
-        ("Septic, caught late", lambda s: s.caught and s.first > 0 and (s.lead or 0) < 3),
-        ("Septic, missed", lambda s: s.septic and s.first > 0 and not s.caught),
-        ("Not septic, false alarms", lambda s: not s.septic and s.n_alerts >= 3),
-        ("Not septic, quiet", lambda s: not s.septic and s.n_alerts == 0),
-        ("Septic from the first hour", lambda s: s.septic and s.first == 0),
+        ("Septic, caught early", lambda s: later(s) and (s.model.lead_hours or 0) >= 6),
+        (
+            "Septic, caught late",
+            lambda s: later(s) and s.model.outcome == "warned" and (s.model.lead_hours or 0) < 3,
+        ),
+        ("Septic, missed", lambda s: later(s) and s.model.outcome == "never_warned"),
+        ("Not septic, false alarms", lambda s: s.first is None and s.model.alert_hours >= 3),
+        ("Not septic, quiet", lambda s: s.first is None and s.model.alert_hours == 0),
+        ("Septic on admission (onset at hour 6)", lambda s: s.first == 0),
     ]
     patients = []
     for k, (story, rule) in enumerate(choices, start=1):
-        # Septic-from-the-first-hour stays are short; allow 8 h and up (all are 8-10 h).
+        # Septic-on-admission stays in hospital A are all 8-10 h; allow 8 h for that story.
         pool = fits if k < 6 else [s for s in stays if 8 <= s.hours <= MAX_HOURS]
         stay = next((s for s in pool if rule(s)), None)
         if stay is None:
             continue
         g = frame[frame["pid"] == stay.pid].reset_index(drop=True)
-        alert_rows = np.flatnonzero(g["alert"].to_numpy())
         x = lgbm.matrix(g, features)
-        explanations = explain_rows(model.booster, x[alert_rows], features)
         col = {name: i for i, name in enumerate(features)}
-        reasons = {
-            int(h): [
-                {
-                    "feature": r.feature,
-                    "label": plain_name(r.feature),
-                    "value": _number(float(x[h, col[r.feature]])),
-                    "contribution": round(r.contribution, 4),
-                }
-                for r in e.reasons
-            ]
-            for h, e in zip(alert_rows, explanations, strict=True)
-        }
+        explanations = explain_rows(model.booster, x, features)  # every hour
+        onset = onset_hour(stay.first)
+        news2_alerts = [int(h) for h in np.flatnonzero(g["news2"].to_numpy() >= news2_threshold)]
+        news2_v = verdict(news2_alerts, onset)
         patients.append(
             {
                 "key": f"demo-{k}",
                 "label": f"Demo patient {k}",
                 "story": story,
+                "story_note": ON_ADMISSION_NOTE if stay.first == 0 else None,
                 "hours": stay.hours,
-                "septic": stay.septic,
-                "onset_hour": stay.onset,
+                "septic": stay.first is not None,
+                "onset_hour": onset,
+                "window": None if onset is None else [max(0, onset - WINDOW_HOURS), onset],
                 "age_group": "65 or older" if float(g["Age"].iloc[0]) >= 65 else "under 65",
                 "risk": [round(float(v), 5) for v in g["risk"]],
                 "news2": [int(v) for v in g["news2"]],
-                "alert_hours": [int(h) for h in alert_rows],
-                "reasons": reasons,
+                "vitals": {
+                    v: [_number(float(z)) for z in g[v].to_numpy(dtype=np.float64)]
+                    for v in VITALS_SHOWN
+                },
+                "alert_hours": [int(h) for h in np.flatnonzero(g["alert"].to_numpy())],
+                "news2_alert_hours": news2_alerts,
+                "verdict": {"sepsiscope": stay.model.as_dict(), "news2": news2_v.as_dict()},
+                "banner": banner(stay.model, news2_v, stay.first is not None),
+                "reasons": [_reasons_for(e, x[h], col) for h, e in enumerate(explanations)],
             }
         )
     doc = {
@@ -192,11 +273,14 @@ def build(cfg: Config, data_dir: Path, models_dir: Path, results_dir: Path) -> P
         "note": "Research prototype, not for clinical use. Model trained on hospital B; "
         "these hospital-A patients were never used for training, tuning or thresholds.",
         "lgbm_threshold": threshold,
+        "lgbm_threshold_source": f"reports/results/lgbm_{DIRECTION}.json strict_external.threshold",
         "news2_threshold": news2_threshold,
         "alarm_budget": cfg.alarm_budget,
+        "rules": list(RULES),
+        "vitals": VITALS_SHOWN,
         "patients": patients,
     }
     out = data_dir / DEMO_FILE
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(doc, indent=1) + "\n", encoding="utf-8")
+    out.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     return out

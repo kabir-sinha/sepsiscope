@@ -53,6 +53,13 @@ maintainer's own terminal.
 - [x] **B5** `sepsiscope ablations`: 4 ablations both ways (main tuned params, not re-tuned),
   `ablation_*.json` and `drift.json`; 280 s, peak 4.32 GiB. Ablation features live in the
   ignored `features_{A,B}_ablation.parquet` (134 columns); main files untouched.
+- [x] **B7c** Demo data v2: explicit verdict rules (`api/verdict.py`: onset = first septic hour
+  + 6 h; window [onset - 12 h, onset], both ends included; lead = onset - first alert in the
+  window; non-septic alerts = false alarms), per-hour vitals, both systems' alerts, top-5
+  contributions for every hour with plain-English sentences and units, process features
+  tagged; patient 6 renamed "Septic on admission (onset at hour 6)" with a labelling note;
+  `/api/results` from committed aggregate JSONs. The dashed LightGBM line is the committed
+  B2A strict threshold 0.049641 (4.96 %), not the 5 % budget.
 - [x] **Post-hoc, exploratory** (`sepsiscope exploratory`; not pre-registered, headline model
   unchanged): cumulative "measurements so far" counts replaced by measurements per hour of
   stay, same tuned params. A→B utility 0.129 [0.111, 0.147] (headline 0.226), AUROC 0.790,
