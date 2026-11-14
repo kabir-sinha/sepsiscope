@@ -27,8 +27,18 @@ in ADR 0024 before any result. Order: C0 → C4 → C1 → C2 → C3 → C5 → 
   0-48 h). LightGBM − LR utility: clearly positive in every B→A band; in A→B only after 48 h
   (0-24 h −0.005 [−0.013, 0.003], 24-48 h −0.033 [−0.069, 0.004]). All models drop in the
   96 h+ band (about 350 patients). `reports/results/bands_{A2B,B2A}.json`.
-- [ ] **C2** deferral ·
-  [ ] **C3** budgets · [ ] **C5** docs · [ ] **C6** gate.
+- [x] **C2** `sepsiscope analyses deferral` (100 s, 2.86 GiB): threshold reproduces the
+  headline. **Pre-registered result (ADR 0024 item 3): deferral not useful in either
+  direction**: fails (a) the deferral rate (A→B 30.5 %, B→A 44.8 % at α = 0.10); passes
+  (b) and (c): utility on non-deferred hours 0.370 (A→B, headline 0.226) and 0.419 (B→A,
+  headline 0.273). Target coverage below nominal (A→B label 1 0.80, B→A label 0 0.83;
+  exactly nominal on the source calibration split): exchangeability caveat. The gain is
+  partly mechanical: deferred hours lie between q1 and q0 (probability about 1-3.5 %), all
+  below the alert thresholds, so alerts and timely sensitivity are unchanged; deferral only
+  removes unsure low-risk hours. α 0.05 / 0.20: deferral 47.4 % / 9.4 % (A→B), 72.5 % /
+  5.1 % (B→A). Per-hour decisions in the ignored `data/processed/deferral/`.
+  `reports/results/deferral_{A2B,B2A}.json`.
+- [ ] **C3** budgets · [ ] **C5** docs · [ ] **C6** gate.
 
 **Batch B gate PASSED (2026-11-14); M4 evidence report delivered as text** and pushed.
 

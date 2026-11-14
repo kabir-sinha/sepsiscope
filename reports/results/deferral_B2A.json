@@ -1,0 +1,264 @@
+{
+ "direction": "B2A",
+ "source": "B",
+ "target": "A",
+ "analysis": "C2 class-conditional conformal deferral (ADR 0020, ADR 0024 items 2-4)",
+ "model": "lgbm (Platt), headline threshold on non-deferred hours",
+ "threshold": 0.04964129593075571,
+ "nonconformity": "1 - p_hat(y), per-class thresholds from the source calibration split",
+ "deferral_rule": "deferred when the prediction set is {0, 1} or empty",
+ "names": {
+  "share_not_deferred": "per class, share of hours not deferred (ADR 0020 item 2)",
+  "coverage": "per class, share of hours whose true label is in the set"
+ },
+ "main_alpha": 0.1,
+ "seed": 42,
+ "bootstrap_resamples": 1000,
+ "headline_utility": 0.27290079172263987,
+ "alphas": {
+  "0.10": {
+   "non_deferred_rows": 436252,
+   "point": {
+    "deferral_rate": 0.44793252469264694,
+    "share_not_deferred_label0": 0.5499657861615695,
+    "share_not_deferred_label1": 0.6468837535014006,
+    "auroc": 0.8202892144037235,
+    "auprc": 0.12301236993393466,
+    "utility": 0.4186841328262262,
+    "alert_rate_non_deferred": 0.15000504295682313,
+    "timely_sensitivity": 0.5450535601764335,
+    "median_lead_hours": 12.0,
+    "false_alerts_per_100_patient_days": 102.17803403424439,
+    "row0_timely_sensitivity": 0.28078817733990147
+   },
+   "ci95": {
+    "deferral_rate": [
+     0.4436853661913997,
+     0.4518638475737816
+    ],
+    "share_not_deferred_label0": [
+     0.5459965508888508,
+     0.5541352253130667
+    ],
+    "share_not_deferred_label1": [
+     0.6306874863127949,
+     0.6625409893398461
+    ],
+    "auroc": [
+     0.8100968586785456,
+     0.8297124760756728
+    ],
+    "auprc": [
+     0.1120620083331146,
+     0.13573125128733035
+    ],
+    "utility": [
+     0.39871651651762907,
+     0.43886709414390934
+    ],
+    "alert_rate_non_deferred": [
+     0.1423921786640281,
+     0.15790951630101324
+    ],
+    "timely_sensitivity": [
+     0.5193863450704973,
+     0.5676901313312515
+    ],
+    "median_lead_hours": [
+     12.0,
+     12.0
+    ],
+    "false_alerts_per_100_patient_days": [
+     96.78729784077655,
+     108.53544994187111
+    ],
+    "row0_timely_sensitivity": [
+     0.22032789067352915,
+     0.33804100645539903
+    ]
+   },
+   "ece_non_deferred": 0.0043890734211182066,
+   "thresholds": {
+    "q0": 0.02665729629422825,
+    "q1": 0.9935705852629977
+   },
+   "calibration_hours": {
+    "label0": 149615,
+    "label1": 2173
+   },
+   "coverage": {
+    "label0": 0.826068228473416,
+    "label1": 0.8985177404295052
+   },
+   "coverage_on_source_calibration": {
+    "label0": 0.9000100257327139,
+    "label1": 0.9005982512655315
+   },
+   "adr_0024_item_3": {
+    "a_deferral_rate_at_most_0.30": false,
+    "b_label1_not_deferred_within_0.10_of_label0": true,
+    "c_utility_non_deferred_above_headline": true,
+    "headline_utility": 0.27290079172263987,
+    "useful": false
+   }
+  },
+  "0.05": {
+   "non_deferred_rows": 217525,
+   "point": {
+    "deferral_rate": 0.7247268148541852,
+    "share_not_deferred_label0": 0.2723537956664196,
+    "share_not_deferred_label1": 0.4069794584500467,
+    "auroc": 0.857167256728337,
+    "auprc": 0.1567770054565782,
+    "utility": 0.6645586536186088,
+    "alert_rate_non_deferred": 0.30083898402482473,
+    "timely_sensitivity": 0.5450535601764335,
+    "median_lead_hours": 12.0,
+    "false_alerts_per_100_patient_days": 102.17803403424439,
+    "row0_timely_sensitivity": 0.28078817733990147
+   },
+   "ci95": {
+    "deferral_rate": [
+     0.720368979036104,
+     0.7289941894932134
+    ],
+    "share_not_deferred_label0": [
+     0.26827695790776457,
+     0.27667259822389884
+    ],
+    "share_not_deferred_label1": [
+     0.38941465572352507,
+     0.42536446937590255
+    ],
+    "auroc": [
+     0.8471690789643678,
+     0.8667632853449777
+    ],
+    "auprc": [
+     0.14142535886699426,
+     0.17484461221738348
+    ],
+    "utility": [
+     0.6427576734699878,
+     0.6829648162538794
+    ],
+    "alert_rate_non_deferred": [
+     0.2879858023929863,
+     0.31476627342217434
+    ],
+    "timely_sensitivity": [
+     0.5193863450704973,
+     0.5676901313312515
+    ],
+    "median_lead_hours": [
+     12.0,
+     12.0
+    ],
+    "false_alerts_per_100_patient_days": [
+     96.78729784077655,
+     108.53544994187111
+    ],
+    "row0_timely_sensitivity": [
+     0.22032789067352915,
+     0.33804100645539903
+    ]
+   },
+   "ece_non_deferred": 0.005548365564483519,
+   "thresholds": {
+    "q0": 0.04787063598557282,
+    "q1": 0.9961172447122028
+   },
+   "calibration_hours": {
+    "label0": 149615,
+    "label1": 2173
+   },
+   "coverage": {
+    "label0": 0.9195114600189631,
+    "label1": 0.9684873949579832
+   },
+   "coverage_on_source_calibration": {
+    "label0": 0.9500116966881663,
+    "label1": 0.9507593189139438
+   }
+  },
+  "0.20": {
+   "non_deferred_rows": 749881,
+   "point": {
+    "deferral_rate": 0.05104180507836475,
+    "share_not_deferred_label0": 0.9486559588347374,
+    "share_not_deferred_label1": 0.962593370681606,
+    "auroc": 0.7706061434749597,
+    "auprc": 0.09671488147968398,
+    "utility": 0.2835000712611643,
+    "alert_rate_non_deferred": 0.08726717972584984,
+    "timely_sensitivity": 0.5450535601764335,
+    "median_lead_hours": 12.0,
+    "false_alerts_per_100_patient_days": 102.17803403424439,
+    "row0_timely_sensitivity": 0.28078817733990147
+   },
+   "ci95": {
+    "deferral_rate": [
+     0.0501485656155359,
+     0.05188596985314699
+    ],
+    "share_not_deferred_label0": [
+     0.947785670948293,
+     0.9495508335911086
+    ],
+    "share_not_deferred_label1": [
+     0.9584389575649295,
+     0.9667086991644118
+    ],
+    "auroc": [
+     0.7612001760259473,
+     0.7796226583183739
+    ],
+    "auprc": [
+     0.0889668840137957,
+     0.10568143775762864
+    ],
+    "utility": [
+     0.26723802959973064,
+     0.301060211028389
+    ],
+    "alert_rate_non_deferred": [
+     0.08251301643094545,
+     0.09223908294508198
+    ],
+    "timely_sensitivity": [
+     0.5193863450704973,
+     0.5676901313312515
+    ],
+    "median_lead_hours": [
+     12.0,
+     12.0
+    ],
+    "false_alerts_per_100_patient_days": [
+     96.78729784077655,
+     108.53544994187111
+    ],
+    "row0_timely_sensitivity": [
+     0.22032789067352915,
+     0.33804100645539903
+    ]
+   },
+   "ece_non_deferred": 0.004176211493074088,
+   "thresholds": {
+    "q0": 0.01307936259891311,
+    "q1": 0.9888639257086285
+   },
+   "calibration_hours": {
+    "label0": 149615,
+    "label1": 2173
+   },
+   "coverage": {
+    "label0": 0.6324140223702882,
+    "label1": 0.785655929038282
+   },
+   "coverage_on_source_calibration": {
+    "label0": 0.8000066838218093,
+    "label1": 0.8007363092498849
+   }
+  }
+ }
+}
