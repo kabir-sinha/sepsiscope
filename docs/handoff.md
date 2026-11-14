@@ -6,41 +6,36 @@ State of the work, so anyone can pick it up from the repository alone.
 
 ## Resume here
 
-**Paused 2026-11-14 (save point, Batch B gate in progress).** 31 commits unpushed (GitHub
-`main` at `31bb0c5`), latest = this handoff commit; working tree clean.
+**Batch B gate PASSED (2026-11-14); M4 evidence report delivered as text.** 33 commits
+unpushed (GitHub `main` at `31bb0c5`), latest = this handoff commit; working tree clean.
+**Next: the maintainer pushes from their own terminal** after reviewing the report.
 
-**Done this session:**
-- (a) Badge wording: no source change (a server started before the last `demo build`).
+**Done in the gate:**
 - Part 1 exhaustive privacy scan: 4 FAILs fixed (scan script blind under zsh, account handle
   in docs/CODEOWNERS, guard not blocking `models/` and `data/demo/`, 500 without security
   headers), real name removed from tracked files (ADR 0023), scan script requires the
-  repo's top folder. The 28 unpushed commits were rewritten locally (maintainer approved):
-  test fix folded in, author/committer name = the maintainer's first name, dates kept,
-  `+0000`; nothing on GitHub touched. Allowed commit name is declared only in the gitignored
-  local denylist (`allow-author-name:`). Re-run: **all 11 items PASS on both passes**, positive
-  control caught by all three scanners.
-- Gate so far: doctor PASS, font SHA-256s OK, `npm audit` 0. **FAIL: `pip-audit`
-  CVE-2026-126360 in `opentelemetry-api 1.45.1`** (ReDoS in `traceparent` parsing; reached
-  via fastapi/mlflow; not imported by our code; fix 1.45.2).
-- Background gate job (unfinished at pause): `uv sync --locked` OK; full pytest: only the
-  sandbox-blocked Unix-socket test failed (as before, covered by CI); train A2B 113 trees
-  (4.8 s, 2.18 GiB), B2A 234 trees (6.3 s, 2.11 GiB); `evaluate --all-models` was running.
-  Its later steps and the byte-identical comparison are **not recorded**: re-run them.
-
-**Next on resume (upgrade APPROVED by the maintainer, with these conditions):**
-1. Wait for or re-run the background job (tests once, train, `evaluate --all-models`,
-   `ablations`, `exploratory`, `demo build`; tracked outputs must equal HEAD).
-2. `uv lock --upgrade-package opentelemetry-api`: only `opentelemetry-api` and
-   `opentelemetry-sdk` 1.45.1 → 1.45.2 and `opentelemetry-semantic-conventions`
-   0.66b1 → 0.66b2 may change; show the lockfile diff; commit.
-3. Real exit codes everywhere (`set -o pipefail`; never read a `tail` exit code), and
-   re-check the earlier piped passes with real exit codes.
-4. Full gate re-run, then the M4 evidence report (7 parts) + OFFICIAL NUMBERS table.
-5. Update handoff and resume note, commit, double privacy check, STOP with the push command.
-   The maintainer pushes from their own terminal.
-
-Also for the maintainer: run `git config --local user.name` once with the allowed first name from `.privacy-denylist.local` (the sandbox
-blocks `.git/config` writes; commits so far set the name through environment variables).
+  repository's top folder. All 11 items PASS on both passes; positive control caught by all
+  three scanners.
+- Unpushed commits only (`origin/main..HEAD`) rewritten locally with the maintainer's
+  approval: author and committer name = the maintainer's full name (commit metadata only),
+  noreply email and all dates kept, `+0000`; `origin/main` still an ancestor, HEAD tree
+  byte-identical, backup ref deleted; nothing on GitHub touched. The allowed commit name is
+  declared only in the gitignored local denylist (`allow-author-name:`, exact match); the
+  name still fails anywhere in file contents (checked).
+- `pip-audit` CVE-2026-126360 fixed: `opentelemetry-api`/`-sdk` 1.45.1 → 1.45.2,
+  `opentelemetry-semantic-conventions` 0.66b1 → 0.66b2; nothing else in `uv.lock` changed.
+- Gate with real exit codes (each step's own exit code, never a `tail`): `uv sync --locked`,
+  doctor, ruff, format, mypy, pre-commit on all files, `pip-audit` (no known
+  vulnerabilities), `npm audit` 0, web lint and build, contrast 56/56, font SHA-256s: all 0.
+  Full pytest: 312 passed, 1 failed = the sandbox-blocked Unix-socket test (covered by CI).
+- Byte-identical re-run (under `caffeinate -i`): train A2B 4.9 s / 2.18 GiB, B2A 6.6 s /
+  2.11 GiB; `evaluate --all-models` 379 s / 5.68 GiB; `ablations` 272 s / 4.49 GiB;
+  `exploratory` 85 s / 4.24 GiB; `demo build` 4.8 s / 4.30 GiB. 0 tracked files changed;
+  all `model.txt`, feature schemas, baselines and demo JSON identical to the pre-run
+  SHA-256s; each `model.json` differs only in its `git_commit` field (records HEAD by
+  design; identical after substituting the earlier commit, checked for all 10).
+- Double privacy check (strict `privacy-audit`, gitleaks, independent scan) with real exit
+  codes after this commit.
 
 **Rules:** no push; no sandbox changes; ask before any download; double privacy check
 (`sepsiscope privacy-audit` + `scripts/independent_scan.sh`); long runs in the background
@@ -156,7 +151,7 @@ maintainer's own terminal.
 - [x] **B7b** Dashboard (`web/src`): patient list, hourly LightGBM risk and modified NEWS2 (max 17)
   timelines in plain SVG with threshold, alerts and onset, top-5 reasons in plain English;
   no new npm package; lint, build and `npm audit` clean. The maintainer starts it locally.
-- [ ] Gate and M4 evidence report (text).
+- [x] Gate and M4 evidence report (text), 2026-11-14.
 
 **Sandbox decisions (maintainer, 2026-11-13), kept as they are:**
 - Fetch and push stay in the maintainer's own terminal (sandbox proof 6 fails by design;
