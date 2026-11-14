@@ -11,7 +11,13 @@ Plan `docs/plan/batch-c.md` approved with the recommended defaults (D1–D12); c
 in ADR 0024 before any result. Order: C0 → C4 → C1 → C2 → C3 → C5 → C6.
 - [x] **C0** Plan and ADR 0024. The two method references in ADR 0024 are cited from
   memory; they are checked against the sources in C5 (download needs approval).
-- [ ] **C4** byte check, threshold label, headline cards · [ ] **C1** bands ·
+- [x] **C4** `scripts/byte_check.py` (logic `sepsiscope.repro`): SHA-256 manifest of
+  `reports/`, `models/` and the demo JSON; only `git_commit` in `model.json` is ignored;
+  6 tests; real outputs 83 files, 0 differences on write-then-compare. Demo: threshold
+  label placed clear of the onset and selected-hour lines (right end, else left end, else
+  below the line); LightGBM headline cards share the others' style, marked "(headline)" in
+  text. Lint, build, contrast 56/56. Not checked visually in a browser (no local server).
+- [ ] **C1** bands ·
   [ ] **C2** deferral · [ ] **C3** budgets · [ ] **C5** docs · [ ] **C6** gate.
 
 **Batch B gate PASSED (2026-11-14); M4 evidence report delivered as text** and pushed.

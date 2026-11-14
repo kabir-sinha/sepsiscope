@@ -48,8 +48,11 @@ function Headline() {
               {rowsFor(doc, d)
                 .filter((r) => ['lgbm', 'lr', 'news2'].includes(r.model))
                 .map((r) => (
-                  <div key={r.model} className={r.model === 'lgbm' ? 'stat main' : 'stat'}>
-                    <dt>{NAMES[r.model]}</dt>
+                  <div key={r.model} className="stat">
+                    <dt>
+                      {NAMES[r.model]}
+                      {r.model === 'lgbm' && ' (headline)'}
+                    </dt>
                     <dd className="num">
                       utility <strong>{r.utility.toFixed(3)}</strong> · AUROC <strong>{r.auroc.toFixed(3)}</strong>
                     </dd>
