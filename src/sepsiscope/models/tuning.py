@@ -280,6 +280,14 @@ def final_tunable(best_params: dict[str, Any]) -> dict[str, Any]:
     return {**best_params, "bagging_freq": 1}
 
 
+def tuned_settings(result_path: Path) -> tuple[dict[str, Any], int] | None:
+    """(tunable parameters, rounds) from a committed tuning result, if it exists."""
+    if not result_path.is_file():
+        return None
+    best = json.loads(result_path.read_text(encoding="utf-8"))["best"]
+    return final_tunable(best["params"]), int(best["median_rounds"])
+
+
 def add_log_file(path: Path) -> logging.Handler:
     """Tuning log in the ignored store folder, with personal paths scrubbed."""
     path.parent.mkdir(parents=True, exist_ok=True)

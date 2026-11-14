@@ -293,25 +293,34 @@ def bootstrap_weights(n_patients: int, resamples: int, seed: int) -> np.ndarray:
     return out
 
 
+def bootstrap_samples(
+    statistic: Callable[[np.ndarray], Mapping[str, float]], weights: np.ndarray
+) -> dict[str, np.ndarray]:
+    """Every statistic returned by ``statistic(patient_weights)``, once per resample."""
+    samples: dict[str, list[float]] = {}
+    for w in weights:
+        for key, value in statistic(w.astype(np.float64)).items():
+            samples.setdefault(key, []).append(value)
+    return {key: np.asarray(v, dtype=np.float64) for key, v in samples.items()}
+
+
+def percentile_ci(values: np.ndarray, level: float = 0.95) -> tuple[float, float]:
+    """Percentile interval ignoring NaN; (NaN, NaN) if every value is NaN."""
+    arr = np.asarray(values, dtype=np.float64)
+    if np.isnan(arr).all():
+        return (float("nan"), float("nan"))
+    lo, hi = (1 - level) / 2 * 100, (1 + level) / 2 * 100
+    return (float(np.nanpercentile(arr, lo)), float(np.nanpercentile(arr, hi)))
+
+
 def bootstrap_ci(
     statistic: Callable[[np.ndarray], Mapping[str, float]],
     weights: np.ndarray,
     level: float = 0.95,
 ) -> dict[str, tuple[float, float]]:
     """Percentile CIs of every statistic returned by ``statistic(patient_weights)``."""
-    samples: dict[str, list[float]] = {}
-    for w in weights:
-        for key, value in statistic(w.astype(np.float64)).items():
-            samples.setdefault(key, []).append(value)
-    lo, hi = (1 - level) / 2 * 100, (1 + level) / 2 * 100
-    out: dict[str, tuple[float, float]] = {}
-    for key, v in samples.items():
-        arr = np.asarray(v, dtype=np.float64)
-        if np.isnan(arr).all():
-            out[key] = (float("nan"), float("nan"))
-        else:
-            out[key] = (float(np.nanpercentile(arr, lo)), float(np.nanpercentile(arr, hi)))
-    return out
+    samples = bootstrap_samples(statistic, weights)
+    return {key: percentile_ci(v, level) for key, v in samples.items()}
 
 
 # --- decision curves --------------------------------------------------------------------

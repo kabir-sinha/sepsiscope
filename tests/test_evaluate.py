@@ -15,7 +15,11 @@ from sepsiscope.data.io import COLUMNS, MEASUREMENTS
 from sepsiscope.data.splits import split_document, write_split
 from sepsiscope.evaluation import run as run_mod
 from sepsiscope.features.causal import causal_features
-from sepsiscope.features.pipeline import feature_path, write_features
+from sepsiscope.features.pipeline import feature_path, read_features, write_features
+from sepsiscope.models import calibration
+from sepsiscope.models.pipeline import train_direction
+
+SMALL = {"num_leaves": 7, "min_child_samples": 5}
 
 CFG = load_config()
 
@@ -60,18 +64,20 @@ def workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
         write_features(causal_features(frame, CFG.features), feature_path(tmp_path, name))
         flags = frame.groupby("pid")["SepsisLabel"].max().astype(bool).to_dict()
         write_split(tmp_path / "splits" / f"hospital_{name}.json", split_document(name, flags, 42))
+    for direction in ("A2B", "B2A"):
+        train_direction(direction, CFG, tmp_path, tmp_path / "splits", tmp_path / "models", SMALL)
     return tmp_path
 
 
-def run_all(root: Path, out: str) -> list[Path]:
+def run_all(root: Path, out: str, models: tuple[str, ...] = run_mod.ALL_MODELS) -> list[Path]:
     return run_mod.run(
-        list(run_mod.MODELS),
+        list(models),
         ["A2B", "B2A"],
         CFG,
         root,
         root / "splits",
         root / out / "results",
-        root / out / "models",
+        root / "models",
         root / out / "figures",
     )
 
@@ -90,11 +96,54 @@ def test_evaluate_is_complete_reproducible_and_has_no_ids(workspace: Path) -> No
             json.loads(text)  # strict JSON (no NaN)
         else:
             assert not set(png_chunk_types(path)) & FORBIDDEN_PNG_CHUNKS
-    assert (workspace / "one" / "models" / "baselines" / "lr_A2B" / "feature_schema.json").is_file()
+    assert (workspace / "models" / "baselines" / "lr_A2B" / "feature_schema.json").is_file()
+    assert (workspace / "models" / "lgbm_A2B" / "calibration.json").is_file()
+    assert {"lgbm_A2B.json", "lgbm_isotonic_B2A.json", "lgbm_raw_A2B.json"} <= set(names)
+    assert {"paired_A2B.json", "explanations_B2A.json"} <= set(names)
+
+
+def test_paired_differences_and_criterion(workspace: Path) -> None:
+    run_all(workspace, "out")
+    doc = json.loads((workspace / "out" / "results" / "paired_A2B.json").read_text())
+    assert set(doc["comparisons"]) == set(run_mod.MODELS)
+    lgbm_res = json.loads((workspace / "out" / "results" / "lgbm_A2B.json").read_text())
+    lr_res = json.loads((workspace / "out" / "results" / "lr_A2B.json").read_text())
+    point = doc["comparisons"]["lr"]["utility"]["point"]
+    expected = lgbm_res["strict_external"]["point"]["utility"]
+    expected -= lr_res["strict_external"]["point"]["utility"]
+    assert point == pytest.approx(expected)
+    lo, hi = doc["criterion_adr_0022"]["ci95_utility_difference"]
+    assert lo <= hi
+    assert doc["criterion_adr_0022"]["met_in_this_direction"] == (lo > 0)
+
+
+def test_explanations_are_aggregate_and_sorted(workspace: Path) -> None:
+    run_all(workspace, "out")
+    doc = json.loads((workspace / "out" / "results" / "explanations_A2B.json").read_text())
+    values = [f["mean_abs_contribution"] for f in doc["features"]]
+    assert values == sorted(values, reverse=True) and len(values) == 130
+    assert doc["max_additivity_error_first_20000_rows"] <= 1e-9
+
+
+def test_calibrators_see_source_calibration_rows_only(
+    workspace: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    seen: list[int] = []
+    real = calibration.fit_platt
+
+    def spy(raw: np.ndarray, labels: np.ndarray) -> calibration.Platt:
+        seen.append(len(raw))
+        return real(raw, labels)
+
+    monkeypatch.setattr(calibration, "fit_platt", spy)
+    source = read_features(workspace, "A")
+    splits = run_mod._split_pids(workspace / "splits", "A")
+    run_mod.prepare_models(["lgbm"], "A2B", CFG, source, splits, workspace / "models")
+    assert seen == [int(source["pid"].isin(splits["calibration"]).sum())]
 
 
 def test_strict_threshold_comes_from_source_validation(workspace: Path) -> None:
-    run_all(workspace, "out")
+    run_all(workspace, "out", run_mod.MODELS)
     result = json.loads((workspace / "out" / "results" / "news2_A2B.json").read_text())
     strict = result["strict_external"]
     assert strict["source_validation_alert_rate"] <= CFG.alarm_budget

@@ -9,10 +9,11 @@ import pandas as pd
 
 from sepsiscope.data.figures import BLUE, GREY, INK, ORANGE, _new, save
 
-COLOURS = {"lr": BLUE, "news2": ORANGE, "all": GREY, "none": INK}
+COLOURS = {"lr": BLUE, "news2": ORANGE, "lgbm": "#2e9e6b", "all": GREY, "none": INK}
 LABELS = {
     "lr": "Logistic regression",
     "news2": "Modified NEWS2 (max 17), as probability",
+    "lgbm": "LightGBM (Platt-calibrated)",
     "all": "Alert everyone",
     "none": "Alert no one",
 }

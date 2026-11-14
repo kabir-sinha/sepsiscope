@@ -319,14 +319,19 @@ def train(
     if model != "lgbm" or direction not in DIRECTIONS:
         typer.echo("give --model lgbm and --direction {A2B,B2A}")
         raise typer.Exit(code=2)
+    from sepsiscope.models.tuning import tuned_settings
+
     cfg = load_config()
+    tuned = tuned_settings(REPO_ROOT / cfg.paths.reports_dir / "tuning" / f"lgbm_{direction}.json")
     r = train_direction(
         direction,
         cfg,
         REPO_ROOT / cfg.paths.data_dir,
         REPO_ROOT / cfg.paths.splits_dir,
         REPO_ROOT / cfg.paths.models_dir,
+        *(tuned if tuned else (None, None)),
     )
+    typer.echo("parameters: " + ("tuned (reports/tuning)" if tuned else "LightGBM defaults"))
     typer.echo(
         f"{r.direction} trees {r.num_trees}  rows {r.train_rows:,}  patients {r.train_patients:,}  "
         f"fit {r.seconds:.1f} s  {r.folder.relative_to(REPO_ROOT)}"
@@ -357,19 +362,25 @@ def evaluate(
         None, help="news2 = modified NEWS2 (max 17), sirs, qsofa = modified qSOFA (max 2), lr."
     ),
     direction: str | None = typer.Option(None, help="A2B or B2A."),
-    all_baselines: bool = typer.Option(False, "--all-baselines", help="All models, both ways."),
+    all_baselines: bool = typer.Option(False, "--all-baselines", help="4 baselines, both ways."),
+    all_models: bool = typer.Option(
+        False, "--all-models", help="Baselines + LightGBM (Platt, isotonic, raw), both ways."
+    ),
 ) -> None:
     """Evaluate baselines under strict external validation; writes reports/results/."""
     from sepsiscope.config import load_config
-    from sepsiscope.evaluation.run import DIRECTIONS, MODELS, run
+    from sepsiscope.evaluation.run import ALL_MODELS, DIRECTIONS, MODELS, run
 
-    if all_baselines:
+    if all_models:
+        models, directions = list(ALL_MODELS), list(DIRECTIONS)
+    elif all_baselines:
         models, directions = list(MODELS), list(DIRECTIONS)
-    elif model in MODELS and direction in DIRECTIONS:
+    elif model in ALL_MODELS and direction in DIRECTIONS:
         models, directions = [model], [direction]
     else:
         typer.echo(
-            "give --model {news2,sirs,qsofa,lr} and --direction {A2B,B2A}, or --all-baselines"
+            "give --model {news2,sirs,qsofa,lr,lgbm,lgbm_isotonic,lgbm_raw} and --direction "
+            "{A2B,B2A}, or --all-baselines / --all-models"
         )
         raise typer.Exit(code=2)
     cfg = load_config()
