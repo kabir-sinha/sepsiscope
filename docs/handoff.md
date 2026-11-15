@@ -6,6 +6,29 @@ State of the work, so anyone can pick it up from the repository alone.
 
 ## Resume here
 
+**Batch D polish (2026-11-15), committed, not pushed.** Small approved fixes after M5:
+- [x] **D0** ADR 0025: one exact "Built by" + first-name line under the demo title
+  (`web/src/App.tsx` only). The guard, `privacy-audit`, `scripts/deep_scan.py` and
+  `scripts/privacy_pass.sh` build the allowed text at run time from the gitignored local
+  file; `tests/test_attribution.py` fails if the name appears anywhere else. The full name
+  stays banned in every tracked file.
+- [x] **D1** New verdict `early_and_late` ("Alerted before and after the window, not in
+  it"). Demo rebuilt: one patient's NEWS2 verdict changes; manifest entry for
+  `data/demo/demo_B2A.json` updated (the only manifest change).
+- [x] **D2** One label placement for every chart (risk, NEWS2, vitals): threshold, onset
+  and window labels avoid vertical lines, plotted line segments, the threshold line, alert
+  dots and each other; a label with no clear spot is left out (it is in the legend).
+  Browser check, six patients at 375 px and 1024 px: 0 collisions.
+- [x] **D3** Results tab "Robustness checks (Milestone 5)" from `/api/results`
+  (`robustness` block built from the committed `bands_*`, `deferral_*`, `budgets_*`);
+  Limitations adds C1 and C2.
+- [x] **D4** At 375 px no element widens the page (checked on all tabs and patients); tabs
+  on one row; meta description. Visual checks used an already-running local demo server
+  (this session cannot bind a port); restart it to load the new API and demo data.
+- Checks: fast checks rc=0 (ruff, format, mypy, pre-commit, web lint/build, contrast,
+  doctor, privacy-audit); pytest 359 passed, 1 failed (the sandbox-blocked Unix-socket
+  test), 360 total; demo rebuild + byte check 89 files, 0 differences.
+
 **Batch C (Milestone 5) gate PASSED 2026-11-14; M5 evidence report delivered as text 2026-11-15.** Batch B pushed by the maintainer (`1fa15f0`).
 Plan `docs/plan/batch-c.md` approved with the recommended defaults (D1–D12); criteria fixed
 in ADR 0024 before any result. Order: C0 → C4 → C1 → C2 → C3 → C5 → C6.
