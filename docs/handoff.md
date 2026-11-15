@@ -6,7 +6,7 @@ State of the work, so anyone can pick it up from the repository alone.
 
 ## Resume here
 
-**Batch C (Milestone 5) gate PASSED 2026-11-14.** Batch B pushed by the maintainer (`1fa15f0`).
+**Batch C (Milestone 5) gate PASSED 2026-11-14; M5 evidence report delivered as text 2026-11-15.** Batch B pushed by the maintainer (`1fa15f0`).
 Plan `docs/plan/batch-c.md` approved with the recommended defaults (D1–D12); criteria fixed
 in ADR 0024 before any result. Order: C0 → C4 → C1 → C2 → C3 → C5 → C6.
 - [x] **C0** Plan and ADR 0024. The two method references in ADR 0024 are cited from
@@ -62,6 +62,22 @@ in ADR 0024 before any result. Order: C0 → C4 → C1 → C2 → C3 → C5 → 
   changed. Exhaustive privacy scan (11 items, two passes + positive control) after this
   commit. **Next: M5 evidence report (text); release tag `v1.0.0-m5` only on the
   maintainer's word; the maintainer pushes.**
+
+- [x] **Gate made durable (2026-11-15).** A cleanup of the system temp folder emptied the
+  session scratchpad (C6 manifest and the scan helpers lost; the recorded C6 result, 89
+  files and 0 differences, was accepted by the maintainer). Now in the repository: the
+  standalone `scripts/deep_scan.py` (standard library only, personal values read at run
+  time from the local denylist, patterns written so they never match their own source),
+  `scripts/api_probe.py` (item 9), `scripts/privacy_pass.sh` (all 11 items, each scanner's
+  own exit code, fails on any non-zero independent-scan count) and
+  `tests/test_privacy_scanners_control.py` (positive control, fake values only). The
+  byte-check reference is committed as `reports/manifest_c6.json` (89 relative paths and
+  SHA-256s; manifests are excluded from the outputs). The first helper commit held literal
+  token prefixes in a pattern; with the maintainer's approval the 2 unpushed commits were
+  rebuilt with the fix folded in (names, emails, dates and messages kept; `origin/main`
+  untouched). Double privacy check: two passes rc=0 with identical output, positive control
+  7/7, manifest compare 89/0. Course terms are no longer written in any scanner; they are
+  covered only if listed in the local denylist.
 
 **Batch B gate PASSED (2026-11-14); M4 evidence report delivered as text** and pushed.
 
