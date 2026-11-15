@@ -44,17 +44,26 @@ run deep uv run python -I scripts/deep_scan.py . $DENY; rc=$?; echo "[1] deep_sc
 sed -E 's/^(  [^:]+): ([0-9]+) paths: (.*)/  \1 [\2]: \3/' $L/deep.log | mask
 
 uv run python -I - "$DENY" "$HANDLE" > $L/names.log <<'PY'
-import subprocess, sys
+import re, subprocess, sys
 vals = [l.split("#", 1)[0].strip() for l in open(sys.argv[1], encoding="utf-8")]
 names = [v for v in vals if v and not v.lower().startswith("allow-author-name:")]
+allow = [v.split(":", 1)[1].strip() for v in vals if v.lower().startswith("allow-author-name:")]
 handle = sys.argv[2].lower()
+# ADR 0025: the exact "Built by <first name>" text is allowed in web/src/App.tsx only.
+attr = [re.compile(r"(?<!\w)" + re.escape("Built by " + a.split()[0]) + r"(?![\w-])(?![ \t]+\w)") for a in allow if a]
+def strip(line):
+    if line.split(":", 2)[0] != "HEAD" or line.split(":", 3)[1] != "web/src/App.tsx":
+        return line
+    for p in attr:
+        line = p.sub(" ", line)
+    return line
 def grep(pattern_args):
     r = subprocess.run(["git", "grep", "-n", "-I", "-i", *pattern_args, "HEAD", "--"], capture_output=True, text=True)
     if r.returncode > 1:
         sys.exit("git grep failed")
     return r.stdout.splitlines()
 lines = grep([a for v in names for a in ("-e", v)]) if names else []
-outside = [l for l in lines if any(v.lower() in l.lower().replace(handle, "") for v in names)]
+outside = [l for l in lines if any(v.lower() in strip(l).lower().replace(handle, "") for v in names)]
 handle_lines = grep(["-F", "-e", handle])
 allowed = (f"github.com/{handle}/sepsiscope", f"+{handle}@users.noreply.github.com", f"\\+{handle}@users\\.noreply")
 bad_handle = [l for l in handle_lines if not any(a in l.lower() for a in allowed)]

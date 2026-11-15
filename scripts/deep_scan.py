@@ -24,6 +24,10 @@ from collections import defaultdict
 from pathlib import Path
 
 ALLOW_PREFIX = "allow-author-name:"
+# ADR 0025: the one allowed demo attribution ("Built by " + first word of the allowed author
+# name, built at run time) is removed before counting, in this one file only.
+ATTRIBUTION_FILE = "web/src/App.tsx"
+ATTRIBUTION_PREFIX = "Built by "
 
 REGEX: dict[str, bytes] = {
     "email(other)": rb"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}",
@@ -74,6 +78,21 @@ def denylist(path: str) -> list[str]:
         if value and not value.lower().startswith(ALLOW_PREFIX):
             out.append(value)
     return out
+
+
+def attribution(path: str) -> list[bytes]:
+    names = [
+        line.split("#", 1)[0].strip()[len(ALLOW_PREFIX) :].strip()
+        for line in Path(path).read_text(encoding="utf-8").splitlines()
+        if line.strip().lower().startswith(ALLOW_PREFIX)
+    ]
+    return [(ATTRIBUTION_PREFIX + n.split()[0]).encode() for n in names if n]
+
+
+def without_attribution(blob: bytes, allowed: list[bytes]) -> bytes:
+    for a in allowed:  # exact and case-sensitive; a following word is still counted
+        blob = re.sub(rb"(?<!\w)" + re.escape(a) + rb"(?![\w-])(?![ \t]+\w)", b" ", blob)
+    return blob
 
 
 def literals(deny: list[str]) -> dict[str, str]:
@@ -156,10 +175,15 @@ def head_blobs() -> dict[str, set[str]]:
     return paths
 
 
-def report(label: str, objects: dict[str, set[str]], lit: dict[str, str]) -> None:
+def report(
+    label: str, objects: dict[str, set[str]], lit: dict[str, str], allowed: list[bytes]
+) -> None:
     agg: dict[str, set[str]] = defaultdict(set)
     for sha, paths in objects.items():
-        for key in scan(git("cat-file", "blob", sha), lit):
+        blob = git("cat-file", "blob", sha)
+        if paths == {ATTRIBUTION_FILE}:
+            blob = without_attribution(blob, allowed)
+        for key in scan(blob, lit):
             agg[key] |= paths
     print(f"== {label}: {len(objects)} blobs")
     for key in sorted(agg):
@@ -185,15 +209,16 @@ def main(argv: list[str]) -> int:
         print("usage: deep_scan.py REPO DENYLIST", file=sys.stderr)
         return 2
     lit = literals(denylist(argv[1]))
+    allowed = attribution(argv[1])
     os.chdir(argv[0])
-    report("HEAD tree", head_blobs(), lit)
+    report("HEAD tree", head_blobs(), lit, allowed)
     has_remote = subprocess.run(
         ["git", "rev-parse", "-q", "--verify", "origin/main"], capture_output=True
     )
     if has_remote.returncode == 0:
-        report("unpushed origin/main..HEAD", blobs(["origin/main..HEAD"]), lit)
+        report("unpushed origin/main..HEAD", blobs(["origin/main..HEAD"]), lit, allowed)
         print("== unpushed commit metadata+messages:", message_counts(["origin/main..HEAD"], lit))
-    report("all history", blobs(["--all"]), lit)
+    report("all history", blobs(["--all"]), lit, allowed)
     print("== commit metadata+messages (all):", message_counts(["--all"], lit) or "no hits")
     return 0
 

@@ -16,7 +16,7 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 
-from sepsiscope.audit.denylist import load_allowed_author_names, load_denylist
+from sepsiscope.audit.denylist import load_allowed_author_names, load_attribution, load_denylist
 from sepsiscope.audit.gitchecks import check_commit, check_message, git, read_commits
 from sepsiscope.audit.mask import mask_values
 from sepsiscope.audit.rules import check_content, check_line, check_path
@@ -82,6 +82,7 @@ def run_audit(root: Path) -> AuditReport:
     """Scan the repository at ``root``. Read-only; prints nothing."""
     report = AuditReport()
     denylist = load_denylist(root)
+    attribution = load_attribution(root)  # ADR 0025: one demo attribution, one file
     cutoff = int(UTC_REQUIRED_FROM.timestamp())
 
     # 1. Tracked files in the working tree (what the next commit would contain).
@@ -90,7 +91,7 @@ def run_audit(root: Path) -> AuditReport:
         path = root / name
         problems = check_path(name)
         if path.is_file():
-            problems += check_content(name, path.read_bytes(), denylist)
+            problems += check_content(name, path.read_bytes(), denylist, False, attribution)
         report.findings += [Finding("tree", name, p, known=False) for p in problems]
 
     # 2. Every blob in every commit that is no longer in HEAD.
@@ -113,7 +114,9 @@ def run_audit(root: Path) -> AuditReport:
     blobs = _read_blobs(root, candidates) if candidates else {}
     for sha, raw in blobs.items():
         name = paths[sha]
-        problems = check_path(name) + check_content(name, raw, denylist, sha in name_blobs)
+        problems = check_path(name) + check_content(
+            name, raw, denylist, sha in name_blobs, attribution
+        )
         known = sha in legacy_blobs
         report.findings += [Finding("history", name, p, known=known) for p in problems]
 

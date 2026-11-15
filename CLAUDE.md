@@ -19,6 +19,8 @@ Personal, machine-specific notes live in the gitignored `CLAUDE.local.md`.
   account details, and no email except `222482936+kabir-sinha@users.noreply.github.com`.
   No personal name in any tracked file (ADR 0023): the copyright and the pyproject author
   are "SepsiScope contributors"; the name is only the git author (commit metadata).
+  One exception (ADR 0025): the exact "Built by" + first-name line in the demo header
+  (`web/src/App.tsx`), built at run time by the rules from the local file.
 - Network services bind to 127.0.0.1 only. Telemetry off (see `_privacy.py`).
 - Anything privacy-related that is not covered here: stop and ask.
 

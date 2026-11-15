@@ -5,6 +5,10 @@ comment. It is gitignored, so CI only ever applies the generic patterns in ``rul
 A line ``allow-author-name: <name>`` is not a denied value: it names the one commit
 author/committer name that may contain denylist values (commit metadata only, ADR 0023).
 Keeping it in this local file keeps the name out of every tracked file.
+
+ADR 0025 adds one visible attribution on the demo: the exact text "Built by " followed by
+the first word of that allowed name, in ``ATTRIBUTION_FILE`` only. The text is built at run
+time from the local file, so it is never written into the rules themselves.
 """
 
 from __future__ import annotations
@@ -18,6 +22,10 @@ ALLOWED_EMAIL = "222482936+kabir-sinha@users.noreply.github.com"
 # The GitHub handle is part of the allowed noreply address and the repository URL, so it
 # is removed from the text before matching; it is not a denylist hit by itself.
 HANDLE = ALLOWED_EMAIL.split("+", 1)[1].split("@", 1)[0]
+
+# ADR 0025: the one file, and the fixed prefix, of the allowed demo attribution.
+ATTRIBUTION_FILE = "web/src/App.tsx"
+ATTRIBUTION_PREFIX = "Built by "
 
 # Lines that carried the maintainer's name before ADR 0023. Since then the name is denied in
 # every tracked file; these shapes are accepted only in older history blobs (not rewritten).
@@ -47,6 +55,24 @@ def load_allowed_author_names(root: Path) -> tuple[str, ...]:
         if e.lower().startswith(ALLOW_AUTHOR_PREFIX)
     ]
     return tuple(dict.fromkeys(n for n in names if n))
+
+
+def load_attribution(root: Path) -> tuple[str, ...]:
+    """The allowed attribution text(s): prefix + first word of each allowed author name."""
+    return tuple(f"{ATTRIBUTION_PREFIX}{n.split()[0]}" for n in load_allowed_author_names(root))
+
+
+def strip_attribution(path: str, text: str, attribution: tuple[str, ...]) -> str:
+    """Remove the exact attribution from ``text`` when ``path`` is the attribution file.
+
+    Case-sensitive and exact: the attribution must not run into another word (so a surname
+    right after it, or a longer word, is still checked), and any other file keeps it.
+    """
+    if not attribution or PurePosixPath(path).as_posix() != ATTRIBUTION_FILE:
+        return text
+    for allowed in attribution:
+        text = re.sub(rf"(?<!\w){re.escape(allowed)}(?![\w-])(?![ \t]+\w)", " ", text)
+    return text
 
 
 def name_allowed_on(path: str, line: str) -> bool:

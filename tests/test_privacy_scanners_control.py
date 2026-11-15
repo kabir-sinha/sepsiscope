@@ -115,3 +115,30 @@ def test_gitleaks_finds_the_planted_token(planted: Path) -> None:
     )
     assert r.returncode != 0
     assert "leaks found: 1" in r.stdout + r.stderr
+
+
+def test_deep_scan_allows_the_attribution_in_its_file_only(tmp_path: Path) -> None:
+    """ADR 0025: the exact attribution in web/src/App.tsx is not counted; elsewhere it is."""
+    repo = tmp_path / "repo"
+    (repo / "web" / "src").mkdir(parents=True)
+    first = "Ctrl" + "first"
+    line = '<p className="byline">Built by ' + first + "</p>\n"
+
+    def git(*args: str) -> None:
+        subprocess.run([GIT, *args], cwd=repo, check=True, env=_env())
+
+    git("init", "-q", "--template=")
+    (repo / "web" / "src" / "App.tsx").write_text(line)
+    git("add", ".")
+    git("-c", "user.name=t", "-c", "user.email=t@example.com", "commit", "-q", "-m", "c")
+    deny = tmp_path / "deny"
+    deny.write_text(first + "\nallow-author-name: " + first + " Q\n")
+    cmd = [sys.executable, "-I", str(ROOT / "scripts" / "deep_scan.py"), str(repo), str(deny)]
+    r = subprocess.run(cmd, capture_output=True, text=True, env=_env())
+    assert r.returncode == 0, r.stderr
+    assert "denylist#1" not in r.stdout
+    (repo / "web" / "src" / "Other.tsx").write_text("// copy\n" + line)
+    git("add", ".")
+    git("-c", "user.name=t", "-c", "user.email=t@example.com", "commit", "-q", "-m", "d")
+    r = subprocess.run(cmd, capture_output=True, text=True, env=_env())
+    assert "  denylist#1: 1 paths: web/src/Other.tsx" in r.stdout

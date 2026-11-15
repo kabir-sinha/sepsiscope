@@ -65,6 +65,7 @@ function App() {
         <header className="top">
           <div>
             <h1>SepsiScope</h1>
+            <p className="byline">Built by Kabir</p>
             <p className="help big">An explainable early-warning model for sepsis in intensive care, tested on a hospital it never saw.</p>
           </div>
           <button type="button" className="btn" aria-pressed={theme === 'dark'} onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>

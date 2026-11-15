@@ -10,7 +10,14 @@ from __future__ import annotations
 import re
 from pathlib import Path, PurePosixPath
 
-from sepsiscope.audit.denylist import ALLOWED_EMAIL, denied_values, load_denylist, name_allowed_on
+from sepsiscope.audit.denylist import (
+    ALLOWED_EMAIL,
+    denied_values,
+    load_attribution,
+    load_denylist,
+    name_allowed_on,
+    strip_attribution,
+)
 from sepsiscope.audit.mask import mask, mask_email
 from sepsiscope.audit.notebook import check_notebook
 
@@ -97,9 +104,11 @@ def check_line(
     line: str,
     denylist: tuple[str, ...],
     allow_name_lines: bool = False,
+    attribution: tuple[str, ...] = (),
 ) -> list[str]:
     """Text rules for one line. Messages are masked. ``allow_name_lines`` is only for history
-    blobs made before ADR 0023 (old copyright and author lines); never for tracked files."""
+    blobs made before ADR 0023 (old copyright and author lines); never for tracked files.
+    ``attribution`` is the ADR 0025 demo text, accepted only in its one file."""
     problems: list[str] = []
     where = f"line {lineno}"
     if HOME_PREFIX in line:
@@ -115,13 +124,17 @@ def check_line(
             if pattern.search(line):
                 problems.append(f"{where}: {label}")
     if denylist and not (allow_name_lines and name_allowed_on(name, line)):
-        for value in denied_values(line, denylist):
+        for value in denied_values(strip_attribution(name, line, attribution), denylist):
             problems.append(f"{where}: personal value from the local denylist ({mask(value)})")
     return problems
 
 
 def check_content(
-    name: str, raw: bytes, denylist: tuple[str, ...] = (), allow_name_lines: bool = False
+    name: str,
+    raw: bytes,
+    denylist: tuple[str, ...] = (),
+    allow_name_lines: bool = False,
+    attribution: tuple[str, ...] = (),
 ) -> list[str]:
     """Content rules for a file's bytes (used for the working tree and for history)."""
     problems: list[str] = []
@@ -148,11 +161,13 @@ def check_content(
                 problems.append(f"personal value from the local denylist ({mask(value)})")
         return problems
     for lineno, line in enumerate(text.splitlines(), start=1):
-        problems.extend(check_line(name, lineno, line, denylist, allow_name_lines))
+        problems.extend(check_line(name, lineno, line, denylist, allow_name_lines, attribution))
     return problems
 
 
-def check_file(name: str, denylist: tuple[str, ...] = ()) -> list[str]:
+def check_file(
+    name: str, denylist: tuple[str, ...] = (), attribution: tuple[str, ...] = ()
+) -> list[str]:
     """All rules for one file on disk."""
     problems = check_path(name)
     file = Path(name)
@@ -161,15 +176,16 @@ def check_file(name: str, denylist: tuple[str, ...] = ()) -> list[str]:
     size = file.stat().st_size
     if size > MAX_BYTES:
         return [*problems, f"file is {size:,} bytes (> 1 MB)"]
-    return problems + check_content(name, file.read_bytes(), denylist)
+    return problems + check_content(name, file.read_bytes(), denylist, False, attribution)
 
 
 def main(argv: list[str]) -> int:
     """pre-commit entry point: check the given files; the local denylist is optional."""
     denylist = load_denylist(Path.cwd())
+    attribution = load_attribution(Path.cwd())
     failed = False
     for name in argv:
-        for problem in check_file(name, denylist):
+        for problem in check_file(name, denylist, attribution):
             print(f"privacy-guard: {name}: {problem}")
             failed = True
     if failed:
