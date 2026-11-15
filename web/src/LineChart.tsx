@@ -2,7 +2,8 @@
 // is true pixels (12 px minimum). All charts share the x-axis "Hours since ICU admission",
 // one selected hour (solid line) and one hover hour (dashed preview).
 import type { MouseEvent } from 'react'
-import { display, hourTicks, niceAxis, thresholdLabelPlacement } from './chartMath'
+import { display, hourTicks, labelBox, niceAxis, placeLabel, thresholdCandidates } from './chartMath'
+import type { Box, Obstacles, Pt, Spot } from './chartMath'
 import { useTooltip, useWidth } from './hooks'
 import { Legend, TableToggle } from './ui'
 import type { LegendItem } from './ui'
@@ -97,6 +98,73 @@ export function LineChart(p: Props) {
     )
   }
 
+  // Label placement (D2): every in-plot label avoids vertical lines, the plotted lines, the
+  // threshold line, alert dots and the labels placed before it.
+  const plotBox: Box = { x0: PAD.left, x1: W - PAD.right, y0: PAD.top, y1: H - PAD.bottom }
+  const onsetX = p.onset !== undefined && p.onset !== null && p.onset <= n ? x(p.onset) : null
+  const hourX = p.hour !== null && p.hour <= p.revealed ? x(p.hour) : null
+  const segments: [Pt, Pt][] = []
+  for (const s of p.series) {
+    let prev: Pt | null = null
+    for (let h = 0; h <= Math.min(p.revealed, s.values.length - 1); h++) {
+      const v = s.values[h]
+      const pt = v === null || v === undefined ? null : { x: x(h), y: y(v) }
+      if (prev && pt) segments.push([prev, pt])
+      prev = pt
+    }
+  }
+  const dots = alerts.flatMap((h) => {
+    const v = main.values[h]
+    return v === null || v === undefined ? [] : [{ x: x(h), y: y(v), r: 7 }]
+  })
+  const thrY = p.threshold ? y(p.threshold.value) : null
+  const thrSeg: [Pt, Pt][] = thrY === null ? [] : [[{ x: PAD.left, y: thrY }, { x: W - PAD.right, y: thrY }]]
+  const placed: Box[] = []
+  const place = (label: string, candidates: Spot[], o: Obstacles): Spot => {
+    const at = placeLabel(label, candidates, { segments, dots, boxes: placed, ...o }, plotBox)
+    placed.push(labelBox(label, at))
+    return at
+  }
+  const verticals = [...(onsetX !== null ? [onsetX] : []), ...(hourX !== null ? [hourX] : [])]
+  const thrAt =
+    p.threshold && thrY !== null
+      ? place(p.threshold.label, thresholdCandidates({ left: PAD.left, right: W - PAD.right, lineY: thrY, top: PAD.top }), {
+          verticals,
+        })
+      : null
+  const onsetLabel = p.onset !== undefined && p.onset !== null ? `Onset h${p.onset}` : ''
+  const onsetAt =
+    onsetX !== null
+      ? place(
+          onsetLabel,
+          [
+            { x: onsetX + 4, y: H - PAD.bottom - 6, anchor: 'start' },
+            { x: onsetX - 4, y: H - PAD.bottom - 6, anchor: 'end' },
+            { x: onsetX + 4, y: PAD.top + 15, anchor: 'start' },
+            { x: onsetX - 4, y: PAD.top + 15, anchor: 'end' },
+            { x: onsetX + 4, y: (PAD.top + H - PAD.bottom) / 2, anchor: 'start' },
+            { x: onsetX - 4, y: (PAD.top + H - PAD.bottom) / 2, anchor: 'end' },
+          ],
+          { verticals: hourX !== null ? [hourX] : [], segments: [...segments, ...thrSeg] },
+        )
+      : null
+  const winLabel = 'Early-warning window'
+  const winAt =
+    p.window && H >= 200
+      ? place(
+          winLabel,
+          [
+            { x: x(p.window[0]) + 4, y: PAD.top + 15, anchor: 'start' },
+            { x: x(Math.min(p.window[1], n)) - 4, y: PAD.top + 15, anchor: 'end' },
+            { x: x(p.window[0]) + 4, y: H - PAD.bottom - 6, anchor: 'start' },
+            { x: x(Math.min(p.window[1], n)) - 4, y: H - PAD.bottom - 6, anchor: 'end' },
+            { x: x(p.window[0]) + 4, y: (PAD.top + H - PAD.bottom) / 2, anchor: 'start' },
+            { x: x(p.window[0]) - 4, y: PAD.top + 15, anchor: 'end' },
+          ],
+          { verticals, segments: [...segments, ...thrSeg] },
+        )
+      : null
+
   const legend: LegendItem[] = p.series.map((s) => ({ label: s.label, kind: s.dashed ? 'dash' : 'line', color: s.color }))
   if (p.normal) legend.push({ label: 'Normal range (0 NEWS2 points)', kind: 'band', color: 'var(--ok)' })
   if (p.threshold) legend.push({ label: p.threshold.label, kind: 'dash', color: 'var(--threshold)' })
@@ -143,9 +211,9 @@ export function LineChart(p: Props) {
                 y={PAD.top}
                 height={H - PAD.top - PAD.bottom}
               />
-              {H >= 200 && (
-                <text className="band-label" x={x(p.window[0]) + 4} y={PAD.top + 15}>
-                  Early-warning window
+              {winAt && (
+                <text className="band-label" x={winAt.x} y={winAt.y} textAnchor={winAt.anchor}>
+                  {winLabel}
                 </text>
               )}
             </g>
@@ -172,34 +240,21 @@ export function LineChart(p: Props) {
           {p.threshold && (
             <g>
               <line className="threshold" x1={PAD.left} x2={W - PAD.right} y1={y(p.threshold.value)} y2={y(p.threshold.value)} />
-              {(() => {
-                // Keep the label clear of the onset and selected-hour lines.
-                const verticals = [
-                  ...(p.onset !== undefined && p.onset !== null && p.onset <= n ? [x(p.onset)] : []),
-                  ...(p.hour !== null && p.hour <= p.revealed ? [x(p.hour)] : []),
-                ]
-                const at = thresholdLabelPlacement({
-                  label: p.threshold.label,
-                  left: PAD.left,
-                  right: W - PAD.right,
-                  lineY: y(p.threshold.value),
-                  top: PAD.top,
-                  verticals,
-                })
-                return (
-                  <text className="threshold-label" x={at.x} y={at.y} textAnchor={at.anchor}>
-                    {p.threshold.label}
-                  </text>
-                )
-              })()}
+              {thrAt && (
+                <text className="threshold-label" x={thrAt.x} y={thrAt.y} textAnchor={thrAt.anchor}>
+                  {p.threshold.label}
+                </text>
+              )}
             </g>
           )}
           {p.onset !== undefined && p.onset !== null && p.onset <= n && (
             <g>
               <line className="onset" x1={x(p.onset)} x2={x(p.onset)} y1={PAD.top} y2={H - PAD.bottom} />
-              <text className="onset-label" x={x(p.onset) + 4} y={H - PAD.bottom - 6}>
-                Onset h{p.onset}
-              </text>
+              {onsetAt && (
+                <text className="onset-label" x={onsetAt.x} y={onsetAt.y} textAnchor={onsetAt.anchor}>
+                  {onsetLabel}
+                </text>
+              )}
             </g>
           )}
           {p.series

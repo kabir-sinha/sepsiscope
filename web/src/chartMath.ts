@@ -38,27 +38,104 @@ export function stepDecimals(step: number): number {
   return Math.max(0, -Math.floor(Math.log10(step) + 1e-9))
 }
 
-// Where to put the threshold label so it does not sit on a vertical line (onset, selected
-// hour). Tries the right end, then the left end of the threshold line; if both are blocked,
-// keeps the right end but moves the label below the line. Text width is estimated
-// (13 px bold ≈ 7.8 px per character); `gap` keeps a margin around each vertical line.
-export function thresholdLabelPlacement(opts: {
-  label: string
-  left: number // x where the threshold line starts
-  right: number // x where it ends
-  lineY: number // y of the threshold line
-  top: number // top of the plot area
-  verticals: number[] // x of vertical lines to keep clear of
-  gap?: number
-}): { x: number; y: number; anchor: 'start' | 'end' } {
-  const gap = opts.gap ?? 8
-  const w = opts.label.length * 7.8
-  const clear = (x0: number, x1: number) => opts.verticals.every((v) => v < x0 - gap || v > x1 + gap)
+// --- Label placement -------------------------------------------------------------------
+// Every text label inside a chart (alert threshold, early-warning window, onset) is placed by
+// `placeLabel`: it tries candidate spots in order and takes the first whose text box touches
+// no obstacle (vertical lines, plotted line segments, alert dots). If every spot is blocked it
+// takes the one with the fewest hits. Text width is estimated (13 px bold ≈ 7.8 px per char).
+
+export type Pt = { x: number; y: number }
+export type Box = { x0: number; x1: number; y0: number; y1: number }
+export type Obstacles = {
+  verticals?: number[] // x of full-height vertical lines
+  segments?: [Pt, Pt][] // plotted lines
+  dots?: (Pt & { r: number })[] // alert dots
+  boxes?: Box[] // labels already placed
+}
+export type Spot = { x: number; y: number; anchor: 'start' | 'end' }
+
+export const CHAR_W = 7.8
+const TEXT_H = 13
+
+// Box of a text label drawn at (x, y) as an SVG baseline with the given anchor.
+export function labelBox(label: string, s: Spot, charW = CHAR_W): Box {
+  const w = label.length * charW
+  const x0 = s.anchor === 'end' ? s.x - w : s.x
+  return { x0, x1: x0 + w, y0: s.y - TEXT_H + 2, y1: s.y + 3 }
+}
+
+function grow(b: Box, g: number): Box {
+  return { x0: b.x0 - g, x1: b.x1 + g, y0: b.y0 - g, y1: b.y1 + g }
+}
+
+// Does segment a-b cross or touch box b? (Liang–Barsky clipping.)
+export function segmentHitsBox(a: Pt, c: Pt, b: Box): boolean {
+  let t0 = 0
+  let t1 = 1
+  const dx = c.x - a.x
+  const dy = c.y - a.y
+  const edges: [number, number][] = [
+    [-dx, a.x - b.x0],
+    [dx, b.x1 - a.x],
+    [-dy, a.y - b.y0],
+    [dy, b.y1 - a.y],
+  ]
+  for (const [pp, q] of edges) {
+    if (pp === 0) {
+      if (q < 0) return false
+    } else {
+      const r = q / pp
+      if (pp < 0) t0 = Math.max(t0, r)
+      else t1 = Math.min(t1, r)
+      if (t0 > t1) return false
+    }
+  }
+  return true
+}
+
+export function hits(box: Box, o: Obstacles, gap = 4): number {
+  const b = grow(box, gap)
+  let n = 0
+  for (const v of o.verticals ?? []) if (v >= b.x0 && v <= b.x1) n++
+  for (const [a, c] of o.segments ?? []) if (segmentHitsBox(a, c, b)) n++
+  for (const o2 of o.boxes ?? []) if (o2.x0 <= b.x1 && o2.x1 >= b.x0 && o2.y0 <= b.y1 && o2.y1 >= b.y0) n++
+  for (const d of o.dots ?? []) {
+    const nx = Math.max(b.x0, Math.min(d.x, b.x1))
+    const ny = Math.max(b.y0, Math.min(d.y, b.y1))
+    if ((nx - d.x) ** 2 + (ny - d.y) ** 2 <= d.r * d.r) n++
+  }
+  return n
+}
+
+// First candidate spot with no hits that stays inside `bounds`; else the one with fewest hits.
+export function placeLabel(label: string, candidates: Spot[], o: Obstacles, bounds?: Box): Spot {
+  let best = candidates[0]
+  let bestHits = Infinity
+  for (const s of candidates) {
+    const box = labelBox(label, s)
+    if (bounds && (box.x0 < bounds.x0 || box.x1 > bounds.x1 || box.y0 < bounds.y0 || box.y1 > bounds.y1)) continue
+    const h = hits(box, o)
+    if (h === 0) return s
+    if (h < bestHits) {
+      best = s
+      bestHits = h
+    }
+  }
+  return best
+}
+
+// Candidate spots for the threshold label: above the line at the right end, then the left
+// end, then below the line (right, left), then above/below the middle.
+export function thresholdCandidates(opts: { left: number; right: number; lineY: number; top: number }): Spot[] {
   const above = opts.lineY - 6 >= opts.top + 12 ? opts.lineY - 6 : opts.lineY + 16
   const below = opts.lineY + 16
-  const rightX = opts.right - 4
-  const leftX = opts.left + 4
-  if (clear(rightX - w, rightX)) return { x: rightX, y: above, anchor: 'end' }
-  if (clear(leftX, leftX + w)) return { x: leftX, y: above, anchor: 'start' }
-  return { x: rightX, y: below, anchor: 'end' }
+  const mid = (opts.left + opts.right) / 2
+  return [
+    { x: opts.right - 4, y: above, anchor: 'end' },
+    { x: opts.left + 4, y: above, anchor: 'start' },
+    { x: opts.right - 4, y: below, anchor: 'end' },
+    { x: opts.left + 4, y: below, anchor: 'start' },
+    { x: mid, y: above, anchor: 'start' },
+    { x: mid, y: below, anchor: 'start' },
+  ]
 }
