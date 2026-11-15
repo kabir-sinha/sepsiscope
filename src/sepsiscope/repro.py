@@ -15,6 +15,8 @@ from pathlib import Path
 
 ROOTS = ("reports", "models")
 DEMO_GLOB = "data/demo/*.json"
+# Committed manifests live in reports/ but are the reference, not an output.
+MANIFEST_GLOB = "manifest_*.json"
 _COMMIT = re.compile(rb'"git_commit": "(?:[0-9a-f]{40}|unknown)"')
 _PLACEHOLDER = b'"git_commit": "<ignored>"'
 
@@ -33,7 +35,13 @@ def output_files(root: Path) -> list[Path]:
     """All output files, sorted, as paths under ``root``."""
     files = [p for r in ROOTS for p in (root / r).rglob("*") if p.is_file()]
     files += list(root.glob(DEMO_GLOB))
-    return sorted(p for p in files if "__pycache__" not in p.parts and p.name != ".DS_Store")
+    return sorted(
+        p
+        for p in files
+        if "__pycache__" not in p.parts
+        and p.name != ".DS_Store"
+        and not (p.parent == root / "reports" and p.match(MANIFEST_GLOB))
+    )
 
 
 def manifest(root: Path) -> dict[str, str]:

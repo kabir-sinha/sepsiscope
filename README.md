@@ -59,7 +59,9 @@ uv run python scripts/byte_check.py --write /tmp/before.json
 ```
 
 and after the re-run `uv run python scripts/byte_check.py --compare /tmp/before.json`
-(only the commit hash inside each `model.json` is ignored).
+(only the commit hash inside each `model.json` is ignored). The committed
+`reports/manifest_c6.json` holds the reference hashes of the Batch C gate (paths and
+SHA-256 only): `uv run python scripts/byte_check.py --compare reports/manifest_c6.json`.
 
 Dev servers bind to `http://127.0.0.1`. If a browser's HTTPS-only mode blocks plain-HTTP
 localhost, open the address in a normal window.

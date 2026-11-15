@@ -80,3 +80,13 @@ def test_cli_write_then_compare(tmp_path: Path, monkeypatch: pytest.MonkeyPatch)
     (tmp_path / "models" / "lgbm_A2B" / "model.txt").write_text("other\n")
     assert main(["--compare", str(m)]) == 1
     assert main([]) == 2
+
+
+def test_committed_manifest_is_not_an_output(tmp_path: Path) -> None:
+    _tree(tmp_path)
+    before = manifest(tmp_path)
+    (tmp_path / "reports" / "manifest_c6.json").write_text("{}\n")
+    (tmp_path / "reports" / "results" / "manifest_x.json").write_text("{}\n")  # not top level
+    after = manifest(tmp_path)
+    assert "reports/manifest_c6.json" not in after
+    assert compare(before, after)["added"] == ["reports/results/manifest_x.json"]
