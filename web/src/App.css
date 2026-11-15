@@ -598,3 +598,29 @@ td.over {
   color: var(--muted);
   padding-left: 1.3rem;
 }
+
+/* Robustness checks (Milestone 5) */
+.pass,
+.fail {
+  display: inline-block;
+  padding: 0 0.4rem;
+  border-radius: 4px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.pass {
+  color: var(--good-text);
+  background: var(--good-bg);
+}
+.fail {
+  color: var(--raise-text);
+  background: var(--bad-bg);
+}
+.finding {
+  border-left: 4px solid var(--accent);
+  padding: 0.3rem 0 0.3rem 0.8rem;
+  margin: 0.8rem 0 1.4rem;
+}
+.panel h3 {
+  margin: 1.4rem 0 0.3rem;
+}

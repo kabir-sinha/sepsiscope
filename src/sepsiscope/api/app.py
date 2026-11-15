@@ -71,7 +71,84 @@ def results_summary(results_dir: Path) -> dict[str, Any]:
         for d in DIRECTIONS
     }
     budget = json.loads((results_dir / "lgbm_B2A.json").read_text("utf-8"))["alarm_budget"]
-    return {"alarm_budget": budget, "rows": rows, "criterion": paired}
+    return {
+        "alarm_budget": budget,
+        "rows": rows,
+        "criterion": paired,
+        "robustness": robustness_summary(results_dir),
+    }
+
+
+def _metric(doc: dict[str, Any], key: str) -> dict[str, Any]:
+    return {"point": doc["point"][key], "ci": doc["ci95"][key]}
+
+
+def robustness_summary(results_dir: Path) -> dict[str, Any] | None:
+    """Milestone 5 checks (C1 bands, C2 deferral at the main alpha, C3 budgets) from the
+    committed aggregate files; None when any of them is missing."""
+    names = [f"{k}_{d}.json" for k in ("bands", "deferral", "budgets") for d in DIRECTIONS]
+    if not all((results_dir / n).is_file() for n in names):
+        return None
+
+    def load(name: str) -> dict[str, Any]:
+        doc: dict[str, Any] = json.loads((results_dir / name).read_text("utf-8"))
+        return doc
+
+    bands, deferral, budgets = {}, {}, {}
+    for d in DIRECTIONS:
+        b = load(f"bands_{d}.json")
+        order = [band["name"] for band in b["bands"]]
+        bands[d] = {
+            "bands": order,
+            "rule": b["collapse_rule"],
+            "models": {
+                m: {
+                    "overall_auroc": doc["overall"]["point"]["auroc"],
+                    "bands": {
+                        n: {
+                            "auroc": _metric(doc["bands"][n], "auroc"),
+                            "alert_rate": _metric(doc["bands"][n], "alert_rate"),
+                        }
+                        for n in order
+                    },
+                }
+                for m, doc in b["models"].items()
+            },
+            "collapse": b["models"]["lgbm"]["adr_0024_item_1"],
+        }
+        c = load(f"deferral_{d}.json")
+        main = c["alphas"][f"{c['main_alpha']:.2f}"]
+        crit = main["adr_0024_item_3"]
+        deferral[d] = {
+            "alpha": c["main_alpha"],
+            "deferral_rate": _metric(main, "deferral_rate"),
+            "coverage": main["coverage"],
+            "share_not_deferred": {
+                "label0": main["point"]["share_not_deferred_label0"],
+                "label1": main["point"]["share_not_deferred_label1"],
+            },
+            "utility_non_deferred": _metric(main, "utility"),
+            "headline_utility": crit["headline_utility"],
+            "criteria": {
+                "a": crit["a_deferral_rate_at_most_0.30"],
+                "b": crit["b_label1_not_deferred_within_0.10_of_label0"],
+                "c": crit["c_utility_non_deferred_above_headline"],
+            },
+            "useful": crit["useful"],
+        }
+        u = load(f"budgets_{d}.json")
+        budgets[d] = {
+            k: {
+                "lgbm": _metric(v["models"]["lgbm"], "utility"),
+                "lr": _metric(v["models"]["lr"], "utility"),
+                "difference": {
+                    "point": v["paired_lgbm_minus_lr"]["utility"]["point"],
+                    "ci": v["paired_lgbm_minus_lr"]["utility"]["ci95"],
+                },
+            }
+            for k, v in u["budgets"].items()
+        }
+    return {"bands": bands, "deferral": deferral, "budgets": budgets}
 
 
 def create_app(demo_file: Path, results_dir: Path, static_dir: Path | None = None) -> FastAPI:

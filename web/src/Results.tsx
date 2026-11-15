@@ -1,5 +1,6 @@
 // "Results": headline numbers from the committed aggregate result files (no patient data).
 import { DIRS, NAMES, ORDER, ci, pct, rowsFor, useResults } from './resultsData'
+import { Robustness } from './Robustness'
 import { Legend, TableToggle } from './ui'
 import { useTooltip, useWidth } from './hooks'
 import type { ResultRow, Results as ResultsDoc } from './types'
@@ -85,6 +86,7 @@ export function Results() {
         </p>
         <DriftChart rows={rowsFor(doc, 'B2A')} budget={doc.alarm_budget} />
       </section>
+      {doc.robustness && <Robustness r={doc.robustness} />}
       <section className="panel limits">
         <h2>Limitations</h2>
         <ul>
@@ -94,6 +96,21 @@ export function Results() {
           <li>The alert threshold drifts at a new hospital (8.3 % instead of 5 %) unless it is re-set there.</li>
           <li>Patients septic on admission cannot be warned early; their onset is set by a dataset rule.</li>
           <li>The modified scores lack items the data does not record (consciousness, mental state, band cells).</li>
+          {doc.robustness && (
+            <>
+              <li>
+                Pre-registered shortcut check failed ("collapse"): after 96 hours in the ICU the model ranks patients barely better
+                than chance (AUROC {doc.robustness.bands.A2B.models.lgbm.bands['96h+'].auroc.point.toFixed(3)} and{' '}
+                {doc.robustness.bands.B2A.models.lgbm.bands['96h+'].auroc.point.toFixed(3)}), and trained on hospital A it gives almost no
+                alerts in the first 48 hours: much of its signal tracks time in the ICU.
+              </li>
+              <li>
+                Conformal deferral is not useful at the main setting: it would hand{' '}
+                {pct(doc.robustness.deferral.A2B.deferral_rate.point)} and {pct(doc.robustness.deferral.B2A.deferral_rate.point)} of
+                hours to a clinician (limit 30 %), and its coverage is not guaranteed at a new hospital.
+              </li>
+            </>
+          )}
         </ul>
       </section>
     </div>

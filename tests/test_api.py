@@ -255,3 +255,27 @@ def test_plain_names() -> None:
     assert plain_name("HR__n") == "number of heart rate measurements so far"
     assert plain_name("Temp__mean6") == "temperature, average over the last 6 hours"
     assert plain_name("shock_index").startswith("shock index")
+
+
+def test_results_robustness_from_committed_files(tmp_path: Path) -> None:
+    """Milestone 5 block of /api/results: copied from the committed C1-C3 files only."""
+    from sepsiscope.api.app import results_summary
+
+    r = results_summary(RESULTS)["robustness"]
+    a2b = r["bands"]["A2B"]
+    assert a2b["bands"] == ["0-24h", "24-48h", "48-96h", "96h+"]
+    assert set(a2b["models"]) == {"lgbm", "lr", "news2"}
+    assert round(a2b["models"]["lgbm"]["bands"]["96h+"]["auroc"]["point"], 3) == 0.565
+    assert a2b["models"]["lgbm"]["bands"]["0-24h"]["alert_rate"]["point"] < 0.001
+    assert all(r["bands"][d]["collapse"]["collapse"] for d in ("A2B", "B2A"))
+    for d in ("A2B", "B2A"):
+        c = r["deferral"][d]
+        assert c["alpha"] == 0.1 and c["useful"] is False
+        assert c["criteria"] == {"a": False, "b": True, "c": True}
+    assert list(r["budgets"]["A2B"]) == ["0.02", "0.05", "0.10"]
+    assert round(r["budgets"]["A2B"]["0.02"]["difference"]["point"], 3) == -0.009
+    # Without the Milestone 5 files the block is simply absent.
+    for f in RESULTS.glob("*.json"):
+        if not f.name.startswith("bands_"):
+            (tmp_path / f.name).write_bytes(f.read_bytes())
+    assert results_summary(tmp_path)["robustness"] is None

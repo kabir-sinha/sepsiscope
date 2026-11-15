@@ -82,4 +82,30 @@ export type Results = {
   alarm_budget: number
   rows: ResultRow[]
   criterion: Record<string, { ci95_utility_difference: [number, number]; met_in_this_direction: boolean }>
+  robustness: Robustness | null
+}
+
+// Milestone 5 robustness checks (from the committed bands_*, deferral_*, budgets_* files).
+export type Metric = { point: number; ci: [number, number] }
+export type BandsDir = {
+  bands: string[]
+  rule: string
+  models: Record<string, { overall_auroc: number; bands: Record<string, { auroc: Metric; alert_rate: Metric }> }>
+  collapse: { collapse: boolean; flagged_bands: { band: string; reasons: string[] }[] }
+}
+export type DeferralDir = {
+  alpha: number
+  deferral_rate: Metric
+  coverage: { label0: number; label1: number }
+  share_not_deferred: { label0: number; label1: number }
+  utility_non_deferred: Metric
+  headline_utility: number
+  criteria: { a: boolean; b: boolean; c: boolean }
+  useful: boolean
+}
+export type BudgetRow = { lgbm: Metric; lr: Metric; difference: Metric }
+export type Robustness = {
+  bands: Record<string, BandsDir>
+  deferral: Record<string, DeferralDir>
+  budgets: Record<string, Record<string, BudgetRow>>
 }
