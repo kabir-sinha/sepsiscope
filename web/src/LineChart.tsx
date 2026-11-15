@@ -120,9 +120,10 @@ export function LineChart(p: Props) {
   const thrY = p.threshold ? y(p.threshold.value) : null
   const thrSeg: [Pt, Pt][] = thrY === null ? [] : [[{ x: PAD.left, y: thrY }, { x: W - PAD.right, y: thrY }]]
   const placed: Box[] = []
-  const place = (label: string, candidates: Spot[], o: Obstacles): Spot => {
+  // Returns null (label not drawn; it is in the legend) when no spot is clear.
+  const place = (label: string, candidates: Spot[], o: Obstacles): Spot | null => {
     const at = placeLabel(label, candidates, { segments, dots, boxes: placed, ...o }, plotBox)
-    placed.push(labelBox(label, at))
+    if (at) placed.push(labelBox(label, at))
     return at
   }
   const verticals = [...(onsetX !== null ? [onsetX] : []), ...(hourX !== null ? [hourX] : [])]

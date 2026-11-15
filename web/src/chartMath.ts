@@ -40,9 +40,11 @@ export function stepDecimals(step: number): number {
 
 // --- Label placement -------------------------------------------------------------------
 // Every text label inside a chart (alert threshold, early-warning window, onset) is placed by
-// `placeLabel`: it tries candidate spots in order and takes the first whose text box touches
-// no obstacle (vertical lines, plotted line segments, alert dots). If every spot is blocked it
-// takes the one with the fewest hits. Text width is estimated (13 px bold ≈ 7.8 px per char).
+// `placeLabel`: it tries candidate spots in order and takes the first whose text box stays in
+// the plot and touches no obstacle (vertical lines, plotted line segments, alert dots, labels
+// already placed). If every spot is blocked it returns null and the label is not drawn: each
+// of these labels is also in the chart legend, so nothing is lost and nothing is covered.
+// Text width is estimated (13 px bold ≈ 7.8 px per char).
 
 export type Pt = { x: number; y: number }
 export type Box = { x0: number; x1: number; y0: number; y1: number }
@@ -107,21 +109,14 @@ export function hits(box: Box, o: Obstacles, gap = 4): number {
   return n
 }
 
-// First candidate spot with no hits that stays inside `bounds`; else the one with fewest hits.
-export function placeLabel(label: string, candidates: Spot[], o: Obstacles, bounds?: Box): Spot {
-  let best = candidates[0]
-  let bestHits = Infinity
+// First candidate spot inside `bounds` with no hits, or null when every spot is blocked.
+export function placeLabel(label: string, candidates: Spot[], o: Obstacles, bounds?: Box): Spot | null {
   for (const s of candidates) {
     const box = labelBox(label, s)
     if (bounds && (box.x0 < bounds.x0 || box.x1 > bounds.x1 || box.y0 < bounds.y0 || box.y1 > bounds.y1)) continue
-    const h = hits(box, o)
-    if (h === 0) return s
-    if (h < bestHits) {
-      best = s
-      bestHits = h
-    }
+    if (hits(box, o) === 0) return s
   }
-  return best
+  return null
 }
 
 // Candidate spots for the threshold label: above the line at the right end, then the left
