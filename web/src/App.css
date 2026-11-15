@@ -124,7 +124,7 @@
 /* How it works */
 .headline .strip {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
   gap: 1rem;
 }
 .strip-group dl {
@@ -171,7 +171,7 @@
 }
 .glossary {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
   gap: 0.5rem 1.5rem;
   margin: 0;
 }
@@ -275,7 +275,7 @@
 }
 @media (max-width: 1100px) {
   .replay-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr); /* content cannot widen the column */
   }
 }
 .why {
@@ -286,7 +286,7 @@
 }
 .vitals {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr));
   gap: 0.6rem;
 }
 .vitals-title {
@@ -326,6 +326,7 @@
 .plot {
   width: 100%;
   min-width: 0;
+  overflow-x: auto; /* a chart scrolls inside its own box, never widens the page */
 }
 .plot svg {
   display: block;
@@ -623,4 +624,22 @@ td.over {
 }
 .panel h3 {
   margin: 1.4rem 0 0.3rem;
+}
+
+/* Phones (D4): the three tabs stay on one row at 375 px and nothing widens the page. */
+@media (max-width: 480px) {
+  .page {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .tabs {
+    flex-wrap: nowrap;
+    gap: 0;
+  }
+  .tab {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.5rem;
+    white-space: nowrap;
+    flex: 1 1 auto;
+  }
 }
