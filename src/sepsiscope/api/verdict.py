@@ -29,7 +29,9 @@ RULES: tuple[str, ...] = (
 
 @dataclass(frozen=True)
 class Verdict:
-    outcome: str  # warned | too_early_only | too_late_only | never_warned | false_alarms | quiet
+    # warned | too_early_only | too_late_only | early_and_late | never_warned | false_alarms
+    # | quiet
+    outcome: str
     badge: str  # short text for a card badge
     sentence: str  # part of the banner, e.g. "warned 9 h before onset"
     lead_hours: int | None
@@ -67,7 +69,19 @@ def verdict(alert_hours: Sequence[int], onset: int | None) -> Verdict:
         text = "warned at the onset hour" if lead == 0 else f"warned {lead} h before onset"
         badge = "Warned at onset" if lead == 0 else f"Warned {lead} h early"
         return Verdict("warned", badge, text, lead, first, len(alerts), 0)
-    if any(h > onset for h in alerts):
+    early = any(h < onset - WINDOW_HOURS for h in alerts)
+    late = any(h > onset for h in alerts)
+    if early and late:  # both sides of the window, none inside it
+        return Verdict(
+            "early_and_late",
+            "Alerted before and after the window, not in it",
+            "alerted before and after the warning window, not in it",
+            None,
+            first,
+            len(alerts),
+            0,
+        )
+    if late:
         return Verdict(
             "too_late_only",
             "Only after onset",

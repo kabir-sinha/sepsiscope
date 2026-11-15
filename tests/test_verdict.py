@@ -21,6 +21,9 @@ def test_onset_is_first_septic_hour_plus_6() -> None:
         ([20], "warned", 0),  # exactly at onset: inside, lead 0
         ([21], "too_late_only", None),  # 1 h after onset
         ([3, 15, 22], "warned", 5),  # first alert in the window decides the lead
+        ([7, 21], "early_and_late", None),  # both sides at the edges, none inside
+        ([1, 2, 30, 31], "early_and_late", None),
+        ([7, 8, 21], "warned", 12),  # one alert inside wins over both sides
         ([], "never_warned", None),
     ],
 )
@@ -56,3 +59,15 @@ def test_banner_texts() -> None:
         "Not septic · false alarm hours: SepsiScope 0 vs NEWS2 30"
     )
     assert len(RULES) == 5
+
+
+def test_before_and_after_but_not_in_the_window() -> None:
+    v = verdict([2, 25], 20)
+    assert v.outcome == "early_and_late"
+    assert v.badge == "Alerted before and after the window, not in it"
+    assert v.lead_hours is None and v.first_alert_hour == 2 and v.alert_hours == 2
+    assert verdict([2], 20).outcome == "too_early_only"
+    assert verdict([25], 20).outcome == "too_late_only"
+    assert banner(v, verdict([], 20), septic=True) == (
+        "SepsiScope alerted before and after the warning window, not in it · NEWS2 never warned"
+    )
