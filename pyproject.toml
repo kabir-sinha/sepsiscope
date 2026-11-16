@@ -68,7 +68,7 @@ constraint-dependencies = [
 
 [dependency-groups]
 dev = [
-    "hypothesis==6.168.5",
+    "hypothesis==6.170.15",
     "jupyterlab==4.6.4",
     "mypy==2.4.0",
     "nbstripout==0.9.1",
