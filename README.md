@@ -8,12 +8,11 @@ Challenge 2019. A LightGBM model with calibrated probabilities is trained on one
 and tested, with its alert threshold unchanged, on the other hospital, under a fixed budget
 of alerts in 5 % of patient-hours. Every alert comes with its reasons, and an interactive
 demo replays real ICU stays hour by hour next to the bedside NEWS2 score. The evaluation
-protocol was frozen before the data was downloaded, and the whole analysis re-runs from one
-command into byte-identical result files.
+rules were fixed in advance (the protocol before the data was downloaded), and the whole
+analysis re-runs from one command into byte-identical files (result files; see
+[Reproducibility](#reproducibility) for the documented exceptions).
 
-> **Research prototype, not for clinical use.** Not a medical device. It must not be used
-> to make decisions about real patients. The software is provided "AS IS", without
-> warranties or conditions of any kind (Apache-2.0, sections 7 and 8).
+> **Research prototype, not for clinical use.**
 
 ## Key results
 
@@ -30,14 +29,12 @@ the other hospital. 95 % confidence intervals from 1,000 patient-level bootstrap
 | B → A | Logistic regression | 0.106 [0.083, 0.127] | 0.641 [0.630, 0.652] | 58.3 % [55.9, 60.7] | 12.5 % [11.9, 13.1] | 1.4× |
 | B → A | Modified NEWS2 | 0.061 [0.052, 0.069] | 0.631 [0.621, 0.639] | 41.7 % [39.4, 44.1] | 14.1 % [13.4, 14.8] | 1.6× |
 
-- **Pre-registered success criterion met in both directions:** the paired utility gain
+- **Success criterion met in both directions:** the paired utility gain
   over the logistic regression is +0.040 [0.021, 0.059] (A → B) and +0.167
   [0.147, 0.188] (B → A).
-- **Alerts are worth looking at:** an alerted patient is 7.3 (A → B) and 2.6 (B → A) times
-  more likely to become septic than a random patient, against 4.6 / 1.4 for the logistic
-  regression and 2.1 / 1.6 for NEWS2. An alerting hour is 6.3× and 4.4× more likely than an
+- **Alert quality:** an alerting hour is 6.3× (A → B) and 4.4× (B → A) more likely than an
   average hour to carry the dataset's sepsis label (which starts 6 hours before onset).
-- **Robust where it matters:** SepsiScope stays ahead of the logistic regression at alert
+- **Subgroups and stress tests:** SepsiScope stays ahead of the logistic regression at alert
   budgets of 5 % and 10 % in both directions, and in every sex and age group.
 - Utility: the official challenge score (1 = perfect, 0 = never alerting). "Warned in
   time": at least one alert in the 12 hours before onset. Lift: share of alerted patients
@@ -73,25 +70,23 @@ change with the alarm budget, from 1 % to 10 % of hours. It runs locally only, o
 ## How it works
 
 ```mermaid
-flowchart LR
-    A["PhysioNet 2019<br/>hospitals A and B"] --> B["Verify fingerprint,<br/>clean, patient splits"]
-    B --> C["Hourly features<br/>(hours up to t only)"]
-    C --> D["LightGBM + Platt<br/>trained on one hospital"]
-    D --> E["Threshold for a 5 % alert<br/>budget (source validation)"]
-    E --> F["Strict external test<br/>on the other hospital"]
-    F --> G["Official utility, AUROC,<br/>event metrics, bootstrap CIs"]
-    D --> H["Per-hour explanations"]
-    F --> I["Demo API on 127.0.0.1"]
+flowchart TD
+    A["PhysioNet 2019 data<br/>hospitals A and B"] --> B["Verify, clean,<br/>patient splits"]
+    B --> C["Hourly features<br/>(past hours only)"]
+    C --> D["LightGBM + Platt<br/>(one hospital)"]
+    D --> E["Threshold at<br/>5 % alert budget"]
+    E --> F["Test on the<br/>other hospital"]
+    F --> G["Metrics with<br/>bootstrap CIs"]
+    D --> H["Per-hour reasons"]
+    F --> I["Local demo<br/>(127.0.0.1)"]
     H --> I
-    I --> J["React demo"]
 ```
 
-- **Leak-free by construction:** patient-level splits, features at hour *t* use only hours
-  up to *t*, and no ICU-time or unit columns are used as features.
+- **Designed to prevent look-ahead leakage:** patient-level splits, features at hour *t*
+  use only hours up to *t*, and no ICU-time or unit columns are used as features.
 - **Baselines** from the same pipeline: logistic regression, modified NEWS2, SIRS and qSOFA.
-- **Robustness checks with pass/fail rules written down in advance** (ICU-stay bands,
-  conformal deferral, alarm budgets), ablations and threshold drift, all in
-  `reports/results/`.
+- **Stress tests** (ICU-stay bands, conformal deferral, alarm budgets), ablations and
+  threshold drift, all in `reports/results/`.
 - **Safe artefacts:** models are LightGBM text plus JSON (never pickle), telemetry is off,
   and a privacy guard checks every commit.
 
@@ -119,7 +114,7 @@ cd web && npm ci && npm run build && cd ..
 Run the checks: `uv run pytest`, `uv run ruff check .`, `uv run mypy src`.
 Contributors: `uv run pre-commit install` adds the privacy and lint hooks.
 
-## Reproduce every result
+## Reproducibility
 
 Download the data once (about 320 MB, into the git-ignored `data/` folder; the only step
 that uses the network):
@@ -130,7 +125,7 @@ uv run sepsiscope data download
 
 Then one command runs everything else in order (data verification, build and splits,
 features, training from the committed tuned parameters, evaluation, ablations, the
-robustness analyses, the alert-quality analysis and the demo data) and stops at the first
+stress tests, the alert-quality analysis and the demo data) and stops at the first
 failure:
 
 ```bash
@@ -187,7 +182,8 @@ reviewed, tested and understood by me. Details: [docs/ai_assistance.md](docs/ai_
 ## Licence
 
 - **Code:** [Apache License 2.0](LICENSE); copyright and attributions in [`NOTICE`](NOTICE)
-  (© 2026 SepsiScope contributors).
+  (© 2026 SepsiScope contributors). Provided "AS IS", without warranties or conditions of
+  any kind (sections 7 and 8); not a medical device.
 - **Documentation, figures and result files** (`docs/`, `reports/`, this README):
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 - **Third-party:** the official PhysioNet scorer in `third_party/physionet_eval/` keeps
