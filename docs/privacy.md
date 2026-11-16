@@ -60,7 +60,7 @@ them on every commit and **blocks**:
   (`/` + `home/<name>`) and Windows (`C:` + `\Users\`)
 - any email address other than the noreply address (plus `@example.*` placeholders,
   GitHub `[bot]` noreply addresses and GitHub's own service addresses)
-- account-tier wording (plan, payment or verification status) and enrollment-ID shapes
+- service and account wording (plan, payment or verification status) and ID-like number patterns
   (lockfiles are exempt from these two)
 - `.env` / `.env.*` files
 - `*.psv` / `*.parquet` anywhere, and `*.csv` under `data/`
