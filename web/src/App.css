@@ -605,7 +605,7 @@ td.over {
   padding-left: 1.3rem;
 }
 
-/* Robustness checks (Milestone 5) */
+/* Stress tests (Milestone 5 checks) */
 .pass,
 .fail {
   display: inline-block;

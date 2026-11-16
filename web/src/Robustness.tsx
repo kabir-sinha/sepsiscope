@@ -1,4 +1,4 @@
-// "Robustness checks (Milestone 5)": C1 ICU-stay bands, C2 conformal deferral, C3 alert
+// "Stress tests" (Milestone 5 checks): C1 ICU-stay bands, C2 conformal deferral, C3 alert
 // budgets. Every number comes from the committed aggregate files via /api/results.
 import { DIRS, NAMES, ci, pct } from './resultsData'
 import type { Metric, Robustness as RobustnessDoc } from './types'
@@ -24,8 +24,8 @@ export function Robustness({ r }: { r: RobustnessDoc }) {
   const notUseful = Object.values(r.deferral).every((d) => !d.useful)
   const alpha = r.deferral.A2B.alpha
   return (
-    <section className="panel" aria-labelledby="robust-title">
-      <h2 id="robust-title">Robustness checks (Milestone 5)</h2>
+    <section className="panel" aria-labelledby="stress-title">
+      <h2 id="stress-title">Stress tests</h2>
       <p className="help">
         Three checks whose pass/fail rules were written down before any result was seen (ADR 0024). 95 % CIs in brackets, from 1,000
         patient-level resamples.
