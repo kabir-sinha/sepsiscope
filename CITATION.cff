@@ -1,0 +1,42 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below, and cite the PhysioNet/CinC Challenge 2019 data it was built on."
+title: "SepsiScope: explainable, alarm-budgeted sepsis early warning"
+type: software
+authors:
+  - name: "SepsiScope contributors"
+version: "1.0.1"
+date-released: "2026-11-16"
+license: MIT
+repository-code: "https://github.com/kabir-sinha/sepsiscope"
+abstract: "A research prototype (not for clinical use) that predicts sepsis hours before onset from routine ICU data under a fixed 5 % alarm budget, with explanations, validated strictly across two hospitals of the PhysioNet/CinC Challenge 2019."
+keywords:
+  - sepsis
+  - early warning
+  - machine learning
+  - explainability
+  - external validation
+  - PhysioNet
+references:
+  - type: dataset
+    title: "Early Prediction of Sepsis from Clinical Data: the PhysioNet/Computing in Cardiology Challenge 2019"
+    version: "1.0.0"
+    authors:
+      - family-names: Reyna
+        given-names: Matthew
+    publisher:
+      name: PhysioNet
+    year: 2019
+    doi: "10.13026/v64v-d857"
+    license: CC-BY-4.0
+  - type: article
+    title: "Early Prediction of Sepsis From Clinical Data: The PhysioNet/Computing in Cardiology Challenge 2019"
+    authors:
+      - family-names: Reyna
+        given-names: Matthew A.
+    journal: "Critical Care Medicine"
+    volume: 48
+    issue: 2
+    start: 210
+    end: 217
+    year: 2020
+    doi: "10.1097/CCM.0000000000004145"

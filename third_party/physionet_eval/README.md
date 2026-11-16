@@ -17,4 +17,4 @@ identical to upstream:
   `compute_prediction_utility` reproduces the example documented in the file
   (labels `[0,0,0,0,1,1]`, predictions `[0,0,1,1,1,1]` → `3.388888888888889`).
 
-It is not covered by the project's "All rights reserved" notice.
+It is not covered by the project's MIT licence (ADR 0026).

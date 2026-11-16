@@ -51,7 +51,7 @@ and 26 in prose is the project report (later); until then the files below hold t
 | 18c | Protocol access | `docs/protocol.md` (frozen; changes by ADR) | done |
 | 18d | Registration | `docs/protocol.md` | not done: not registered (pre-registration by committed ADRs only) |
 | 18e | Data availability | `README.md` "Data attribution"; `docs/data_card.md` | done (public, CC BY 4.0) |
-| 18f | Code availability | `README.md` | partly: repository public, all rights reserved (ADR 0003) |
+| 18f | Code availability | `README.md` | done: code MIT, documents and results CC BY 4.0 (ADR 0026); `CITATION.cff` |
 | 19 | Patient and public involvement | — | not done: no involvement (student project) |
 | 20a | Participant flow, with and without outcome | `docs/data_card.md` "Cohorts"; result files (`patients`, `septic_patients`) | partly: no flow diagram |
 | 20b | Characteristics per source, missing data, groups | `docs/data_card.md`; `docs/eda_findings.md` | done |

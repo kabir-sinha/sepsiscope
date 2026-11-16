@@ -1,7 +1,7 @@
 # Third-party material
 
 Each vendored item keeps its own licence file next to it. Nothing here is covered by
-the project's "All rights reserved" notice.
+the project's MIT licence or its CC BY 4.0 terms for documents (ADR 0026).
 
 | Item | Source | Licence | Added |
 |---|---|---|---|

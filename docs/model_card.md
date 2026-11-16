@@ -22,7 +22,7 @@ estimated by hand. **Research prototype, not for clinical use; not a medical dev
   alarm budget (ADR 0022, protocol section 6). No class weights.
 - **Saved as:** LightGBM text + whitelisted JSON + feature schema (never pickle; ADR 0004),
   in the ignored `models/`; rebuilt by `uv run sepsiscope reproduce`.
-- **Licence:** all rights reserved (ADR 0003). Data: PhysioNet/CinC Challenge 2019, CC BY 4.0.
+- **Licence:** code MIT; documentation, figures and results CC BY 4.0 (ADR 0026). Data: PhysioNet/CinC Challenge 2019, CC BY 4.0.
 
 ## Intended use
 

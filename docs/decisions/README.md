@@ -8,7 +8,7 @@ A decision is changed by a new ADR that supersedes it, never by editing history.
 |---|---|---|
 | [0001](0001-reuse-before-install.md) | Reuse existing tools; install only uv and libomp | Accepted |
 | [0002](0002-python-313-system-interpreter.md) | Python 3.13 via uv, using the Homebrew interpreter | Accepted |
-| [0003](0003-licence-all-rights-reserved.md) | No open-source licence during evaluation | Accepted |
+| [0003](0003-licence-all-rights-reserved.md) | No open-source licence during evaluation | Superseded by 0026 |
 | [0004](0004-models-as-text-never-pickle.md) | Models as LightGBM text + JSON; never pickle/joblib | Accepted |
 | [0005](0005-openmp-single-process-smoke.md) | Homebrew libomp + single-process OpenMP smoke test | Accepted |
 | [0006](0006-telemetry-off.md) | Telemetry off, enforced in code and tested | Accepted |
@@ -30,3 +30,5 @@ A decision is changed by a new ADR that supersedes it, never by editing history.
 | [0022](0022-batch-b-model-decisions.md) | Batch B: calibration split, Platt headline, ablations, tracking, no class weights, success criterion | Accepted |
 | [0023](0023-no-name-in-tracked-files.md) | No personal name in tracked files (copyright: "SepsiScope contributors") | Accepted |
 | [0024](0024-batch-c-criteria.md) | Batch C: pre-registered shortcut-check, deferral and budget criteria | Accepted |
+| [0025](0025-attribution-on-the-demo.md) | One exact "Built by" + first-name byline on the demo header | Accepted |
+| [0026](0026-open-licences.md) | MIT for code; CC BY 4.0 for docs, figures and results | Accepted |

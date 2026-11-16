@@ -1,6 +1,6 @@
 # 0003 — No open-source licence during evaluation
 
-**Date:** 2026-10-10 · **Status:** Accepted
+**Date:** 2026-10-10 · **Status:** Superseded by [ADR 0026](0026-open-licences.md) (2026-11-16)
 **Amended:** 2026-10-22 (privacy wording only; decision unchanged)
 
 ## Context

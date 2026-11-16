@@ -86,6 +86,5 @@ repository.
 
 ## Licence
 
-© 2026 SepsiScope contributors. All rights reserved.
-
-Third-party material in `third_party/` keeps its own licence.
+Code: [MIT](LICENSE) © 2026 SepsiScope contributors. Documentation, figures and results:
+CC BY 4.0. Third-party material keeps its own licence (ADR 0026).
