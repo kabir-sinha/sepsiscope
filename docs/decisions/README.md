@@ -4,6 +4,21 @@ One short file per decision: context, decision, alternatives, consequences, sour
 Format after [Michael Nygard's ADRs](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions).
 A decision is changed by a new ADR that supersedes it, never by editing history.
 
+## Start here: the eight key decisions
+
+| ADR | Decision | Why it matters |
+|---|---|---|
+| [0007](0007-frozen-evaluation-protocol.md) | The evaluation protocol was frozen before the data was downloaded | Metrics, splits, baselines and thresholds could not be tuned to the results |
+| [0013](0013-stratified-patient-splits.md) | Patient-level 60/20/20 splits, stratified by the septic flag, seed 42 | No patient appears in two splits; every split has the same share of septic patients |
+| [0019](0019-strict-external-validation-headline.md) | The headline is strict external validation: train on one hospital, test unchanged on the other | The reported numbers are what a new hospital would see without any local retuning |
+| [0022](0022-batch-b-model-decisions.md) | Separate calibration split, Platt scaling, pre-set success criterion against the logistic regression | Calibration and thresholds never reuse the same rows; "better than the baseline" was defined in advance |
+| [0024](0024-batch-c-criteria.md) | Pass/fail rules for the robustness checks written down before running them | The ICU-stay, deferral and alarm-budget checks are reported exactly as pre-registered |
+| [0004](0004-models-as-text-never-pickle.md) | Models saved as LightGBM text plus JSON; never pickle | Saved models are readable, diffable and cannot run code when loaded |
+| [0016](0016-privacy-hardening.md) | Privacy hardening: UTC commits, local denylist, git hooks, full-history audit | No personal or machine data enters the repository or its history |
+| [0026](0026-open-licences.md) | MIT for code; CC BY 4.0 for documentation, figures and results | Others may reuse and cite the work; the PhysioNet attribution is kept |
+
+## All decisions
+
 | # | Decision | Status |
 |---|---|---|
 | [0001](0001-reuse-before-install.md) | Reuse existing tools; install only uv and libomp | Accepted |
