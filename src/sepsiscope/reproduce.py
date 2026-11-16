@@ -30,6 +30,7 @@ AFTER_MODELS: tuple[tuple[str, ...], ...] = (
     ("analyses", "bands"),
     ("analyses", "deferral"),
     ("analyses", "budgets"),
+    ("analyses", "alert-quality"),
     ("demo", "build"),
 )
 

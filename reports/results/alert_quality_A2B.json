@@ -1,0 +1,254 @@
+{
+ "direction": "A2B",
+ "source": "A",
+ "target": "B",
+ "analysis": "alert quality at the headline 5 % budget (post-hoc, descriptive)",
+ "thresholds": "headline thresholds from the source validation split (unchanged)",
+ "alarm_budget": 0.05,
+ "seed": 42,
+ "bootstrap_resamples": 1000,
+ "definitions": {
+  "ppv_hour": "label-1 hours among alerting hours",
+  "label1_share_hour": "label-1 hours among all hours",
+  "lift_hour": "ppv_hour / label1_share_hour",
+  "npv_hour": "label-0 hours among non-alerting hours",
+  "precision_patient": "ever-septic patients among patients with at least one alert",
+  "septic_share_patient": "ever-septic patients among all patients",
+  "lift_patient": "precision_patient / septic_share_patient",
+  "patients_alerted_per_septic_found": "1 / precision_patient",
+  "sensitivity_patient_any_alert": "septic patients with at least one alert, at any time",
+  "timely_sensitivity": "protocol event metric (window onset - 12 h to onset, row-0 septic patients excluded); equals the committed headline value",
+  "alert_hours_per_septic_found": "alerting hours / septic patients with an alert",
+  "alert_hours_per_timely_detection": "alerting hours / timely detections"
+ },
+ "models": {
+  "lgbm": {
+   "model_label": "LightGBM, Platt-calibrated (headline)",
+   "threshold": 0.07524788857023655,
+   "point": {
+    "ppv_hour": 0.08917697366640505,
+    "label1_share_hour": 0.014147074455869133,
+    "lift_hour": 6.303562898787784,
+    "npv_hour": 0.9896765170761579,
+    "precision_patient": 0.41789473684210526,
+    "septic_share_patient": 0.0571,
+    "lift_patient": 7.3186468798967645,
+    "patients_alerted_per_septic_found": 2.392947103274559,
+    "sensitivity_patient_any_alert": 0.3476357267950963,
+    "timely_sensitivity": 0.4015233949945593,
+    "alert_hours_per_septic_found": 93.0705289672544,
+    "alert_hours_per_timely_detection": 100.13279132791328
+   },
+   "ci95": {
+    "ppv_hour": [
+     0.08110600708384239,
+     0.09870384598913938
+    ],
+    "label1_share_hour": [
+     0.013345314359006768,
+     0.014997705782642928
+    ],
+    "lift_hour": [
+     5.744799968513665,
+     6.9579254767930365
+    ],
+    "npv_hour": [
+     0.9889214917140795,
+     0.9903913475985738
+    ],
+    "precision_patient": [
+     0.3880241901461015,
+     0.45286290255402095
+    ],
+    "septic_share_patient": [
+     0.053698749999999996,
+     0.06045
+    ],
+    "lift_patient": [
+     6.82653220822659,
+     7.838459061696644
+    ],
+    "patients_alerted_per_septic_found": [
+     2.2081738805849036,
+     2.5771589275445654
+    ],
+    "sensitivity_patient_any_alert": [
+     0.32129183937246514,
+     0.3772435093877096
+    ],
+    "timely_sensitivity": [
+     0.37186092019170064,
+     0.4332042552233536
+    ],
+    "alert_hours_per_septic_found": [
+     84.63310078762608,
+     102.65996772362914
+    ],
+    "alert_hours_per_timely_detection": [
+     90.5414356095986,
+     110.33936875687043
+    ]
+   },
+   "counts": {
+    "patients": 20000,
+    "hours": 761995,
+    "alert_hours": 36949,
+    "patients_alerted": 950,
+    "septic_patients": 1142,
+    "septic_patients_alerted": 397
+   }
+  },
+  "lr": {
+   "model_label": "logistic regression",
+   "threshold": 0.07077397030461978,
+   "point": {
+    "ppv_hour": 0.07947644269432351,
+    "label1_share_hour": 0.014147074455869133,
+    "lift_hour": 5.617871238484327,
+    "npv_hour": 0.989098182479399,
+    "precision_patient": 0.2600243013365735,
+    "septic_share_patient": 0.0571,
+    "lift_patient": 4.553840653880447,
+    "patients_alerted_per_septic_found": 3.8457943925233646,
+    "sensitivity_patient_any_alert": 0.37478108581436076,
+    "timely_sensitivity": 0.3982589771490751,
+    "alert_hours_per_septic_found": 84.25467289719626,
+    "alert_hours_per_timely_detection": 98.52732240437159
+   },
+   "ci95": {
+    "ppv_hour": [
+     0.07187907214074112,
+     0.08700165484078531
+    ],
+    "label1_share_hour": [
+     0.013345314359006768,
+     0.014997705782642928
+    ],
+    "lift_hour": [
+     5.1378089208955355,
+     6.15782958284865
+    ],
+    "npv_hour": [
+     0.9883365018137851,
+     0.989816481389491
+    ],
+    "precision_patient": [
+     0.239444024137485,
+     0.2808975699571889
+    ],
+    "septic_share_patient": [
+     0.053698749999999996,
+     0.06045
+    ],
+    "lift_patient": [
+     4.242466593574051,
+     4.87112811980821
+    ],
+    "patients_alerted_per_septic_found": [
+     3.5600168321831345,
+     4.1763414410159525
+    ],
+    "sensitivity_patient_any_alert": [
+     0.34660308922226607,
+     0.402601911976912
+    ],
+    "timely_sensitivity": [
+     0.3658503301736074,
+     0.4295795535033235
+    ],
+    "alert_hours_per_septic_found": [
+     76.73295198228742,
+     93.27002710411932
+    ],
+    "alert_hours_per_timely_detection": [
+     89.53878898082654,
+     109.21111761161708
+    ]
+   },
+   "counts": {
+    "patients": 20000,
+    "hours": 761995,
+    "alert_hours": 36061,
+    "patients_alerted": 1646,
+    "septic_patients": 1142,
+    "septic_patients_alerted": 428
+   }
+  },
+  "news2": {
+   "model_label": "modified NEWS2 (max 17)",
+   "threshold": 7.0,
+   "point": {
+    "ppv_hour": 0.05375298382105915,
+    "label1_share_hour": 0.014147074455869133,
+    "lift_hour": 3.799583015466416,
+    "npv_hour": 0.9870647156442013,
+    "precision_patient": 0.12016806722689076,
+    "septic_share_patient": 0.0571,
+    "lift_patient": 2.104519566145197,
+    "patients_alerted_per_septic_found": 8.321678321678322,
+    "sensitivity_patient_any_alert": 0.500875656742557,
+    "timely_sensitivity": 0.3710554951033732,
+    "alert_hours_per_septic_found": 39.54895104895105,
+    "alert_hours_per_timely_detection": 66.34017595307918
+   },
+   "ci95": {
+    "ppv_hour": [
+     0.04793184001184601,
+     0.060291935829748
+    ],
+    "label1_share_hour": [
+     0.013345314359006768,
+     0.014997705782642928
+    ],
+    "lift_hour": [
+     3.41641999639161,
+     4.225363098217393
+    ],
+    "npv_hour": [
+     0.9862847347674113,
+     0.9878375214789045
+    ],
+    "precision_patient": [
+     0.1108461218393199,
+     0.13022003207666719
+    ],
+    "septic_share_patient": [
+     0.053698749999999996,
+     0.06045
+    ],
+    "lift_patient": [
+     1.9899166730569302,
+     2.2282478497753173
+    ],
+    "patients_alerted_per_septic_found": [
+     7.679310110086747,
+     9.021515447443182
+    ],
+    "sensitivity_patient_any_alert": [
+     0.47206884006492644,
+     0.5323149611957458
+    ],
+    "timely_sensitivity": [
+     0.34108272969881814,
+     0.40409538214032203
+    ],
+    "alert_hours_per_septic_found": [
+     36.40279813915858,
+     42.98040973652252
+    ],
+    "alert_hours_per_timely_detection": [
+     60.098248619021106,
+     73.5226462648163
+    ]
+   },
+   "counts": {
+    "patients": 20000,
+    "hours": 761995,
+    "alert_hours": 22622,
+    "patients_alerted": 4760,
+    "septic_patients": 1142,
+    "septic_patients_alerted": 572
+   }
+  }
+ }
+}

@@ -428,6 +428,24 @@ def analyses_budgets() -> None:
         typer.echo(f"wrote {path.relative_to(REPO_ROOT)}")
 
 
+@analyses_app.command("alert-quality")
+def analyses_alert_quality() -> None:
+    """Post-hoc: alert precision, NPV, lift and per-patient numbers at the 5 % budget."""
+    from sepsiscope.config import load_config
+    from sepsiscope.evaluation import alert_quality
+
+    cfg = load_config()
+    reports = REPO_ROOT / cfg.paths.reports_dir
+    for path in alert_quality.run(
+        cfg,
+        REPO_ROOT / cfg.paths.data_dir,
+        REPO_ROOT / cfg.paths.splits_dir,
+        reports / "results",
+        REPO_ROOT / cfg.paths.models_dir,
+    ):
+        typer.echo(f"wrote {path.relative_to(REPO_ROOT)}")
+
+
 @app.command()
 def reproduce(
     retune: bool = typer.Option(False, "--retune", help="Repeat the tuning first (~30 min)."),
