@@ -25,4 +25,4 @@ Every model that can defer reports, on the **unseen (target) hospital**:
 Batch C must log the deferral decision per hour so these numbers can be recomputed.
 
 ## Sources
-`docs/protocol.md` section 5 · `docs/internal/plan/batch-a.md` A0.3
+`docs/protocol.md` section 5 · Batch A plan (internal) A0.3

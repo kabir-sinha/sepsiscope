@@ -156,7 +156,6 @@ window.
 - [Model card](docs/model_card.md) · [Datasheet](docs/datasheet.md) · [TRIPOD+AI checklist](docs/tripod_ai.md)
 - [Evaluation protocol (frozen)](docs/protocol.md) · [Data card](docs/data_card.md) · [EDA findings](docs/eda_findings.md) · [Data manifest](docs/data_manifest.md)
 - [Key decisions](docs/decisions/README.md) · [Privacy](docs/privacy.md) · [Traceability](docs/traceability.md) · [Changelog](CHANGELOG.md)
-- Working notes from development: [docs/internal/](docs/internal/)
 
 ## Citation
 

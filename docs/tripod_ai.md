@@ -19,7 +19,7 @@ and 26 in prose is the project report (later); until then the files below hold t
 | 3a | Healthcare context, rationale, existing models | `docs/protocol.md` §7 (baselines NEWS2, SIRS, qSOFA with sources) | partly: no literature review in the repo |
 | 3b | Target population, intended purpose and users | `docs/model_card.md` "Intended use" | done (research use only) |
 | 3c | Known health inequalities between groups | `docs/model_card.md` "Ethical considerations"; `docs/data_card.md` "Known limitations" | partly: the data has sex and age only |
-| 4 | Objectives (development and/or validation) | `docs/protocol.md`; `docs/internal/plan/batch-b.md`, `batch-c.md` | done |
+| 4 | Objectives (development and/or validation) | `docs/protocol.md`; ADR 0022, ADR 0024 | done |
 | 5a | Data sources for development and evaluation, representativeness | `docs/data_card.md` "Source", "Cohorts"; `docs/datasheet.md` | done |
 | 5b | Dates of data collection | `docs/datasheet.md` "Collection process" | n/a: dates removed by de-identification |
 | 6a | Setting, number and location of centres | `docs/data_card.md` "Cohorts" (two US hospital systems) | done |

@@ -1,5 +1,5 @@
 """Static layout guards for the demo CSS (no browser needed): nothing may force the page or a
-card wider than its box. The browser geometry check is recorded in docs/internal/handoff.md."""
+card wider than its box. A browser geometry check backs these static guards."""
 
 from __future__ import annotations
 

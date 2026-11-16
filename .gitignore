@@ -53,3 +53,7 @@ web/coverage/
 .DS_Store
 .vscode/
 .idea/
+
+# Internal working notes and AI-assistant rules stay local (Batch E, Part 4)
+docs/internal/
+/CLAUDE.md

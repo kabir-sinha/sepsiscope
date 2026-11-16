@@ -7,7 +7,7 @@
 Batch C checks whether the headline model relies on a time-in-ICU shortcut, adds an
 uncertainty-based deferral layer (ADR 0020) and reports alarm-budget sensitivity, lead-time
 distributions and subgroup CIs. Each of these can be made to look good after seeing results,
-so the rules are fixed here first. The plan is `docs/internal/plan/batch-c.md`.
+so the rules are fixed here first. The plan is the internal Batch C plan.
 
 ## Decision
 1. **Shortcut check (C1).** Rows are grouped by their hour's time since ICU admission:
@@ -66,7 +66,7 @@ decisions are written to the ignored `data/` folder so the ADR 0020 metrics can 
 recomputed; only aggregates are committed.
 
 ## Sources
-`docs/internal/plan/batch-c.md` · `docs/protocol.md` sections 3, 5, 6 · ADR 0019 (strict external
+Batch C plan (internal) · `docs/protocol.md` sections 3, 5, 6 · ADR 0019 (strict external
 headline) · ADR 0020 (deferral metrics) · ADR 0022 (calibration split, Platt headline) ·
 Vovk V. et al., *Algorithmic Learning in a Random World* (2005), Mondrian conformal
 prediction · Angelopoulos A.N., Bates S., *A Gentle Introduction to Conformal Prediction*

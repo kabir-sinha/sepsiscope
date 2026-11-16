@@ -16,8 +16,8 @@ Notable changes per phase. Dates are ISO 8601. The format follows
 ### Changed
 - README rewritten as a project showcase (results table, Mermaid diagram, quick start,
   reproduce, citation, licence).
-- Internal working notes moved to `docs/internal/` (handoff, ops, plans, learning notes,
-  `CLAUDE.md`, with a root pointer).
+- Internal working notes (handoff, operations, plans, learning notes) and the AI-assistant
+  rules are kept out of the public repository.
 - Doc fixes: `privacy.md` states the ADR 0025 byline exception; repo map and handoff
   heading updated.
 
@@ -116,7 +116,7 @@ Notable changes per phase. Dates are ISO 8601. The format follows
 
 ### Added
 - gitleaks: pre-commit hook and a checksum-verified CI job over the full history.
-- `docs/internal/plan/batch-a.md` (Milestone 3 spec, queued) and ADR 0017.
+- Milestone 3 spec (internal plan, queued) and ADR 0017.
 
 ## Privacy hardening (2026-10-22)
 

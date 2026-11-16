@@ -37,4 +37,4 @@ Modified NEWS2 may under-score patients on oxygen whose FiO2 was not charted eve
 
 ## Sources
 `docs/protocol.md` section 7 · `src/sepsiscope/data/clean.py` (FiO2 rule) · ADR 0014 ·
-`docs/internal/plan/batch-a.md` A0.1
+Batch A plan (internal) A0.1

@@ -24,5 +24,5 @@ Fixing them now, before Batch B, prevents tuning until the result looks good.
 Batch B has a fixed tuning budget; any extra trials need a new ADR.
 
 ## Sources
-`docs/protocol.md` section 4 · `docs/internal/plan/batch-a.md` A0.4 ·
+`docs/protocol.md` section 4 · Batch A plan (internal) A0.4 ·
 [Optuna](https://optuna.org/) (pinned 5.0.0 in `pyproject.toml`)
