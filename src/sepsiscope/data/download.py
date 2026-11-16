@@ -24,7 +24,7 @@ import time
 from collections import Counter
 from collections.abc import Callable, Iterable
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from pathlib import Path
 
 import httpx
@@ -274,7 +274,3 @@ def download_all(
         seconds=time.monotonic() - started,
     )
     return report, manifest_sha
-
-
-def report_as_dict(report: DownloadReport) -> dict[str, object]:
-    return asdict(report)

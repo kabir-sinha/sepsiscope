@@ -33,11 +33,6 @@ export function display(v: number): string {
   return String(Number(v.toFixed(Math.abs(v) >= 10 ? 1 : 2)))
 }
 
-// Number of decimals a tick step needs (0.02 → 2, 5 → 0).
-export function stepDecimals(step: number): number {
-  return Math.max(0, -Math.floor(Math.log10(step) + 1e-9))
-}
-
 // --- Label placement -------------------------------------------------------------------
 // Every text label inside a chart (alert threshold, early-warning window, onset) is placed by
 // `placeLabel`: it tries candidate spots in order and takes the first whose text box stays in

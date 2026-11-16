@@ -21,7 +21,6 @@ import sqlite3
 from collections.abc import Iterable, Mapping
 from pathlib import Path
 
-from sepsiscope.config import REPO_ROOT
 from sepsiscope.models.lgbm import git_commit
 
 EXPERIMENT = "sepsiscope"
@@ -105,8 +104,3 @@ def stored_texts(db_path: Path) -> Iterable[tuple[str, str]]:
         for kind, sql in queries.items():
             for (text,) in con.execute(sql):
                 yield kind, str(text)
-
-
-def relative_source(path: Path) -> str:
-    """A path inside the repository, written relative to its root."""
-    return path.resolve().relative_to(REPO_ROOT).as_posix()
