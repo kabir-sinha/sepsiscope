@@ -89,6 +89,19 @@ Notable changes per phase. Dates are ISO 8601. The format follows
   `ebe8e2f`); 500 errors keep the security headers (`f2b480c`); independent scan fixes
   (`11f98b6`, `807fdaa`).
 
+## Milestone 3, Batch A: features, baselines and evaluation (2026-11-13)
+
+### Added
+- ADRs 0018-0021: NEWS2 oxygen item, strict external validation as the headline,
+  deferral metrics, tuning protocol (`49e21a8`).
+- Causal hourly features with a tracked feature schema (`3dafd89`).
+- Baselines: modified NEWS2 (max 17), SIRS, modified qSOFA (max 2) and logistic regression
+  (`44f1e1c`, `ca676cd`).
+- Metrics library with hand-computed fixtures (`8fe484e`).
+- `sepsiscope evaluate`: strict external validation, deployment adaptation and result
+  files (`a45a02e`).
+- Traceability from the protocol to code, tests and results (`78e90f8`).
+
 ## Security lockdown (2026-11-13)
 
 ### Changed
@@ -99,6 +112,7 @@ Notable changes per phase. Dates are ISO 8601. The format follows
   react and react-dom 19.3.1, vite 8.3.5, oxlint 1.89.0, @types/node 26.6.5; setup-uv
   v10.3.3; `uv_build <0.14`. EDA figures are byte-identical after the upgrade.
 - `sepsiscope doctor` prints only the OS family and CPU architecture.
+- `privacy-audit` is strict by default (`--no-strict` for the lenient view; `3564502`).
 
 ### Added
 - gitleaks: pre-commit hook and a checksum-verified CI job over the full history.
