@@ -25,6 +25,9 @@ State of the work, so anyone can pick it up from the repository alone.
 - [x] **D4** At 375 px no element widens the page (checked on all tabs and patients); tabs
   on one row; meta description. Visual checks used an already-running local demo server
   (this session cannot bind a port); restart it to load the new API and demo data.
+- Badge fix (2026-11-16): verdict badges wrap inside the patient cards; browser check at
+  375, 1024 and 1440 px, light and dark: 0 badges outside or clipped (long badge = 2
+  lines); static guard `tests/test_web_layout.py`.
 - Checks: fast checks rc=0 (ruff, format, mypy, pre-commit, web lint/build, contrast,
   doctor, privacy-audit); pytest 359 passed, 1 failed (the sandbox-blocked Unix-socket
   test), 360 total; demo rebuild + byte check 89 files, 0 differences.

@@ -151,7 +151,7 @@
   list-style: none;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
   gap: 0.75rem;
   margin: 0 0 1rem;
 }
@@ -187,11 +187,12 @@
 /* Patient cards */
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
   gap: 0.6rem;
   margin: 0.75rem 0 1rem;
 }
 .card {
+  min-width: 0; /* a long badge wraps instead of widening the card */
   font: inherit;
   text-align: left;
   display: flex;
@@ -233,9 +234,13 @@
   font-size: 0.85rem;
   font-weight: 600;
   padding: 0.1rem 0.5rem;
-  border-radius: 999px;
+  border-radius: 0.8rem;
   border: 1px solid;
-  white-space: nowrap;
+  /* Badges wrap inside the card: never cut off, never wider than the card. */
+  white-space: normal;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .badge.good {
   color: var(--good-text);
@@ -269,7 +274,7 @@
 }
 .replay-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+  grid-template-columns: minmax(0, 1fr) minmax(min(320px, 100%), 420px);
   gap: 1rem;
   align-items: start;
 }
