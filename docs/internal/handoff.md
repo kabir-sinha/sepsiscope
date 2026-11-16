@@ -33,7 +33,7 @@ State of the work, so anyone can pick it up from the repository alone.
   test), 360 total; demo rebuild + byte check 89 files, 0 differences.
 
 **Batch C (Milestone 5) gate PASSED 2026-11-14; M5 evidence report delivered as text 2026-11-15.** Batch B pushed by the maintainer (`1fa15f0`).
-Plan `docs/plan/batch-c.md` approved with the recommended defaults (D1–D12); criteria fixed
+Plan `docs/internal/plan/batch-c.md` approved with the recommended defaults (D1–D12); criteria fixed
 in ADR 0024 before any result. Order: C0 → C4 → C1 → C2 → C3 → C5 → C6.
 - [x] **C0** Plan and ADR 0024. The two method references in ADR 0024 are cited from
   memory; they are checked against the sources in C5 (download needs approval).
@@ -143,14 +143,14 @@ their own terminal (latest `3e0da73`; CI #11 green on `ce231b2`, 0 open Dependab
 The Milestone 3 evidence document is done.
 
 **Batch B (Milestone 4: trained model) approved 2026-11-13** with amendments; plan in
-`docs/plan/batch-b.md`, decisions in ADR 0022. B0 is done. **Next step: B1** (LightGBM model
+`docs/internal/plan/batch-b.md`, decisions in ADR 0022. B0 is done. **Next step: B1** (LightGBM model
 and `sepsiscope train`). Order: B1 → B6 → B2 → B3 → B4 → B5 → B7 → gate.
 **B2 tuning waits for the maintainer's explicit "go".** Pushes happen from the
 maintainer's own terminal.
 
 ### Batch B
 
-- [x] **B0** Plan `docs/plan/batch-b.md` and ADR 0022.
+- [x] **B0** Plan `docs/internal/plan/batch-b.md` and ADR 0022.
 - [x] **B1** LightGBM model and `sepsiscope train` (`models/lgbm.py`, `models/pipeline.py`):
   text + whitelisted JSON + feature schema in the ignored `models/lgbm_{direction}/`;
   deterministic, no class weights; data fingerprint = SHA-256 of contents. Default
@@ -336,7 +336,7 @@ run numbers from before that date belong to the legacy repository.
   follow-up tasks, CI is green on `e78124d`: run `38004614423`, on `ubuntu-24.04`.
 - Commit `ce32d9f` (`docs(ops): record repository state after first push`) is
   pushed.
-- Branch protection: pending; rules in `docs/ops.md`, to apply when enabled.
+- Branch protection: pending; rules in `docs/internal/ops.md`, to apply when enabled.
 
 ## Pending tasks
 
@@ -347,7 +347,7 @@ run numbers from before that date belong to the legacy repository.
   `@types/node` moved from major 24 to 26.6.4 by merging PR #2 (`3c3cb0b`, authored by
   `dependabot[bot]`); local `npm ci`, lint and build pass.
 - [x] **Task 4:** both CI jobs pinned to `runs-on: ubuntu-24.04` (89fe95d); upgrade note in
-  `docs/ops.md`.
+  `docs/internal/ops.md`.
 
 All four are done and pushed. Open pull requests: none (#1 closed, #2 merged).
 
@@ -359,7 +359,7 @@ All four are done and pushed. Open pull requests: none (#1 closed, #2 merged).
   full text; row counts verified in Table 2 of `manuscript.pdf`, on printed page 11
   (an earlier note said page 10).
 - [x] **Close-out 3:** `ignore` rule for `@types/node` semver-major updates added (6ebc9c3).
-- [x] **Close-out 4:** state table in `docs/ops.md` refreshed (da6652a).
+- [x] **Close-out 4:** state table in `docs/internal/ops.md` refreshed (da6652a).
 - [x] **Close-out 5:** Definition of Done re-run on 2026-10-10, all green: `uv sync --locked`;
   `doctor` PASS (OpenMP OK, telemetry off, nothing personal printed); pytest 48 passed, three
   runs in a row; ruff and mypy clean; `pre-commit run --all-files` clean; web `npm ci`, lint
@@ -434,11 +434,11 @@ No models are trained in this phase.
 
 - Done in Phase 1: the official scorer is vendored in `third_party/physionet_eval/`.
 - Branch protection for `main`: pending; the exact rules, to apply when enabled, are in
-  `docs/ops.md`.
+  `docs/internal/ops.md`.
 - Ubuntu runner: CI is pinned to `ubuntu-24.04`; upgrade deliberately later through a
-  pull request (see `docs/ops.md`).
+  pull request (see `docs/internal/ops.md`).
 
 ## Next
 
 Batch A (Milestone 3: causal features, baselines, metrics, evaluation), plan in
-`docs/plan/batch-a.md`.
+`docs/internal/plan/batch-a.md`.

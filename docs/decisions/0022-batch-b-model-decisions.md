@@ -6,7 +6,7 @@
 ## Context
 Batch B trains the main model (LightGBM), tunes it (ADR 0021), calibrates it, explains its
 alerts and runs the ablations of protocol section 8. Several choices could be tuned after
-seeing results, so they are fixed here first. The plan is `docs/plan/batch-b.md`.
+seeing results, so they are fixed here first. The plan is `docs/internal/plan/batch-b.md`.
 
 ## Decision
 1. **Calibration split.** Calibrators are fitted on the source hospital's **calibration**
@@ -60,5 +60,5 @@ Batch B results are judged by criterion 10, fixed before any result. A "no" is r
 such.
 
 ## Sources
-`docs/plan/batch-b.md` · `docs/protocol.md` sections 4–8 · ADR 0004 (no pickle) · ADR 0015
+`docs/internal/plan/batch-b.md` · `docs/protocol.md` sections 4–8 · ADR 0004 (no pickle) · ADR 0015
 (unit columns) · ADR 0021 (tuning)

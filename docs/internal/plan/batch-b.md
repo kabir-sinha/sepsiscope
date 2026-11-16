@@ -1,7 +1,7 @@
 # Batch B — Milestone 4: trained model
 
 Status: **approved 2026-11-13 with amendments** (P1–P5, Q1–Q3 below). Decisions are recorded
-in ADR 0022. Working mode as in Batch A: one commit per step with `docs/handoff.md`
+in ADR 0022. Working mode as in Batch A: one commit per step with `docs/internal/handoff.md`
 updated, fast checks per step, the full gate once at the end, then a stop before any
 push. Pushes happen from the maintainer's own terminal.
 

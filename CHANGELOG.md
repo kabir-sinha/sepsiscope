@@ -16,7 +16,7 @@ Notable changes per phase. Dates are ISO 8601. The format follows
 
 ### Added
 - gitleaks: pre-commit hook and a checksum-verified CI job over the full history.
-- `docs/plan/batch-a.md` (Milestone 3 spec, queued) and ADR 0017.
+- `docs/internal/plan/batch-a.md` (Milestone 3 spec, queued) and ADR 0017.
 
 ## Privacy hardening (2026-10-22)
 

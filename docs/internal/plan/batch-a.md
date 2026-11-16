@@ -2,7 +2,7 @@
 
 Status: **approved 2026-11-13, in progress** (Batch S is pushed and CI is green).
 Same working mode as Batch S: one plan, one approval,
-fast checks per step, a commit per step with `docs/handoff.md` updated, the full gate at
+fast checks per step, a commit per step with `docs/internal/handoff.md` updated, the full gate at
 the end, and a stop before the push.
 
 ## A0. Decisions to record as ADRs (approved)

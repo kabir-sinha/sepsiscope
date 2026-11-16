@@ -2,7 +2,7 @@
 
 Status: **approved 2026-11-14 with the recommended defaults** (decisions D1–D12 below).
 Criteria are recorded in ADR 0024 **before any Batch C result exists**. Working mode as in
-Batch B: one commit per step with `docs/handoff.md` updated, fast checks per step with real
+Batch B: one commit per step with `docs/internal/handoff.md` updated, fast checks per step with real
 exit codes (`set -o pipefail`), the full gate once at the end, then a stop before any push
 or tag. Pushes and tags happen from the maintainer's own terminal.
 

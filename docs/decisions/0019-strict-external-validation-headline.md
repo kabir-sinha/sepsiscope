@@ -33,4 +33,4 @@ The secondary analysis is evaluated on about 80 % of the target hospital, so its
 little wider and its numbers are not directly comparable with the headline.
 
 ## Sources
-`docs/protocol.md` sections 4 and 6 · ADR 0013 (splits) · `docs/plan/batch-a.md` A0.2
+`docs/protocol.md` sections 4 and 6 · ADR 0013 (splits) · `docs/internal/plan/batch-a.md` A0.2

@@ -70,7 +70,7 @@ localhost, open the address in a normal window.
 
 - [Evaluation protocol (frozen)](docs/protocol.md)
 - [Data card](docs/data_card.md) · [EDA findings](docs/eda_findings.md) · [Data manifest](docs/data_manifest.md)
-- [Privacy](docs/privacy.md) · [Operations](docs/ops.md) · [Decisions](docs/decisions/README.md)
+- [Privacy](docs/privacy.md) · [Operations](docs/internal/ops.md) · [Decisions](docs/decisions/README.md)
 - [Model card](docs/model_card.md) · [Datasheet](docs/datasheet.md) · [TRIPOD+AI](docs/tripod_ai.md) · [Changelog](CHANGELOG.md)
 
 ## AI assistance
