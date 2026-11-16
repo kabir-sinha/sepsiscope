@@ -2,9 +2,26 @@
 
 State of the work, so anyone can pick it up from the repository alone.
 
-## Status (2026-11-16): Milestones 1-5 complete (`v1.0.1`); Batch E public-readiness in progress.
+## Status (2026-11-16): Milestones 1-5 complete (`v1.0.1`); Batch E public-readiness committed, not pushed.
 
 ## Resume here
+
+**Batch E public readiness (2026-11-16), committed, not pushed.** Part 1 audit delivered as
+text; Part 2 as small commits on main (no history rewrite, no new repository; visibility
+unchanged):
+- [x] Dead code and Vite starter files removed. The audit's "8 stale noqa" were a false
+  positive (rule selection too narrow); they stay.
+- [x] `docs/internal/` holds handoff, ops, plan/, learning/ and CLAUDE.md (root pointer
+  imports it).
+- [x] Doc contradictions fixed (privacy.md byline exception, repo map, this heading).
+- [x] `sepsiscope analyses alert-quality` (post-hoc, descriptive): LightGBM A→B precision
+  per patient 0.418 (lift 7.3×), B→A 0.228 (2.6×); re-run byte-identical; manifest 91.
+- [x] Licences: MIT code, CC BY 4.0 docs/results, `CITATION.cff`, ADR 0026.
+- [x] Key-ADR index; README showcase rewrite. The 2019 Challenge range (−0.166 to −0.048)
+  was supplied by the maintainer from the official `challenge.tsv`; not re-checked here
+  (a download needs approval).
+- Open: CHANGELOG has no Milestone 4/5 or Batch D entries; screenshots for the README
+  slots (`docs/images/`) still to be taken.
 
 **Batch D polish (2026-11-15), committed, not pushed.** Small approved fixes after M5:
 - [x] **D0** ADR 0025: one exact "Built by" + first-name line under the demo title

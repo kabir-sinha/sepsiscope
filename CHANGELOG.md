@@ -3,6 +3,28 @@
 Notable changes per phase. Dates are ISO 8601. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## Public readiness, Batch E (2026-11-16)
+
+### Added
+- `LICENSE` (MIT, code), CC BY 4.0 for documentation, figures and results, and
+  `CITATION.cff` (ADR 0026, supersedes ADR 0003).
+- `sepsiscope analyses alert-quality`: alert precision (PPV), NPV, lift and per-patient
+  numbers at the 5 % budget for LightGBM, LR and NEWS2 (`alert_quality_*.json`; a
+  reproduce step; byte-check manifest now 91 files).
+- "Start here" index of the eight key ADRs.
+
+### Changed
+- README rewritten as a project showcase (results table, Mermaid diagram, quick start,
+  reproduce, citation, licence).
+- Internal working notes moved to `docs/internal/` (handoff, ops, plans, learning notes,
+  `CLAUDE.md`, with a root pointer).
+- Doc fixes: `privacy.md` states the ADR 0025 byline exception; repo map and handoff
+  heading updated.
+
+### Removed
+- Dead code (`report_as_dict`, `relative_source`, `stepDecimals`) and the Vite starter
+  assets.
+
 ## Security lockdown (2026-11-13)
 
 ### Changed
