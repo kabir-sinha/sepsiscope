@@ -52,7 +52,7 @@ rejects it); AI help is disclosed in `docs/ai_assistance.md` and the README inst
 
 ## Decisions (see docs/decisions/)
 Python 3.13 via uv (`<3.14` for dcurves) · uv `required-version >=0.12.24,<0.13` ·
-exact pins + hashed `uv.lock` · pyarrow 25.0.1 (mlflow needs <26) · ruff 0.16.10 ·
+exact pins + hashed `uv.lock` · pyarrow 25.0.1 (mlflow needs <26) · ruff 0.17.4 ·
 no torch / polars / MAPIE · Vite react-ts template pins untouched (TS ~6.0) ·
 code Apache-2.0, docs/figures/results CC BY 4.0 (ADR 0026, supersedes 0003) · public demo later
 on a Hugging Face static Space · splits stratified by septic flag (ADR 0013) ·
