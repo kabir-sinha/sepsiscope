@@ -6,8 +6,8 @@ Notable changes per phase. Dates are ISO 8601. The format follows
 ## Public readiness, Batch E (2026-11-16)
 
 ### Added
-- `LICENSE` (MIT, code), CC BY 4.0 for documentation, figures and results, and
-  `CITATION.cff` (ADR 0026, supersedes ADR 0003).
+- `LICENSE` (Apache-2.0, official text) and `NOTICE` for the code, CC BY 4.0 for
+  documentation, figures and results, and `CITATION.cff` (ADR 0026, supersedes ADR 0003).
 - `sepsiscope analyses alert-quality`: alert precision (PPV), NPV, lift and per-patient
   numbers at the 5 % budget for LightGBM, LR and NEWS2 (`alert_quality_*.json`; a
   reproduce step; byte-check manifest now 91 files).
@@ -24,6 +24,70 @@ Notable changes per phase. Dates are ISO 8601. The format follows
 ### Removed
 - Dead code (`report_as_dict`, `relative_source`, `stepDecimals`) and the Vite starter
   assets.
+
+## Batch D, demo polish (2026-11-15 to 2026-11-16, tag `v1.0.1`)
+
+### Added
+- One exact "Built by" + first-name byline on the demo header, allowed by the privacy
+  rules in that file only (ADR 0025, `51f02c3`).
+- Results tab section "Robustness checks (Milestone 5)", built from the committed
+  band, deferral and budget files (`21c8162`).
+
+### Fixed
+- Verdict for alerts before and after the early-warning window but not in it
+  (`early_and_late`; `c995dce`).
+- In-chart labels placed clear of lines, alert dots and each other on every chart
+  (`4d73ae8`, `2b35a1a`).
+- Phone layout at 375 px and a meta description (`988308e`); verdict badges wrap inside
+  the patient cards (`95fda3e`).
+
+## Milestone 5, Batch C: robustness checks and reporting (2026-11-14 to 2026-11-15, tag `v1.0.0-m5`)
+
+### Added
+- Batch C plan and ADR 0024 with pass/fail criteria fixed before any result (`e3da7ef`,
+  `e60da3e`).
+- `sepsiscope analyses bands`: metrics within ICU-stay bands (`ba4fc65`, `718b2ae`;
+  results `e3e21c7`).
+- `sepsiscope analyses deferral`: class-conditional conformal deferral (`f1f340a`,
+  `2492235`; results `6c19b25`).
+- `sepsiscope analyses budgets`: 2/5/10 % alert budgets, lead-time distribution and
+  subgroup CIs (`7bf9e1e`, `8a97251`; results `b899d92`).
+- `sepsiscope reproduce`: every result from the verified dataset in one command
+  (`4c74d4c`); byte-identical re-run check (`0f5c622`) with a committed manifest
+  (`77399f9`).
+- Model card, datasheet and TRIPOD+AI checklist (`4b9f236`, `1b1fdfa`, `216bda0`).
+- In-repository privacy scan helpers and their positive control (`7d0e158`).
+
+### Fixed
+- Demo: threshold label clear of the onset and selected-hour lines; LightGBM headline cards
+  match the others (`154567d`, `a5d29bc`).
+
+## Milestone 4, Batch B: model, trust layer and demo (2026-11-13 to 2026-11-14)
+
+### Added
+- Batch B plan and ADR 0022 (`31bb0c5`).
+- LightGBM model and `sepsiscope train` (`559029c`); Optuna tuning per ADR 0021 with the
+  tuned parameters committed (`572ae8e`, `c96d96f`).
+- Calibration (Platt headline, isotonic sensitivity) and per-alert explanations
+  (`5f001c4`, `863ce7d`).
+- LightGBM in `sepsiscope evaluate` with paired difference CIs; results and explanation
+  summaries (`56fa8e6`, `be8c557`).
+- Ablation feature sets, ablation runner and hospital drift summary (`22bc612`,
+  `b9d2ac4`); post-hoc exploratory analysis (`103911e`).
+- MLflow tracking without personal paths (`12af436`).
+- Local demo: data, API on 127.0.0.1 with security headers, verdict rules, what-if
+  budgets, and the React dashboard with replay, reasons panel, results, dark mode and
+  self-hosted IBM Plex fonts (`d18b415` to `d858e7a`); WCAG 2.2 contrast check
+  (`15c9173`).
+
+### Changed
+- No personal name in tracked files (ADR 0023, `1d3362b`); commit-name rule (`cce547d`);
+  guard blocks `models/` and `data/demo/` (`386b271`).
+
+### Fixed
+- opentelemetry-api/sdk 1.45.2 and semantic-conventions 0.66b2 (CVE-2026-126360,
+  `ebe8e2f`); 500 errors keep the security headers (`f2b480c`); independent scan fixes
+  (`11f98b6`, `807fdaa`).
 
 ## Security lockdown (2026-11-13)
 

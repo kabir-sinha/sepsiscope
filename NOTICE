@@ -1,0 +1,30 @@
+SepsiScope
+Copyright 2026 SepsiScope contributors
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+Documentation, figures and result files (docs/, reports/, README.md) are licensed
+under Creative Commons Attribution 4.0 International (CC BY 4.0).
+
+This product includes the PhysioNet/CinC Challenge 2019 official scoring code
+(third_party/physionet_eval/evaluate_sepsis_score.py), licensed under the
+BSD-2-Clause licence (see third_party/physionet_eval/LICENSE.txt).
+
+This product includes the IBM Plex Sans and IBM Plex Mono fonts
+(web/public/fonts/), licensed under the SIL Open Font License 1.1
+(see web/public/fonts/OFL-LICENSE.txt).
+
+This product was developed with the PhysioNet/CinC Challenge 2019 dataset,
+licensed under CC BY 4.0. The dataset is not included. Please cite:
+
+1. Reyna M, et al. Early Prediction of Sepsis from Clinical Data: the
+   PhysioNet/Computing in Cardiology Challenge 2019 (version 1.0.0).
+   PhysioNet (2019). doi:10.13026/v64v-d857
+2. Reyna MA, et al. Early Prediction of Sepsis From Clinical Data: The
+   PhysioNet/Computing in Cardiology Challenge 2019. Critical Care Medicine
+   2020;48(2):210-217. doi:10.1097/CCM.0000000000004145
+3. Pollard T, et al. PhysioNet as a global platform for biomedical research.
+   Nature Health (2026). doi:10.1038/s44360-026-00096-z
+
+Research prototype, not for clinical use. Not a medical device. Provided
+"AS IS", without warranties or conditions of any kind (see LICENSE, sections
+7 and 8).

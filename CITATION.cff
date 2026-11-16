@@ -6,7 +6,7 @@ authors:
   - name: "SepsiScope contributors"
 version: "1.0.1"
 date-released: "2026-11-16"
-license: MIT
+license: Apache-2.0
 repository-code: "https://github.com/kabir-sinha/sepsiscope"
 abstract: "A research prototype (not for clinical use) that predicts sepsis hours before onset from routine ICU data under a fixed 5 % alarm budget, with explanations, validated strictly across two hospitals of the PhysioNet/CinC Challenge 2019."
 keywords:

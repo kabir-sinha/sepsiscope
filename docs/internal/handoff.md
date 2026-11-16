@@ -16,12 +16,16 @@ unchanged):
 - [x] Doc contradictions fixed (privacy.md byline exception, repo map, this heading).
 - [x] `sepsiscope analyses alert-quality` (post-hoc, descriptive): LightGBM A→B precision
   per patient 0.418 (lift 7.3×), B→A 0.228 (2.6×); re-run byte-identical; manifest 91.
-- [x] Licences: MIT code, CC BY 4.0 docs/results, `CITATION.cff`, ADR 0026.
-- [x] Key-ADR index; README showcase rewrite. The 2019 Challenge range (−0.166 to −0.048)
-  was supplied by the maintainer from the official `challenge.tsv`; not re-checked here
-  (a download needs approval).
-- Open: CHANGELOG has no Milestone 4/5 or Batch D entries; screenshots for the README
-  slots (`docs/images/`) still to be taken.
+- [x] Licences: Apache-2.0 code (`LICENSE` byte-identical to the official text, 11,358
+  bytes; copyright in `NOTICE`), CC BY 4.0 docs/results, `CITATION.cff`, ADR 0026
+  (amended from MIT before publication).
+- [x] Key-ADR index; README showcase rewrite. 2019 Challenge range (top 5 by full-test
+  utility: 0.339-0.364 full, -0.166 to -0.048 on hospital C) verified by the maintainer
+  against the official `challenge.tsv`; README cites the official results page.
+- [x] README shows two committed figures instead of screenshot slots; CHANGELOG
+  back-filled for Milestones 4-5 and Batch D.
+- Open: screenshots to be added by the maintainer; CHANGELOG has no Milestone 3 (Batch A)
+  entry.
 
 **Batch D polish (2026-11-15), committed, not pushed.** Small approved fixes after M5:
 - [x] **D0** ADR 0025: one exact "Built by" + first-name line under the demo title

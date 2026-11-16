@@ -12,7 +12,8 @@ protocol was frozen before the data was downloaded, and the whole analysis re-ru
 command into byte-identical result files.
 
 > **Research prototype, not for clinical use.** Not a medical device. It must not be used
-> to make decisions about real patients.
+> to make decisions about real patients. The software is provided "AS IS", without
+> warranties or conditions of any kind (Apache-2.0, sections 7 and 8).
 
 ## Key results
 
@@ -46,26 +47,28 @@ the other hospital. 95 % confidence intervals from 1,000 patient-level bootstrap
 Sources: `reports/results/{lgbm,lr,news2}_{A2B,B2A}.json`, `paired_*.json`,
 `alert_quality_*.json`, `budgets_*.json`.
 
-**2019 Challenge context.** In the official challenge, the five best teams on the full
-test set scored between −0.166 and −0.048 utility on hidden hospital C, which no team
-could train on (official results file `challenge.tsv`). SepsiScope's numbers come from a
-different setting (training on one public hospital and testing on the other), so they are
-**not directly comparable**.
+**2019 Challenge context.** In the official challenge, the five best teams by full-test
+utility scored 0.339 to 0.364 on the full hidden test set and −0.166 to −0.048 on its
+hospital C, which no team could train on
+([official results](https://moody-challenge.physionet.org/2019/results/), `challenge.tsv`).
+SepsiScope's numbers come from a different setting (training on one public hospital and
+testing on the other), so they are **not directly comparable**.
 
 **Limitations.** A retrospective study of two US hospitals; how performance varies with
 time in the ICU, alarm budgets and hospitals is documented in the
 [model card](docs/model_card.md#caveats-and-recommendations).
 
-## Demo
+## Figures
 
-| Patient replay | Results | Phone (375 px) |
-|---|---|---|
-| _screenshot: `docs/images/replay.png`_ | _screenshot: `docs/images/results.png`_ | _screenshot: `docs/images/phone.png`_ |
+| Decision curve, trained on A → tested on B | Calibration, trained on B → tested on A |
+|---|---|
+| ![Decision curve: LightGBM has the highest net benefit at low thresholds, above the logistic regression and NEWS2](reports/figures/results/decision_curve_A2B.png) | ![Reliability: LightGBM's predicted risk matches the observed rate at the unseen hospital; the logistic regression over-predicts](reports/figures/results/reliability_B2A.png) |
 
-The demo replays six held-out patients hour by hour: the SepsiScope risk next to NEWS2,
-the alert threshold, the early-warning window, the vital signs and, for every hour, the
-reasons that raised or lowered the risk. A what-if control shows how alerts change with the
-alarm budget, from 1 % to 10 % of hours. It runs locally only, on `127.0.0.1`.
+**Demo.** A local web app replays six held-out patients hour by hour: the SepsiScope risk
+next to NEWS2, the alert threshold, the early-warning window, the vital signs and, for
+every hour, the reasons that raised or lowered the risk. A what-if control shows how alerts
+change with the alarm budget, from 1 % to 10 % of hours. It runs locally only, on
+`127.0.0.1` (`uv run sepsiscope demo serve`, see below).
 
 ## How it works
 
@@ -183,11 +186,13 @@ reviewed, tested and understood by me. Details: [docs/ai_assistance.md](docs/ai_
 
 ## Licence
 
-- **Code:** [MIT](LICENSE) © 2026 SepsiScope contributors.
+- **Code:** [Apache License 2.0](LICENSE); copyright and attributions in [`NOTICE`](NOTICE)
+  (© 2026 SepsiScope contributors).
 - **Documentation, figures and result files** (`docs/`, `reports/`, this README):
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 - **Third-party:** the official PhysioNet scorer in `third_party/physionet_eval/` keeps
   BSD-2-Clause; the IBM Plex fonts keep the SIL Open Font License 1.1.
-- **Data:** PhysioNet/CinC Challenge 2019, CC BY 4.0, cited above.
+- **Data:** stays with PhysioNet (PhysioNet/CinC Challenge 2019, CC BY 4.0, cited above);
+  it is not included here.
 
 See [ADR 0026](docs/decisions/0026-open-licences.md).
