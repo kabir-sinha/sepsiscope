@@ -123,17 +123,17 @@ Notable changes per phase. Dates are ISO 8601. The format follows
 ### Added
 - `src/sepsiscope/audit/`: one set of privacy rules for the pre-commit guard, the git
   hooks, CI and the new `sepsiscope privacy-audit` command (masked output) (ADR 0016).
-- New rules: Linux and Windows home paths, account-tier wording, enrollment-ID shapes,
-  notebook outputs and metadata, and an optional gitignored local denylist.
+- New rules: Linux and Windows home paths, ID-like number patterns, notebook outputs and
+  metadata, and an optional gitignored local denylist.
 - `commit-msg` hook (no AI trailers, nothing personal) and `pre-push` hook (`+0000`
   offsets, allowed identities); CI checks every pushed commit the same way.
 - ADR 0016.
 
 ### Changed
 - All commits are made with `TZ=UTC` from 2026-10-22 on.
-- `CLAUDE.md` holds project-neutral rules only; personal notes moved to a gitignored file.
-- Docs reworded to be neutral and OS-neutral; account-tier wording, other-project
-  references and machine-specific notes removed. ADRs 0001, 0003, 0006 and 0008 amended
+- `CLAUDE.md` holds project-neutral rules only; local notes kept out of the repository.
+- Docs reworded to be neutral and OS-neutral; other-project references and
+  machine-specific notes removed. ADRs 0001, 0003, 0006 and 0008 amended
   (privacy wording only; decisions unchanged).
 - CI runs the privacy guard after installing the package and checks out full history.
 - `.gitignore` covers local-only files, MLflow artifacts, SQLite stores, logs and web coverage.
