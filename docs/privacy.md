@@ -86,7 +86,10 @@ so `git commit --no-verify` or `git push --no-verify` still fails CI.
 `#` starts a comment. It is read only when present, so CI uses generic patterns only.
 Matches are whole-word and case-insensitive; the GitHub handle inside the noreply address
 and the repository URL is not a hit. The maintainer's name is denied on every line of every
-tracked file (ADR 0023); only history blobs from before 2026-11-15 keep the old copyright
+tracked file (ADR 0023), with one exception (ADR 0025): the exact text "Built by" + first
+name in the demo header (`web/src/App.tsx`), built at run time from the local file and
+accepted in that one file only (`tests/test_attribution.py` fails on any other occurrence).
+Only history blobs from before 2026-11-15 keep the old copyright
 and author-line allowance, because history is not rewritten. Commit author and committer
 names are checked against the same list: only the one name declared on an
 `allow-author-name:` line of the local file may contain a listed value (ADR 0023); commits

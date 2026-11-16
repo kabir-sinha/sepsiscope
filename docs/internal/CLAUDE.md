@@ -61,22 +61,30 @@ Age 90+ is coded 100 by the dataset and stays uncapped.
 
 ## Repo map
 ```
-src/sepsiscope/   _privacy.py (imported first) · config.py · cli.py · _smoke.py
+src/sepsiscope/   _privacy.py (imported first) · config.py · cli.py · _smoke.py · logscrub.py ·
+                  tracking.py · repro.py (byte check) · reproduce.py (one-command re-run)
                   audit/: rules · denylist · notebook · gitchecks · hooks · history · mask
                   data/: download · io · fingerprint · build · clean · schema · splits ·
                          pipeline · eda · figures
-                  features/ models/ evaluation/ trust/ api/   (later phases)
+                  features/: causal · pipeline
+                  models/: baselines · lgbm · calibration · tuning · pipeline
+                  evaluation/: metrics · run · figures · ablation · exploratory · bands ·
+                               deferral · budgets
+                  trust/: conformal · explain        api/: app · demo · verdict · whatif
 configs/          default.yaml (relative paths, seed, alarm budget, label horizon, switches)
-tests/            smoke, privacy, config, cli, download, fingerprint, build/clean/schema,
-                  splits, eda/figures, official scorer, network guard (conftest blocks network),
-                  audit rules / git hooks / privacy-audit (throwaway git repos)
-scripts/          privacy_guard.py (pre-commit hook; rules in sepsiscope.audit)
-docs/             protocol, data_card, data_manifest, eda_findings, privacy, ops, handoff,
-                  model_card, tripod_ai, decisions/, learning/
+tests/            tests for every package area, plus privacy, network guard, README,
+                  TRIPOD+AI, attribution and web-layout guards
+scripts/          privacy_guard.py (pre-commit hook) · privacy_pass.sh · deep_scan.py ·
+                  independent_scan.sh · api_probe.py · byte_check.py · contrast_check.py ·
+                  measure.py
+docs/             protocol, data_card, datasheet, data_manifest, eda_findings, model_card,
+                  tripod_ai, traceability, privacy, ai_assistance, decisions/
+docs/internal/    CLAUDE.md (these rules), handoff, ops, plan/, learning/
 splits/           hospital_A.json, hospital_B.json (patient IDs; committed)
-reports/          figures/ (EDA PNGs, no metadata) · data/cleaning_report.json
+reports/          results/ (aggregate JSON) · figures/ (PNGs, no metadata) · data/ ·
+                  features/ · tuning/ · manifest_c6.json (byte-check reference)
 notebooks/        01_eda.ipynb (calls the package only; outputs stripped)
-web/              Vite react-ts scaffold + research banner
+web/              React + TypeScript demo (Vite): replay, explanations, results
 third_party/      physionet_eval/ (official scorer, unmodified, BSD-2-Clause)
 data/ models/ mlruns/   git-ignored
 ```

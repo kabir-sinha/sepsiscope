@@ -2,7 +2,7 @@
 
 State of the work, so anyone can pick it up from the repository alone.
 
-## Phase 1 closed; privacy hardening done (2026-10-22, ADR 0016). Next: Phase 2.
+## Status (2026-11-16): Milestones 1-5 complete (`v1.0.1`); Batch E public-readiness in progress.
 
 ## Resume here
 
