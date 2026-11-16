@@ -4,7 +4,7 @@
 
 | Item | State |
 |---|---|
-| Repository | The maintainer's `sepsiscope`, **Private**, default branch `main` |
+| Repository | The maintainer's `sepsiscope`, default branch `main`; private during development, prepared for public release as `v1.1.0` (visibility is changed by the maintainer) |
 | Created with | `gh repo create --private --source=. --remote=origin --push --disable-wiki` |
 | Features | Issues on; Wiki, Projects and Discussions off; delete head branch on merge on |
 | Auth method | GitHub CLI `gh` OAuth token in gh's credential store (details below); no PAT created |
