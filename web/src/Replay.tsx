@@ -27,7 +27,9 @@ function bannerText(p: PatientRow, k: number): string {
     : `Not septic · false alarm hours: SepsiScope ${s.false_alarm_hours} vs NEWS2 ${n.false_alarm_hours}`
 }
 
-export function Replay({ summary }: { summary: Summary }) {
+// `active` is false while another tab is shown: the component stays mounted (state kept),
+// but playback pauses and the Space/arrow shortcuts are off.
+export function Replay({ summary, active }: { summary: Summary; active: boolean }) {
   const budgets = summary.what_if.budgets
   const headlineK = Math.max(0, budgets.findIndex((b) => Math.abs(b - summary.alarm_budget) < 1e-9))
   const [patient, setPatient] = useState<Patient | null>(null)
@@ -40,7 +42,15 @@ export function Replay({ summary }: { summary: Summary }) {
   const [compare, setCompare] = useState<'none' | 'lr' | 'news2'>('none')
   const [error, setError] = useState<string | null>(null)
 
-  const last = patient ? patient.hours - 1 : 0
+  // Leaving the tab pauses playback; the selected hour stays where it is. (State adjusted
+  // during render when the prop changes, React's pattern for this, not in an effect.)
+  const [wasActive, setWasActive] = useState(active)
+  if (active !== wasActive) {
+    setWasActive(active)
+    if (!active) setPlaying(false)
+  }
+
+  const last =patient ? patient.hours - 1 : 0
   const revealed = patient ? (replay ? (hour ?? 0) : last) : 0
 
   function open(key: string) {
@@ -90,6 +100,7 @@ export function Replay({ summary }: { summary: Summary }) {
   // Keyboard: Space = play/pause, ←/→ = one hour. Ignored while typing in a control.
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
+      if (!active) return
       const t = e.target as HTMLElement
       if (t.closest('input, select, textarea, [role="tab"], summary')) return
       if (e.key === ' ' && !t.closest('button')) {

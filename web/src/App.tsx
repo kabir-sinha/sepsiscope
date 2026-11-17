@@ -94,9 +94,15 @@ function App() {
           ))}
         </div>
         {error && <p className="error">{error}</p>}
-        <section id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} className="tabpanel">
+        {/* One panel per tab. The replay panel stays mounted while hidden, so the selected
+            patient, hour, budget and comparison are still there after visiting another tab. */}
+        <section id="panel-how" role="tabpanel" aria-labelledby="tab-how" className="tabpanel" hidden={tab !== 'how'}>
           {tab === 'how' && <HowItWorks />}
-          {tab === 'replay' && summary && <Replay summary={summary} />}
+        </section>
+        <section id="panel-replay" role="tabpanel" aria-labelledby="tab-replay" className="tabpanel" hidden={tab !== 'replay'}>
+          {summary && <Replay summary={summary} active={tab === 'replay'} />}
+        </section>
+        <section id="panel-results" role="tabpanel" aria-labelledby="tab-results" className="tabpanel" hidden={tab !== 'results'}>
           {tab === 'results' && <Results />}
         </section>
         <footer className="footer">
