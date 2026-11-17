@@ -241,7 +241,7 @@ def test_no_patient_ids_in_tracked_web_or_api_files() -> None:
 
 
 def test_display_values_and_sentences() -> None:
-    from sepsiscope.api.demo import display_value, reason_sentence
+    from sepsiscope.api.wording import display_value, reason_sentence
 
     assert display_value(37.1667) == "37.2" and display_value(112.0) == "112"
     assert display_value(1.234) == "1.23" and display_value(0.5) == "0.5"

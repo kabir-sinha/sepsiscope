@@ -21,6 +21,8 @@ from fastapi.responses import PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.base import RequestResponseEndpoint
 
+from sepsiscope.api.wording import patient_for_display
+
 LOCAL_ORIGINS = ["http://127.0.0.1:5173", "http://localhost:5173"]
 RESULT_MODELS = ("lgbm", "lr", "news2", "sirs", "qsofa")
 CSP = (
@@ -154,7 +156,10 @@ def robustness_summary(results_dir: Path) -> dict[str, Any] | None:
 def create_app(demo_file: Path, results_dir: Path, static_dir: Path | None = None) -> FastAPI:
     doc: dict[str, Any] = json.loads(demo_file.read_text(encoding="utf-8"))
     results = results_summary(results_dir)
-    by_key = {p["key"]: p for p in doc["patients"]}
+    # Count wording ("1 hour", "1 false alarm") is corrected at display time; the stored,
+    # byte-checked demo file stays as built (see api/wording.py).
+    patients = [patient_for_display(p) for p in doc["patients"]]
+    by_key = {p["key"]: p for p in patients}
     app = FastAPI(title="SepsiScope local demo", docs_url=None, redoc_url=None, openapi_url=None)
     app.add_middleware(
         CORSMiddleware, allow_origins=LOCAL_ORIGINS, allow_methods=["GET"], allow_headers=[]
@@ -198,7 +203,7 @@ def create_app(demo_file: Path, results_dir: Path, static_dir: Path | None = Non
                         "what_if",
                     )
                 }
-                for p in doc["patients"]
+                for p in patients
             ],
         }
 

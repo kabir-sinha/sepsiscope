@@ -26,6 +26,7 @@ import numpy as np
 
 from sepsiscope.api.verdict import RULES, WINDOW_HOURS, Verdict, banner, onset_hour, verdict
 from sepsiscope.api.whatif import BUDGETS, budget_thresholds, patient_what_if
+from sepsiscope.api.wording import reason_sentence
 from sepsiscope.config import Config
 from sepsiscope.data.io import LABEL
 from sepsiscope.evaluation.run import _split_pids
@@ -152,19 +153,6 @@ def unit_of(feature: str) -> str:
     if feature.endswith("__std6"):
         return UNITS.get(base_variable(feature), "")
     return UNITS.get(base_variable(feature), "")
-
-
-def reason_sentence(label: str, value: float | None, unit: str, contribution: float) -> str:
-    effect = "raised" if contribution > 0 else "lowered"
-    if value is None:
-        return f"{label[:1].upper()}{label[1:]}: not measured yet; this {effect} the risk."
-    shown = f"{display_value(value)} {unit}".strip()
-    return f"{label[:1].upper()}{label[1:]} = {shown} {effect} the risk."
-
-
-def display_value(value: float) -> str:
-    """Readable value: 1 decimal from 10 upwards (37.2 not 37.17), else up to 2 decimals."""
-    return f"{round(value, 1 if abs(value) >= 10 else 2):g}"
 
 
 def _number(x: float) -> float | None:
