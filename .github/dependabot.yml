@@ -4,8 +4,15 @@ updates:
   - package-ecosystem: "uv"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     open-pull-requests-limit: 5
+    groups:
+      # One PR per month for all minor and patch updates (ADR 0028); majors and
+      # security updates still come as their own PRs.
+      python-minor-patch:
+        applies-to: version-updates
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
     ignore:
       # Pinned for byte-identical reproducibility (ADR 0027): majors are upgraded deliberately.
       - dependency-name: "pyarrow"
@@ -17,8 +24,15 @@ updates:
   - package-ecosystem: "npm"
     directory: "/web"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     open-pull-requests-limit: 5
+    groups:
+      # One PR per month for all minor and patch updates (ADR 0028); majors and
+      # security updates still come as their own PRs.
+      web-minor-patch:
+        applies-to: version-updates
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
     ignore:
       # Decision (ADR 0010): stay on TypeScript ~6.0, the Vite template's pin.
       - dependency-name: "typescript"
@@ -32,5 +46,12 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     open-pull-requests-limit: 5
+    groups:
+      # One PR per month for all minor and patch updates (ADR 0028); majors and
+      # security updates still come as their own PRs.
+      actions-minor-patch:
+        applies-to: version-updates
+        patterns: ["*"]
+        update-types: ["minor", "patch"]

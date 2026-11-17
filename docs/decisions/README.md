@@ -48,3 +48,4 @@ A decision is changed by a new ADR that supersedes it, never by editing history.
 | [0025](0025-attribution-on-the-demo.md) | One exact "Built by" + first-name byline on the demo header | Accepted |
 | [0026](0026-open-licences.md) | Apache-2.0 for code; CC BY 4.0 for docs, figures and results | Accepted |
 | [0027](0027-hold-pyarrow-duckdb-majors.md) | Hold major upgrades of pyarrow and duckdb (byte-identical reproducibility) | Accepted |
+| [0028](0028-grouped-monthly-dependabot.md) | Monthly, grouped Dependabot updates (minor + patch per ecosystem) | Accepted |
